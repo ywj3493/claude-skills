@@ -6,7 +6,7 @@ of truth and keep it up to date.
 
 ## Documentation Structure
 
-```
+```text
 docs/
 ├── specifications/   # Architecture, infrastructure, requirements, user stories, use cases, sequence diagrams
 ├── issue/            # One file per work item: issue001.md, issue002.md, ...
