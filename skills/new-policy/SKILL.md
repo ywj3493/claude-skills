@@ -88,8 +88,9 @@ Translation rules (same as sync-dev):
 
 After creating the files, remind the user:
 
-> Consider adding a reference to this new policy in `docs/policy/policy.md`
-> under a "Related Policy Files" section, so Claude can discover it from CLAUDE.md.
+> Consider adding an @-reference to this new policy in `docs/policy/policy.md`
+> under the "Related Policy Files" section:
+> `- [@docs/policy/<policy-name>.md](docs/policy/<policy-name>.md) — <description>`
 
 Do **not** automatically edit `policy.md` — show the suggested line and let the
 user decide.
@@ -102,4 +103,4 @@ Tell the user:
 > - `docs/policy/<policy-name>.md`
 > - `docs/dev/policy/<policy-name>.ko.md`
 >
-> Remember to reference this file in `docs/policy/policy.md` if appropriate.
+> Add an @-reference to `docs/policy/policy.md` if appropriate.

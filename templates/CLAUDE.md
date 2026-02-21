@@ -35,19 +35,22 @@ docs/
 4. **Reference is read-only.** Never create or modify files in `docs/reference/`.
    That directory is managed exclusively by the user.
 
-5. **Policy is law.** Before starting any task, check `docs/policy/` for
-   applicable rules. Policy files take precedence over general conventions.
+5. **Policy is law.** Before starting any task, load all @-referenced
+   policy files. Policy files take precedence over general conventions.
 
 6. **Keep docs current.** When implementation changes, update the relevant docs
    in the same commit or PR.
 
-## Policy Files
+## Required Context
 
-Read these before working:
+Load these files before starting any work:
 
-- `docs/policy/policy.md` — General working rules
-- `docs/policy/commit-message-rule.md` — Commit message format
-- `docs/policy/naming-conventions.md` — File, variable, and branch naming
+- [@docs/policy/policy.md](docs/policy/policy.md) — General working rules
+- [@docs/policy/commit-message-rule.md](docs/policy/commit-message-rule.md) — Commit message format
+- [@docs/policy/naming-conventions.md](docs/policy/naming-conventions.md) — File, variable, and branch naming
+- [@docs/policy/reference-convention.md](docs/policy/reference-convention.md) — Document linking convention
+
+For active work, also load the relevant issue from `docs/issue/`.
 
 ## Issue Document Format
 

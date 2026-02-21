@@ -21,5 +21,6 @@
 
 ## Related Policy Files
 
-- `commit-message-rule.md` — Commit message format
-- `naming-conventions.md` — Naming conventions for files, code, and branches
+- [@docs/policy/commit-message-rule.md](docs/policy/commit-message-rule.md) — Commit message format
+- [@docs/policy/naming-conventions.md](docs/policy/naming-conventions.md) — Naming conventions for files, code, and branches
+- [@docs/policy/reference-convention.md](docs/policy/reference-convention.md) — Document linking convention
