@@ -21,5 +21,6 @@
 
 ## 관련 정책 파일
 
-- `commit-message-rule.md` — 커밋 메시지 형식
-- `naming-conventions.md` — 파일, 코드, 브랜치 명명 규칙
+- [@docs/policy/commit-message-rule.md](docs/policy/commit-message-rule.md) — 커밋 메시지 형식
+- [@docs/policy/naming-conventions.md](docs/policy/naming-conventions.md) — 파일, 코드, 브랜치 명명 규칙
+- [@docs/policy/reference-convention.md](docs/policy/reference-convention.md) — 문서 참조 컨벤션

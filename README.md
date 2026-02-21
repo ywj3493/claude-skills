@@ -21,24 +21,11 @@
 
 ## 설치
 
-### 전역 설치 (모든 프로젝트에서 사용 가능)
-
 ```bash
-npx skills add <your-github-username>/claude@init-docs
-npx skills add <your-github-username>/claude@new-issue
-npx skills add <your-github-username>/claude@sync-dev
-npx skills add <your-github-username>/claude@new-policy
+npx skills add https://github.com/ywj3493/claude-skills.git
 ```
 
-### 로컬 설치 (개발/테스트용, 단일 프로젝트)
-
-```bash
-mkdir -p .skills
-cp -r /path/to/this/repo/skills/init-docs .skills/init-docs
-cp -r /path/to/this/repo/skills/new-issue .skills/new-issue
-cp -r /path/to/this/repo/skills/sync-dev  .skills/sync-dev
-cp -r /path/to/this/repo/skills/new-policy .skills/new-policy
-```
+해당 명령어 사용 후 가이드에 따라 선택
 
 ## 사용법
 
