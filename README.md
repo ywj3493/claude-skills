@@ -18,6 +18,7 @@
 | new-issue | `/new-issue` | 다음 번호의 이슈 문서와 한국어 미러를 생성한다 |
 | sync-dev | `/sync-dev` | `docs/dev/`의 한국어 번역 누락 및 구식 항목을 감지하고 동기화한다 |
 | new-policy | `/new-policy` | 새 정책 문서와 한국어 미러를 추가한다 |
+| frontend-planning | `/frontend-planning` | 프론트엔드 프로젝트의 6단계 기획 문서를 순차 생성한다 |
 
 ## 설치
 
@@ -36,6 +37,7 @@ npx skills add https://github.com/ywj3493/claude-skills.git
 /new-issue     ← 새 작업을 시작할 때마다 실행
 /sync-dev      ← 한국어 번역 동기화가 필요할 때 실행
 /new-policy    ← 새 규칙을 공식화할 때 실행
+/frontend-planning ← 프론트엔드 프로젝트 기획 문서 6단계 생성
 ```
 
 ## 전형적인 작업 흐름
@@ -48,6 +50,7 @@ npx skills add https://github.com/ywj3493/claude-skills.git
               └─ /new-issue    이후 작업마다 반복
               └─ /new-policy   새 규칙이 필요할 때
               └─ /sync-dev     번역 누락이 생겼을 때
+              └─ /frontend-planning  프론트엔드 기획 문서가 필요할 때
 ```
 
 ## 저장소 구조
@@ -60,6 +63,7 @@ skills/             # Claude Code 스킬 정의
   new-issue/        # /new-issue 스킬
   sync-dev/         # /sync-dev 스킬
   new-policy/       # /new-policy 스킬
+  frontend-planning/ # /frontend-planning 스킬
 docs/               # 이 저장소 자체의 문서 (init-docs로 생성됨)
   policy/           # 작업 규칙
   issue/            # 작업 추적 이슈

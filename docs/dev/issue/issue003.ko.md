@@ -1,6 +1,6 @@
 # 이슈 003: frontend-planning 스킬 추가
 
-**상태**: 열림
+**상태**: 진행 중
 **생성일**: 2026-02-25
 
 ## 배경
@@ -21,8 +21,8 @@ state-api-integration (6단계).
 
 ## 완료 기준
 
-- [ ] `.agents/skills/frontend-planning/SKILL.md`가 올바른 YAML front matter와 함께 존재
-- [ ] `.agents/skills/frontend-planning/references/`에 6개 참조 템플릿 존재
+- [ ] `skills/frontend-planning/SKILL.md`가 올바른 YAML front matter와 함께 존재
+- [ ] `skills/frontend-planning/references/`에 6개 참조 템플릿 존재
 - [ ] 스킬이 `docs/specifications/`에 문서 생성 (01~06)
 - [ ] 각 단계가 이전 모든 단계의 결과물을 참조
 - [ ] 각 단계 완료 후 다음 단계 진행 전 사용자 검토 요청
@@ -39,8 +39,8 @@ state-api-integration (6단계).
 ## 작업 목록
 
 - [ ] 1. 이슈 문서 생성 (영문 + 한국어)
-- [ ] 2. `.agents/skills/frontend-planning/SKILL.md` 생성
-- [ ] 3. `.agents/skills/frontend-planning/references/`에 6개 참조 템플릿 생성
+- [ ] 2. `skills/frontend-planning/SKILL.md` 생성
+- [ ] 3. `skills/frontend-planning/references/`에 6개 참조 템플릿 생성
 
 ## 참고 사항
 
