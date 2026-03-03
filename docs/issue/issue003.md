@@ -1,6 +1,6 @@
 # Issue 003: Add frontend-planning Skill
 
-**Status**: Open
+**Status**: In Progress
 **Created**: 2026-02-25
 
 ## Background
@@ -22,8 +22,8 @@ English, following the user's preference for frontend design documentation.
 
 ## Acceptance Criteria
 
-- [ ] `.agents/skills/frontend-planning/SKILL.md` exists with correct YAML front matter
-- [ ] Six reference templates exist in `.agents/skills/frontend-planning/references/`
+- [ ] `skills/frontend-planning/SKILL.md` exists with correct YAML front matter
+- [ ] Six reference templates exist in `skills/frontend-planning/references/`
 - [ ] Skill generates documents in `docs/specifications/` (01 through 06)
 - [ ] Each step references outputs of all previous steps
 - [ ] User review is solicited after each step before proceeding
@@ -40,8 +40,8 @@ English, following the user's preference for frontend design documentation.
 ## Tasks
 
 - [ ] 1. Create issue documents (English + Korean)
-- [ ] 2. Create `.agents/skills/frontend-planning/SKILL.md`
-- [ ] 3. Create six reference templates in `.agents/skills/frontend-planning/references/`
+- [ ] 2. Create `skills/frontend-planning/SKILL.md`
+- [ ] 3. Create six reference templates in `skills/frontend-planning/references/`
 
 ## Notes
 
