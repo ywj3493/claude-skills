@@ -1,6 +1,6 @@
 ---
 name: new-issue
-description: Creates a new numbered issue document in docs/issue/ following the project's standard issue format, and simultaneously creates the corresponding Korean translation in docs/dev/issue/. Use this whenever starting new work — features, bug fixes, tasks, or investigations. The user may say "create an issue", "new issue", "이슈 만들어줘", or simply describe work they want to start.
+description: Creates a new numbered issue document in docs/en/issue/ following the project's standard issue format, and simultaneously creates the corresponding Korean translation in docs/ko/issue/. Use this whenever starting new work — features, bug fixes, tasks, or investigations. The user may say "create an issue", "new issue", "이슈 만들어줘", or simply describe work they want to start.
 ---
 
 # new-issue
@@ -20,7 +20,7 @@ Creates a properly numbered, bilingual issue document for tracking a unit of wor
 Check what issue numbers already exist:
 
 ```bash
-ls docs/issue/ 2>/dev/null | grep -E '^issue[0-9]+\.md$' | sort
+ls docs/en/issue/ 2>/dev/null | grep -E '^issue[0-9]+\.md$' | sort
 ```
 
 Take the highest number found and add 1. If no issues exist yet, start at `001`.
@@ -40,7 +40,7 @@ Otherwise, ask the user for:
 
 ### Step 3: Create the English Issue Document
 
-Create `docs/issue/issue<NNN>.md`:
+Create `docs/en/issue/issue<NNN>.md`:
 
 ```markdown
 # Issue <NNN>: <Title>
@@ -71,7 +71,7 @@ See `references/issue-template.md` for the raw template.
 
 ### Step 4: Create the Korean Mirror
 
-Create `docs/dev/issue/issue<NNN>.ko.md` with the same structure in Korean.
+Create `docs/ko/issue/issue<NNN>.md` with the same structure in Korean.
 Code blocks, file paths, commands, and technical identifiers remain in English.
 
 ```markdown
@@ -104,8 +104,8 @@ Code blocks, file paths, commands, and technical identifiers remain in English.
 Tell the user:
 
 > Created:
-> - `docs/issue/issue<NNN>.md`
-> - `docs/dev/issue/issue<NNN>.ko.md`
+> - `docs/en/issue/issue<NNN>.md`
+> - `docs/ko/issue/issue<NNN>.md`
 >
 > Reference this issue in commit messages with `Refs: issue<NNN>`.
 

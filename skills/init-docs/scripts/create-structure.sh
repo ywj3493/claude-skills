@@ -8,26 +8,28 @@ set -e
 echo "Setting up standard docs/ structure..."
 
 # Create English doc directories
-mkdir -p docs/specifications
-mkdir -p docs/issue
-mkdir -p docs/reference
-mkdir -p docs/policy
+mkdir -p docs/en/specifications
+mkdir -p docs/en/issue
+mkdir -p docs/en/policy
 
-# Create Korean mirror directories (dev/)
-mkdir -p docs/dev/specifications
-mkdir -p docs/dev/issue
-mkdir -p docs/dev/policy
+# Create Korean doc directories
+mkdir -p docs/ko/specifications
+mkdir -p docs/ko/issue
+mkdir -p docs/ko/policy
+
+# Create language-neutral reference directory
+mkdir -p docs/reference
 
 # Add .gitkeep files so Git tracks empty directories
 # Only create if no other files exist in the directory yet
 for dir in \
-  docs/specifications \
-  docs/issue \
-  docs/reference \
-  docs/policy \
-  docs/dev/specifications \
-  docs/dev/issue \
-  docs/dev/policy
+  docs/en/specifications \
+  docs/en/issue \
+  docs/en/policy \
+  docs/ko/specifications \
+  docs/ko/issue \
+  docs/ko/policy \
+  docs/reference
 do
   if [ -z "$(ls -A "$dir" 2>/dev/null)" ]; then
     touch "$dir/.gitkeep"
@@ -40,5 +42,5 @@ find docs -type d | sort | sed 's/^/  /'
 echo ""
 echo "Next steps:"
 echo "  1. Claude will create CLAUDE.md in the project root"
-echo "  2. Claude will create initial policy files in docs/policy/"
+echo "  2. Claude will create initial policy files in docs/en/policy/"
 echo "  3. Run /new-issue to create your first issue document"

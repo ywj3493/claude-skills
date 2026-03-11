@@ -1,6 +1,6 @@
 ---
 name: frontend-planning
-description: 프론트엔드 프로젝트의 6단계 기획 문서(요구사항 → 사용자 플로우 → 화면 명세 → 유스케이스 → 컴포넌트 트리 → 상태/API 연동)를 docs/specifications/에 순차 생성한다. 각 단계마다 사용자 검토를 거치며, 기술 스택을 자동 감지하고, 한국어로 작성한다.
+description: 프론트엔드 프로젝트의 6단계 기획 문서(요구사항 → 사용자 플로우 → 화면 명세 → 유스케이스 → 컴포넌트 트리 → 상태/API 연동)를 docs/en/specifications/에 순차 생성한다. 각 단계마다 사용자 검토를 거치며, 기술 스택을 자동 감지하고, 한국어로 작성한다.
 ---
 
 # frontend-planning
@@ -60,10 +60,10 @@ Wait for confirmation before proceeding.
 
 ### Step 1: Requirements (요구사항 정의서)
 
-**Output**: `docs/specifications/01-requirements.md`
+**Output**: `docs/en/specifications/01-requirements.md`
 
 1. Load the reference template: `references/01-requirements-template.md`
-2. Check `docs/specifications/` for existing backend documents — reference them if present
+2. Check `docs/en/specifications/` for existing backend documents — reference them if present
 3. Ask the user to describe:
    - Project purpose and target users
    - Core features and functionality
@@ -76,10 +76,10 @@ Wait for confirmation before proceeding.
 
 ### Step 2: User Flows (사용자 플로우)
 
-**Output**: `docs/specifications/02-user-flows.md`
+**Output**: `docs/en/specifications/02-user-flows.md`
 
 1. Load the reference template: `references/02-user-flows-template.md`
-2. Load Step 1 output: `docs/specifications/01-requirements.md`
+2. Load Step 1 output: `docs/en/specifications/01-requirements.md`
 3. For each major feature, create:
    - **Mermaid flowchart** diagram showing the happy path
    - Alternative paths and error/exception flows
@@ -91,7 +91,7 @@ Wait for confirmation before proceeding.
 
 ### Step 3: Page Spec (화면 명세서)
 
-**Output**: `docs/specifications/03-page-spec.md`
+**Output**: `docs/en/specifications/03-page-spec.md`
 
 1. Load the reference template: `references/03-page-spec-template.md`
 2. Load previous outputs: Steps 1–2
@@ -108,7 +108,7 @@ Wait for confirmation before proceeding.
 
 ### Step 4: Use Cases (유스케이스)
 
-**Output**: `docs/specifications/04-use-cases.md`
+**Output**: `docs/en/specifications/04-use-cases.md`
 
 1. Load the reference template: `references/04-use-cases-template.md`
 2. Load previous outputs: Steps 1–3
@@ -125,7 +125,7 @@ Wait for confirmation before proceeding.
 
 ### Step 5: Component Tree (컴포넌트 트리)
 
-**Output**: `docs/specifications/05-component-tree.md`
+**Output**: `docs/en/specifications/05-component-tree.md`
 
 1. Load the reference template: `references/05-component-tree-template.md`
 2. Load previous outputs: Steps 1–4
@@ -140,11 +140,11 @@ Wait for confirmation before proceeding.
 
 ### Step 6: State & API Integration (상태/API 연동 명세)
 
-**Output**: `docs/specifications/06-state-api-integration.md`
+**Output**: `docs/en/specifications/06-state-api-integration.md`
 
 1. Load the reference template: `references/06-state-api-integration-template.md`
 2. Load previous outputs: Steps 1–5
-3. Check `docs/specifications/` for existing backend API specs — reference endpoints if available
+3. Check `docs/en/specifications/` for existing backend API specs — reference endpoints if available
 4. Define:
    - State management strategy and rationale
    - **TypeScript interface** for each store/slice
@@ -158,7 +158,7 @@ Wait for confirmation before proceeding.
 
 ### Step 7: Generate Table of Contents
 
-**Output**: `docs/specifications/README.md`
+**Output**: `docs/en/specifications/README.md`
 
 After all 6 documents are approved, generate a table of contents:
 
@@ -177,19 +177,19 @@ After all 6 documents are approved, generate a table of contents:
 | 06 | [State & API Integration](06-state-api-integration.md) | 상태/API 연동 명세 |
 ```
 
-If `docs/specifications/README.md` already exists, append the frontend section
+If `docs/en/specifications/README.md` already exists, append the frontend section
 rather than overwriting.
 
 Report completion:
 
 > 프론트엔드 기획 문서 6개를 모두 생성했습니다:
-> - `docs/specifications/01-requirements.md`
-> - `docs/specifications/02-user-flows.md`
-> - `docs/specifications/03-page-spec.md`
-> - `docs/specifications/04-use-cases.md`
-> - `docs/specifications/05-component-tree.md`
-> - `docs/specifications/06-state-api-integration.md`
-> - `docs/specifications/README.md` (목차)
+> - `docs/en/specifications/01-requirements.md`
+> - `docs/en/specifications/02-user-flows.md`
+> - `docs/en/specifications/03-page-spec.md`
+> - `docs/en/specifications/04-use-cases.md`
+> - `docs/en/specifications/05-component-tree.md`
+> - `docs/en/specifications/06-state-api-integration.md`
+> - `docs/en/specifications/README.md` (목차)
 
 ## Document Rules
 
