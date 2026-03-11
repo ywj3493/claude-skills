@@ -4,8 +4,8 @@
 
 - 모든 파일명: 소문자, 하이픈 구분 (kebab-case)
 - 이슈 문서: `issue001.md`, `issue002.md` (3자리 0 패딩)
-- 한국어 미러: `.md` 앞에 `.ko` 추가
-  - 영어: `requirements.md` → 한국어: `requirements.ko.md`
+- 번역 문서는 `docs/<lang>/` 하위에 동일한 파일명을 사용한다
+  - 영어: `docs/en/policy/policy.md` → 한국어: `docs/ko/policy/policy.md`
 - 파일 및 디렉토리 이름에 공백 없음
 
 ## 코드 (언어 공통 기본값)
