@@ -36,6 +36,23 @@ do
   fi
 done
 
+# Create top-level specification template files if they don't exist
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+REFERENCES_DIR="$SCRIPT_DIR/../references"
+
+for spec_file in architecture config infrastructure; do
+  for lang in en ko; do
+    target="docs/$lang/specifications/$spec_file.md"
+    if [ ! -f "$target" ]; then
+      if [ -f "$REFERENCES_DIR/$spec_file-template.md" ]; then
+        cp "$REFERENCES_DIR/$spec_file-template.md" "$target"
+      else
+        touch "$target"
+      fi
+    fi
+  done
+done
+
 echo ""
 echo "Done. Created directory structure:"
 find docs -type d | sort | sed 's/^/  /'

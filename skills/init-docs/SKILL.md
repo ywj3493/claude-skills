@@ -19,6 +19,9 @@ Sets up the standard project documentation structure from scratch.
 docs/
 ├── en/
 │   ├── specifications/
+│   │   ├── architecture.md      # Project folder structure (empty template)
+│   │   ├── config.md            # Environment variables (empty template)
+│   │   └── infrastructure.md    # Infrastructure description (empty template)
 │   ├── issue/
 │   └── policy/
 │       ├── policy.md
@@ -27,6 +30,9 @@ docs/
 │       └── reference-convention.md
 ├── ko/
 │   ├── specifications/
+│   │   ├── architecture.md
+│   │   ├── config.md
+│   │   └── infrastructure.md
 │   ├── issue/
 │   └── policy/
 │       ├── policy.md
@@ -36,6 +42,9 @@ docs/
 └── reference/
 CLAUDE.md  (placed in project root)
 ```
+
+**Note:** Domain directories (e.g., `specifications/auth/`, `specifications/dashboard/`)
+are created at runtime by planning skills such as `frontend-planning`, not by `init-docs`.
 
 ## Step-by-Step Instructions
 

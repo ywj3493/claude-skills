@@ -1,11 +1,11 @@
 ---
 name: frontend-planning
-description: 프론트엔드 프로젝트의 6단계 기획 문서(요구사항 → 사용자 플로우 → 화면 명세 → 유스케이스 → 컴포넌트 트리 → 상태/API 연동)를 docs/en/specifications/에 순차 생성한다. 각 단계마다 사용자 검토를 거치며, 기술 스택을 자동 감지하고, 한국어로 작성한다.
+description: Generates a 6-step frontend planning document pipeline (requirements → user flows → page spec → use cases → component tree → state/API integration) into docs/en/specifications/<domain>/, with domain analysis, tech stack detection, and user review gates at each step.
 ---
 
 # frontend-planning
 
-프론트엔드 프로젝트를 위한 6단계 기획 문서 파이프라인.
+6-step planning document pipeline for frontend projects, organized by domain.
 
 ## When to Use
 
@@ -24,14 +24,40 @@ description: 프론트엔드 프로젝트의 6단계 기획 문서(요구사항 
 ## Pipeline Overview
 
 ```text
-Step 0: Tech stack detection
-Step 1: Requirements (요구사항 정의서)
-Step 2: User Flows (사용자 플로우)
-Step 3: Page Spec (화면 명세서)
-Step 4: Use Cases (유스케이스)
-Step 5: Component Tree (컴포넌트 트리)
-Step 6: State & API Integration (상태/API 연동 명세)
-Step 7: Table of Contents (목차 생성)
+Step 0:   Tech stack detection
+Step 0.5: Domain analysis
+Step 1:   Requirements
+Step 2:   User Flows
+Step 3:   Page Spec
+Step 4:   Use Cases
+Step 5:   Component Tree
+Step 6:   State & API Integration
+Step 7:   README (table of contents)
+```
+
+For multi-domain projects, Steps 1–6 are completed for each domain before
+moving to the next. Step 7 runs once at the end to generate the index.
+
+## Output Structure
+
+```text
+docs/en/specifications/
+├── architecture.md              # Project folder structure (created by init-docs)
+├── config.md                    # Environment variables (created by init-docs)
+├── infrastructure.md            # Infrastructure description (created by init-docs)
+├── README.md                    # Index of all domains/documents (Step 7)
+├── <domain-a>/
+│   ├── requirements/
+│   │   └── requirements.md      # Step 1
+│   └── workflows/
+│       ├── user-flows.md        # Step 2
+│       ├── page-spec.md         # Step 3
+│       ├── use-cases.md         # Step 4
+│       ├── component-tree.md    # Step 5
+│       └── state-api-integration.md  # Step 6
+└── <domain-b>/
+    ├── requirements/
+    └── workflows/
 ```
 
 ## Step-by-Step Instructions
@@ -48,21 +74,50 @@ Before generating any documents, detect the project's tech stack:
 
 Summarize the detected stack and confirm with the user:
 
-> 감지된 기술 스택:
+> **Detected tech stack:**
 > - Framework: Next.js 14 (App Router)
 > - Language: TypeScript
 > - Styling: Tailwind CSS
 > - State: Zustand
 >
-> 이 스택을 기반으로 기획 문서를 작성합니다. 맞나요?
+> I'll generate planning documents based on this stack. Does this look correct?
 
 Wait for confirmation before proceeding.
 
-### Step 1: Requirements (요구사항 정의서)
+### Step 0.5: Domain Analysis
 
-**Output**: `docs/en/specifications/01-requirements.md`
+After confirming the tech stack, identify the project's domain structure:
 
-1. Load the reference template: `references/01-requirements-template.md`
+1. Ask the user to describe the project's major feature areas
+2. Propose domain groupings based on their description (e.g., `auth`, `payment`, `dashboard`)
+3. Always create at least one domain directory — even single-domain projects use `specifications/<domain>/`
+4. Present the proposed directory structure for confirmation:
+
+> **Proposed domain structure:**
+>
+> ```
+> docs/en/specifications/
+> ├── auth/
+> │   ├── requirements/
+> │   └── workflows/
+> └── dashboard/
+>     ├── requirements/
+>     └── workflows/
+> ```
+>
+> I'll generate the 6 planning documents for each domain in sequence.
+> Shall I proceed with this structure?
+
+5. Store the confirmed domain list for subsequent steps
+
+Wait for confirmation before proceeding. If the user requests changes to the
+domain groupings, adjust and re-confirm.
+
+### Step 1: Requirements
+
+**Output**: `docs/en/specifications/<domain>/requirements/requirements.md`
+
+1. Load the reference template: `references/requirements-template.md`
 2. Check `docs/en/specifications/` for existing backend documents — reference them if present
 3. Ask the user to describe:
    - Project purpose and target users
@@ -71,29 +126,29 @@ Wait for confirmation before proceeding.
 4. Generate the document following the template structure
 5. Present the document to the user and wait for review
 
-> Step 1/6 완료: 요구사항 정의서를 작성했습니다.
-> 검토 후 수정 사항이 있으면 말씀해 주세요. 다음 단계로 진행할까요?
+> **Step 1/6 complete**: Requirements document generated.
+> Please review and let me know if any changes are needed. Ready to proceed to the next step?
 
-### Step 2: User Flows (사용자 플로우)
+### Step 2: User Flows
 
-**Output**: `docs/en/specifications/02-user-flows.md`
+**Output**: `docs/en/specifications/<domain>/workflows/user-flows.md`
 
-1. Load the reference template: `references/02-user-flows-template.md`
-2. Load Step 1 output: `docs/en/specifications/01-requirements.md`
+1. Load the reference template: `references/user-flows-template.md`
+2. Load Step 1 output: `<domain>/requirements/requirements.md`
 3. For each major feature, create:
    - **Mermaid flowchart** diagram showing the happy path
    - Alternative paths and error/exception flows
    - Entry and exit conditions
 4. Generate the document and wait for review
 
-> Step 2/6 완료: 사용자 플로우를 작성했습니다.
-> 검토 후 수정 사항이 있으면 말씀해 주세요. 다음 단계로 진행할까요?
+> **Step 2/6 complete**: User flows document generated.
+> Please review and let me know if any changes are needed. Ready to proceed?
 
-### Step 3: Page Spec (화면 명세서)
+### Step 3: Page Spec
 
-**Output**: `docs/en/specifications/03-page-spec.md`
+**Output**: `docs/en/specifications/<domain>/workflows/page-spec.md`
 
-1. Load the reference template: `references/03-page-spec-template.md`
+1. Load the reference template: `references/page-spec-template.md`
 2. Load previous outputs: Steps 1–2
 3. For each page/screen, define:
    - URL / route path
@@ -103,14 +158,14 @@ Wait for confirmation before proceeding.
    - SEO considerations (title, meta, OG tags)
 4. Generate the document and wait for review
 
-> Step 3/6 완료: 화면 명세서를 작성했습니다.
-> 검토 후 수정 사항이 있으면 말씀해 주세요. 다음 단계로 진행할까요?
+> **Step 3/6 complete**: Page specification generated.
+> Please review and let me know if any changes are needed. Ready to proceed?
 
-### Step 4: Use Cases (유스케이스)
+### Step 4: Use Cases
 
-**Output**: `docs/en/specifications/04-use-cases.md`
+**Output**: `docs/en/specifications/<domain>/workflows/use-cases.md`
 
-1. Load the reference template: `references/04-use-cases-template.md`
+1. Load the reference template: `references/use-cases-template.md`
 2. Load previous outputs: Steps 1–3
 3. For each use case, define:
    - Actor (user role)
@@ -120,14 +175,14 @@ Wait for confirmation before proceeding.
    - Exception flows
 4. Generate the document and wait for review
 
-> Step 4/6 완료: 유스케이스를 작성했습니다.
-> 검토 후 수정 사항이 있으면 말씀해 주세요. 다음 단계로 진행할까요?
+> **Step 4/6 complete**: Use cases document generated.
+> Please review and let me know if any changes are needed. Ready to proceed?
 
-### Step 5: Component Tree (컴포넌트 트리)
+### Step 5: Component Tree
 
-**Output**: `docs/en/specifications/05-component-tree.md`
+**Output**: `docs/en/specifications/<domain>/workflows/component-tree.md`
 
-1. Load the reference template: `references/05-component-tree-template.md`
+1. Load the reference template: `references/component-tree-template.md`
 2. Load previous outputs: Steps 1–4
 3. Define the component hierarchy:
    - **Mermaid graph TD** diagram showing parent-child relationships
@@ -135,14 +190,14 @@ Wait for confirmation before proceeding.
    - **TypeScript interface** for each component's props
 4. Generate the document and wait for review
 
-> Step 5/6 완료: 컴포넌트 트리를 작성했습니다.
-> 검토 후 수정 사항이 있으면 말씀해 주세요. 다음 단계로 진행할까요?
+> **Step 5/6 complete**: Component tree document generated.
+> Please review and let me know if any changes are needed. Ready to proceed?
 
-### Step 6: State & API Integration (상태/API 연동 명세)
+### Step 6: State & API Integration
 
-**Output**: `docs/en/specifications/06-state-api-integration.md`
+**Output**: `docs/en/specifications/<domain>/workflows/state-api-integration.md`
 
-1. Load the reference template: `references/06-state-api-integration-template.md`
+1. Load the reference template: `references/state-api-integration-template.md`
 2. Load previous outputs: Steps 1–5
 3. Check `docs/en/specifications/` for existing backend API specs — reference endpoints if available
 4. Define:
@@ -153,48 +208,55 @@ Wait for confirmation before proceeding.
    - Caching strategy and error handling patterns
 5. Generate the document and wait for review
 
-> Step 6/6 완료: 상태/API 연동 명세를 작성했습니다.
-> 검토 후 수정 사항이 있으면 말씀해 주세요.
+> **Step 6/6 complete**: State & API integration document generated.
+> Please review and let me know if any changes are needed.
 
-### Step 7: Generate Table of Contents
+### Step 7: Generate README
 
 **Output**: `docs/en/specifications/README.md`
 
-After all 6 documents are approved, generate a table of contents:
+After all domains have completed Steps 1–6, generate a table of contents.
+
+For single-domain projects:
 
 ```markdown
 # Specifications
 
-## Frontend Planning Documents
+## Domains
 
-| # | Document | Description |
-|---|----------|-------------|
-| 01 | [Requirements](01-requirements.md) | 요구사항 정의서 |
-| 02 | [User Flows](02-user-flows.md) | 사용자 플로우 |
-| 03 | [Page Spec](03-page-spec.md) | 화면 명세서 |
-| 04 | [Use Cases](04-use-cases.md) | 유스케이스 |
-| 05 | [Component Tree](05-component-tree.md) | 컴포넌트 트리 |
-| 06 | [State & API Integration](06-state-api-integration.md) | 상태/API 연동 명세 |
+### <domain>
+
+| Document | Path | Description |
+|----------|------|-------------|
+| Requirements | [requirements.md](<domain>/requirements/requirements.md) | Feature requirements and constraints |
+| User Flows | [user-flows.md](<domain>/workflows/user-flows.md) | User interaction flows with Mermaid diagrams |
+| Page Spec | [page-spec.md](<domain>/workflows/page-spec.md) | Page layouts, routes, and responsive behavior |
+| Use Cases | [use-cases.md](<domain>/workflows/use-cases.md) | Actor-system interactions |
+| Component Tree | [component-tree.md](<domain>/workflows/component-tree.md) | Component hierarchy and props |
+| State & API | [state-api-integration.md](<domain>/workflows/state-api-integration.md) | State management and API integration |
 ```
 
-If `docs/en/specifications/README.md` already exists, append the frontend section
-rather than overwriting.
+For multi-domain projects, list each domain in a separate section. Also generate
+a per-domain `README.md` at `<domain>/README.md` if there are 2+ domains.
+
+If `docs/en/specifications/README.md` already exists, merge the frontend
+planning section rather than overwriting.
 
 Report completion:
 
-> 프론트엔드 기획 문서 6개를 모두 생성했습니다:
-> - `docs/en/specifications/01-requirements.md`
-> - `docs/en/specifications/02-user-flows.md`
-> - `docs/en/specifications/03-page-spec.md`
-> - `docs/en/specifications/04-use-cases.md`
-> - `docs/en/specifications/05-component-tree.md`
-> - `docs/en/specifications/06-state-api-integration.md`
-> - `docs/en/specifications/README.md` (목차)
+> **Frontend planning complete.** Generated documents for all domains:
+> - `docs/en/specifications/<domain>/requirements/requirements.md`
+> - `docs/en/specifications/<domain>/workflows/user-flows.md`
+> - `docs/en/specifications/<domain>/workflows/page-spec.md`
+> - `docs/en/specifications/<domain>/workflows/use-cases.md`
+> - `docs/en/specifications/<domain>/workflows/component-tree.md`
+> - `docs/en/specifications/<domain>/workflows/state-api-integration.md`
+> - `docs/en/specifications/README.md`
 
 ## Document Rules
 
-- **Language**: Korean with English technical terms in parentheses
-- **Meta block**: Every document includes creation date, last modified date, status, tech stack, and prerequisite documents
+- **Language**: English
+- **Meta block**: Every document includes Created date, Last Modified date, Status (Draft/Review/Final), Tech Stack, and Prerequisites
 - **Mermaid**: Use `flowchart TD` for user flows, `graph TD` for component trees
 - **TypeScript**: Use `interface` declarations for props, store shapes, and API DTOs
 - **References**: Each step must load all previous step outputs before generating
