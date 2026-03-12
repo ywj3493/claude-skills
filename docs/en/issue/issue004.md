@@ -1,6 +1,6 @@
 # Issue 004: Restructure docs/ to Language-Code-Based Directory Layout
 
-**Status**: In Progress
+**Status**: Done
 **Created**: 2026-03-09
 
 ## Background
@@ -14,27 +14,27 @@ equally and makes the structure extensible.
 
 ## Acceptance Criteria
 
-- [ ] English docs moved to `docs/en/{specifications,issue,policy}/`
-- [ ] Korean docs moved to `docs/ko/{specifications,issue,policy}/` without `.ko.md` suffix
-- [ ] `docs/reference/` stays at root level (language-neutral)
-- [ ] `docs/dev/` directory removed
-- [ ] CLAUDE.md and `templates/CLAUDE.md` updated to new paths
-- [ ] All policy files updated with new path references
-- [ ] All skills updated to reference new paths
-- [ ] `skills/sync-dev/` renamed to `skills/sync-translations/`
-- [ ] README.md updated
-- [ ] No residual references to old paths (`docs/dev/`, `docs/policy/`, `.ko.md` in skills)
+- [x] English docs moved to `docs/en/{specifications,issue,policy}/`
+- [x] Korean docs moved to `docs/ko/{specifications,issue,policy}/` without `.ko.md` suffix
+- [x] `docs/reference/` stays at root level (language-neutral)
+- [x] `docs/dev/` directory removed
+- [x] CLAUDE.md and `templates/CLAUDE.md` updated to new paths
+- [x] All policy files updated with new path references
+- [x] All skills updated to reference new paths
+- [x] `skills/sync-dev/` renamed to `skills/sync-translations/`
+- [x] README.md updated
+- [x] No residual references to old paths (`docs/dev/`, `docs/policy/`, `.ko.md` in skills)
 
 ## Tasks
 
-- [ ] 1. Create issue004 documents (English + Korean) under old structure
-- [ ] 2. Migrate files with `git mv` to new directory layout
-- [ ] 3. Update CLAUDE.md and `templates/CLAUDE.md`
-- [ ] 4. Update policy files (English and Korean)
-- [ ] 5. Update all skills for new paths
-- [ ] 6. Rename `skills/sync-dev/` to `skills/sync-translations/`
-- [ ] 7. Update README.md
-- [ ] 8. Verify no residual old-path references
+- [x] 1. Create issue004 documents (English + Korean) under old structure
+- [x] 2. Migrate files with `git mv` to new directory layout
+- [x] 3. Update CLAUDE.md and `templates/CLAUDE.md`
+- [x] 4. Update policy files (English and Korean)
+- [x] 5. Update all skills for new paths
+- [x] 6. Rename `skills/sync-dev/` to `skills/sync-translations/`
+- [x] 7. Update README.md
+- [x] 8. Verify no residual old-path references
 
 ## Notes
 
