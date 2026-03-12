@@ -54,16 +54,10 @@ Wait for confirmation before creating anything.
 Run the setup script if available:
 
 ```bash
-bash .skills/init-docs/scripts/create-structure.sh
+bash skills/init-docs/scripts/create-structure.sh
 ```
 
-Or fall back to the global install:
-
-```bash
-bash ~/.agents/skills/init-docs/scripts/create-structure.sh
-```
-
-If neither is available, create directories manually and add `.gitkeep` files
+If the script is not available, create directories manually and add `.gitkeep` files
 so Git tracks the empty directories:
 
 ```bash
