@@ -9,7 +9,9 @@ of truth and keep it up to date.
 ```text
 docs/
 ├── en/
-│   ├── specifications/   # Architecture, infrastructure, requirements, user stories, use cases, sequence diagrams
+│   ├── specifications/   # Domain-based: <domain>/requirements/ and <domain>/workflows/
+│   │   ├── architecture.md, config.md, infrastructure.md  # Cross-cutting top-level docs
+│   │   └── <domain>/     # Created by planning skills (e.g., auth/, dashboard/)
 │   ├── issue/            # One file per work item: issue001.md, issue002.md, ...
 │   └── policy/           # Working rules: commit messages, naming conventions, general policy
 ├── ko/
