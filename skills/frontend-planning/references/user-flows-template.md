@@ -4,7 +4,8 @@
 > **Last Modified**: YYYY-MM-DD
 > **Status**: Draft / Review / Final
 > **Tech Stack**: (auto-detected)
-> **Prerequisites**: `<domain>/requirements/requirements.md`
+> **Prerequisites**: [@<domain>/requirements/requirements.md](<domain>/requirements/requirements.md)
+> **Reference Documents**: <!-- list @-references from document discovery -->
 
 ## 1. Flow Overview
 

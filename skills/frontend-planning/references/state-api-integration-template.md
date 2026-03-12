@@ -4,7 +4,8 @@
 > **Last Modified**: YYYY-MM-DD
 > **Status**: Draft / Review / Final
 > **Tech Stack**: (auto-detected)
-> **Prerequisites**: `<domain>/requirements/requirements.md` through `<domain>/workflows/component-tree.md`
+> **Prerequisites**: [@<domain>/requirements/requirements.md](<domain>/requirements/requirements.md) through [@<domain>/workflows/component-tree.md](<domain>/workflows/component-tree.md)
+> **Reference Documents**: <!-- list @-references from document discovery -->
 
 ## 1. State Management Strategy
 
@@ -68,12 +69,12 @@ interface SomeActions {
 
 ### 3.1 Endpoint List
 
-| # | Method | Path | Description | Auth | Related UC |
-|---|--------|------|-------------|------|------------|
-| 1 | POST | `/auth/login` | Login | Not required | UC-002 |
-| 2 | POST | `/auth/signup` | Sign up | Not required | UC-001 |
-| 3 | GET | `/users/me` | Get current user info | Required | UC-003 |
-| 4 | | | | | |
+| # | Method | Path | Description | Auth | Related UC | Source |
+|---|--------|------|-------------|------|------------|--------|
+| 1 | POST | `/auth/login` | Login | Not required | UC-002 | <!-- @-ref to discovered api-spec doc --> |
+| 2 | POST | `/auth/signup` | Sign up | Not required | UC-001 | <!-- @-ref to discovered api-spec doc --> |
+| 3 | GET | `/users/me` | Get current user info | Required | UC-003 | <!-- @-ref to discovered api-spec doc --> |
+| 4 | | | | | | |
 
 ### 3.2 Request / Response DTOs
 

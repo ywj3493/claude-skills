@@ -5,6 +5,7 @@
 > **Status**: Draft / Review / Final
 > **Tech Stack**: (auto-detected)
 > **Prerequisites**: None
+> **Reference Documents**: <!-- list @-references from document discovery -->
 
 ## 1. Project Overview
 
@@ -62,5 +63,5 @@
 
 ## 6. References
 
-- Existing backend spec: `docs/en/specifications/api-spec.md` (if available)
+<!-- Populate from document discovery results (requirements, architecture, api-spec types) using @-reference format -->
 - Design files: (link or path)
