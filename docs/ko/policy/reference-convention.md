@@ -10,13 +10,13 @@
 **필수 컨텍스트**를 표시하려면 `@` 접두사가 포함된 마크다운 링크를 사용한다:
 
 ```markdown
-[@docs/policy/policy.md](docs/policy/policy.md)
+[@docs/en/policy/policy.md](docs/en/policy/policy.md)
 ```
 
 `@` 없이 백틱으로 감싼 경로는 정보 제공 또는 예시용이다:
 
 ```markdown
-`docs/issue/issue003.md`
+`docs/en/issue/issue003.md`
 ```
 
 ## 규칙
@@ -55,22 +55,23 @@ grep -rn '\[@docs/' CLAUDE.md docs/
 **목록 형태 (CLAUDE.md 및 정책 파일에서 주로 사용):**
 
 ```markdown
-- [@docs/policy/policy.md](docs/policy/policy.md) — General working rules
-- [@docs/policy/commit-message-rule.md](docs/policy/commit-message-rule.md) — Commit message format
+- [@docs/en/policy/policy.md](docs/en/policy/policy.md) — General working rules
+- [@docs/en/policy/commit-message-rule.md](docs/en/policy/commit-message-rule.md) — Commit message format
 ```
 
 **인라인 형태 (이슈 문서에서 주로 사용):**
 
 ```markdown
 This issue implements the requirements in
-[@docs/specifications/auth.md](docs/specifications/auth.md).
+[@docs/en/specifications/auth.md](docs/en/specifications/auth.md).
 ```
 
 **메타 참조 (컨벤션 자체를 논의할 때):**
 
 `@`-reference 컨벤션을 논의할 때는 백틱을 사용한다:
-`` `[@docs/policy/policy.md](docs/policy/policy.md)` ``
+`` `[@docs/en/policy/policy.md](docs/en/policy/policy.md)` ``
 
 ## 개정 이력
 
 - 2026-02-19: 최초 작성
+- 2026-03-11: 모든 예시 경로를 docs/en/ 구조로 업데이트

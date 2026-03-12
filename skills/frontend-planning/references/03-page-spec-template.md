@@ -4,7 +4,7 @@
 > **최종 수정일**: YYYY-MM-DD
 > **상태**: 초안 / 검토 중 / 확정
 > **기술 스택**: (자동 감지 결과 기입)
-> **선행 문서**: `docs/specifications/01-requirements.md`, `docs/specifications/02-user-flows.md`
+> **선행 문서**: `docs/en/specifications/01-requirements.md`, `docs/en/specifications/02-user-flows.md`
 
 ## 1. 페이지 목록
 

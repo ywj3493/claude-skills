@@ -1,6 +1,6 @@
 ---
 name: init-docs
-description: Initializes the standard docs/ directory structure for a new project. Creates docs/specifications/, docs/issue/, docs/reference/, docs/policy/, and docs/dev/ subdirectories, seeds initial policy documents in both English and Korean, and places a CLAUDE.md in the project root. Use this when starting a fresh project that should follow the standard documentation system.
+description: Initializes the standard docs/ directory structure for a new project. Creates docs/en/{specifications,issue,policy}/, docs/ko/{specifications,issue,policy}/, and docs/reference/, seeds initial policy documents in both English and Korean, and places a CLAUDE.md in the project root. Use this when starting a fresh project that should follow the standard documentation system.
 ---
 
 # init-docs
@@ -17,22 +17,23 @@ Sets up the standard project documentation structure from scratch.
 
 ```
 docs/
-├── specifications/
-├── issue/
-├── reference/
-├── policy/
-│   ├── policy.md
-│   ├── commit-message-rule.md
-│   ├── naming-conventions.md
-│   └── reference-convention.md
-└── dev/
-    ├── specifications/
-    ├── issue/
-    └── policy/
-        ├── policy.ko.md
-        ├── commit-message-rule.ko.md
-        ├── naming-conventions.ko.md
-        └── reference-convention.ko.md
+├── en/
+│   ├── specifications/
+│   ├── issue/
+│   └── policy/
+│       ├── policy.md
+│       ├── commit-message-rule.md
+│       ├── naming-conventions.md
+│       └── reference-convention.md
+├── ko/
+│   ├── specifications/
+│   ├── issue/
+│   └── policy/
+│       ├── policy.md
+│       ├── commit-message-rule.md
+│       ├── naming-conventions.md
+│       └── reference-convention.md
+└── reference/
 CLAUDE.md  (placed in project root)
 ```
 
@@ -66,10 +67,12 @@ If neither is available, create directories manually and add `.gitkeep` files
 so Git tracks the empty directories:
 
 ```bash
-mkdir -p docs/specifications docs/issue docs/reference docs/policy
-mkdir -p docs/dev/specifications docs/dev/issue docs/dev/policy
-touch docs/specifications/.gitkeep docs/issue/.gitkeep docs/reference/.gitkeep docs/policy/.gitkeep
-touch docs/dev/specifications/.gitkeep docs/dev/issue/.gitkeep docs/dev/policy/.gitkeep
+mkdir -p docs/en/specifications docs/en/issue docs/en/policy
+mkdir -p docs/ko/specifications docs/ko/issue docs/ko/policy
+mkdir -p docs/reference
+touch docs/en/specifications/.gitkeep docs/en/issue/.gitkeep docs/en/policy/.gitkeep
+touch docs/ko/specifications/.gitkeep docs/ko/issue/.gitkeep docs/ko/policy/.gitkeep
+touch docs/reference/.gitkeep
 ```
 
 ### Step 3: Place CLAUDE.md
@@ -83,11 +86,11 @@ or the `templates/CLAUDE.md` in the source repository) into the project root.
 
 ### Step 4: Create Initial Policy Files
 
-Create the following English policy files in `docs/policy/`:
+Create the following English policy files in `docs/en/policy/`:
 
 ---
 
-**docs/policy/policy.md**
+**docs/en/policy/policy.md**
 
 ```markdown
 # Project Policy
@@ -95,13 +98,13 @@ Create the following English policy files in `docs/policy/`:
 ## Documentation
 
 - All documentation lives in `docs/` and is the source of truth
-- All `docs/` content (except `docs/dev/`) is written in English
-- `docs/dev/` contains Korean translations with `.ko.md` suffix
+- English documents live in `docs/en/`
+- Korean translations live in `docs/ko/` with the same filename
 - `docs/reference/` is user-managed only — never create or edit files there
 
 ## Workflow
 
-- Every task begins with an issue document in `docs/issue/`
+- Every task begins with an issue document in `docs/en/issue/`
 - Issue files are numbered sequentially: issue001.md, issue002.md, ...
 - Do not begin implementation before an issue document exists
 - Update documentation in the same commit as the code change
@@ -113,14 +116,14 @@ Create the following English policy files in `docs/policy/`:
 
 ## Related Policy Files
 
-- [@docs/policy/commit-message-rule.md](docs/policy/commit-message-rule.md) — Commit message format
-- [@docs/policy/naming-conventions.md](docs/policy/naming-conventions.md) — Naming conventions for files, code, and branches
-- [@docs/policy/reference-convention.md](docs/policy/reference-convention.md) — Document linking convention
+- [@docs/en/policy/commit-message-rule.md](docs/en/policy/commit-message-rule.md) — Commit message format
+- [@docs/en/policy/naming-conventions.md](docs/en/policy/naming-conventions.md) — Naming conventions for files, code, and branches
+- [@docs/en/policy/reference-convention.md](docs/en/policy/reference-convention.md) — Document linking convention
 ```
 
 ---
 
-**docs/policy/commit-message-rule.md**
+**docs/en/policy/commit-message-rule.md**
 
 ```markdown
 # Commit Message Rules
@@ -157,7 +160,7 @@ Create the following English policy files in `docs/policy/`:
 
 ---
 
-**docs/policy/naming-conventions.md**
+**docs/en/policy/naming-conventions.md**
 
 ```markdown
 # Naming Conventions
@@ -166,8 +169,8 @@ Create the following English policy files in `docs/policy/`:
 
 - All filenames: lowercase, hyphen-separated (kebab-case)
 - Issue documents: `issue001.md`, `issue002.md` (zero-padded to 3 digits)
-- Korean mirrors: append `.ko` before `.md`
-  - English: `requirements.md` → Korean: `requirements.ko.md`
+- Translated docs use the same filename under `docs/<lang>/`
+  - English: `docs/en/policy/policy.md` → Korean: `docs/ko/policy/policy.md`
 - No spaces in file or directory names
 
 ## Code (language-agnostic defaults)
@@ -192,7 +195,7 @@ Create the following English policy files in `docs/policy/`:
 
 ---
 
-**docs/policy/reference-convention.md**
+**docs/en/policy/reference-convention.md**
 
 ```markdown
 # Document Reference Convention
@@ -207,11 +210,11 @@ examples or illustrations.
 
 Use a markdown link with an `@` prefix to indicate **required context**:
 
-    [@docs/policy/policy.md](docs/policy/policy.md)
+    [@docs/en/policy/policy.md](docs/en/policy/policy.md)
 
 A bare backtick path without `@` is informational or illustrative only:
 
-    `docs/issue/issue003.md`
+    `docs/en/issue/issue003.md`
 
 ## Rules
 
@@ -234,12 +237,12 @@ A bare backtick path without `@` is informational or illustrative only:
 
 ### Step 5: Create Korean Policy Mirrors
 
-Translate the four policy files into Korean and place them in `docs/dev/policy/`:
+Translate the four policy files into Korean and place them in `docs/ko/policy/`:
 
-- `docs/dev/policy/policy.ko.md`
-- `docs/dev/policy/commit-message-rule.ko.md`
-- `docs/dev/policy/naming-conventions.ko.md`
-- `docs/dev/policy/reference-convention.ko.md`
+- `docs/ko/policy/policy.md`
+- `docs/ko/policy/commit-message-rule.md`
+- `docs/ko/policy/naming-conventions.md`
+- `docs/ko/policy/reference-convention.md`
 
 Translation rules:
 - All prose and headings → Korean
@@ -252,7 +255,7 @@ Translation rules:
 After completing setup, ask:
 
 > Setup complete. Would you like me to create the first issue document
-> (`docs/issue/issue001.md`) to track the initial project setup tasks?
+> (`docs/en/issue/issue001.md`) to track the initial project setup tasks?
 
 ### Step 7: Report
 

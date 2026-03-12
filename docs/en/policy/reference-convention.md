@@ -11,13 +11,13 @@ examples or illustrations.
 Use a markdown link with an `@` prefix to indicate **required context**:
 
 ```markdown
-[@docs/policy/policy.md](docs/policy/policy.md)
+[@docs/en/policy/policy.md](docs/en/policy/policy.md)
 ```
 
 A bare backtick path without `@` is informational or illustrative only:
 
 ```markdown
-`docs/issue/issue003.md`
+`docs/en/issue/issue003.md`
 ```
 
 ## Rules
@@ -56,22 +56,23 @@ GitHub and most IDEs, they render as clickable links for easy navigation.
 **In a list (common in CLAUDE.md and policy files):**
 
 ```markdown
-- [@docs/policy/policy.md](docs/policy/policy.md) — General working rules
-- [@docs/policy/commit-message-rule.md](docs/policy/commit-message-rule.md) — Commit message format
+- [@docs/en/policy/policy.md](docs/en/policy/policy.md) — General working rules
+- [@docs/en/policy/commit-message-rule.md](docs/en/policy/commit-message-rule.md) — Commit message format
 ```
 
 **Inline (common in issue documents):**
 
 ```markdown
 This issue implements the requirements in
-[@docs/specifications/auth.md](docs/specifications/auth.md).
+[@docs/en/specifications/auth.md](docs/en/specifications/auth.md).
 ```
 
 **Meta-references (discussing the convention itself):**
 
 When discussing the `@`-reference convention, use backticks:
-`` `[@docs/policy/policy.md](docs/policy/policy.md)` ``
+`` `[@docs/en/policy/policy.md](docs/en/policy/policy.md)` ``
 
 ## Revision History
 
 - 2026-02-19: Initial version
+- 2026-03-11: Update all example paths to docs/en/ structure

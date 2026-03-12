@@ -4,8 +4,8 @@
 
 - All filenames: lowercase, hyphen-separated (kebab-case)
 - Issue documents: `issue001.md`, `issue002.md` (zero-padded to 3 digits)
-- Korean mirrors: append `.ko` before `.md`
-  - English: `requirements.md` → Korean: `requirements.ko.md`
+- Translated docs use the same filename under `docs/<lang>/`
+  - English: `docs/en/policy/policy.md` → Korean: `docs/ko/policy/policy.md`
 - No spaces in file or directory names
 
 ## Code (language-agnostic defaults)

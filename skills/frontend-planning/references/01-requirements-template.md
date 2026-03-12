@@ -62,5 +62,5 @@
 
 ## 6. 참고 문서
 
-- 기존 백엔드 명세: `docs/specifications/api-spec.md` (있는 경우)
+- 기존 백엔드 명세: `docs/en/specifications/api-spec.md` (있는 경우)
 - 디자인 파일: (링크 또는 경로)

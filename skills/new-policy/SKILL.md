@@ -1,12 +1,12 @@
 ---
 name: new-policy
-description: Creates a new policy document in docs/policy/ with the standard format, and simultaneously creates its Korean translation in docs/dev/policy/. Use this when the team needs to establish a new working rule or standard. Triggered by "add a policy", "create a policy for X", "새 정책 만들어줘", "규칙 문서화", or describing a convention that needs to be formalized.
+description: Creates a new policy document in docs/en/policy/ with the standard format, and simultaneously creates its Korean translation in docs/ko/policy/. Use this when the team needs to establish a new working rule or standard. Triggered by "add a policy", "create a policy for X", "새 정책 만들어줘", "규칙 문서화", or describing a convention that needs to be formalized.
 ---
 
 # new-policy
 
 Adds a new policy document to the project following the standard format,
-with an automatic Korean translation in `docs/dev/policy/`.
+with an automatic Korean translation in `docs/ko/policy/`.
 
 ## When to Use
 
@@ -31,7 +31,7 @@ ask for confirmation before writing.
 
 ### Step 2: Create the English Policy Document
 
-Create `docs/policy/<policy-name>.md`:
+Create `docs/en/policy/<policy-name>.md`:
 
 ```markdown
 # <Policy Title>
@@ -56,9 +56,9 @@ Create `docs/policy/<policy-name>.md`:
 
 ### Step 3: Create the Korean Mirror
 
-Create `docs/dev/policy/<policy-name>.ko.md` with a full Korean translation.
+Create `docs/ko/policy/<policy-name>.md` with a full Korean translation.
 
-Translation rules (same as sync-dev):
+Translation rules (same as sync-translations):
 - All prose and headings → Korean
 - Code blocks, file paths, technical identifiers → keep in English
 - Checkbox and list markers → keep as-is
@@ -88,9 +88,9 @@ Translation rules (same as sync-dev):
 
 After creating the files, remind the user:
 
-> Consider adding an @-reference to this new policy in `docs/policy/policy.md`
+> Consider adding an @-reference to this new policy in `docs/en/policy/policy.md`
 > under the "Related Policy Files" section:
-> `- [@docs/policy/<policy-name>.md](docs/policy/<policy-name>.md) — <description>`
+> `- [@docs/en/policy/<policy-name>.md](docs/en/policy/<policy-name>.md) — <description>`
 
 Do **not** automatically edit `policy.md` — show the suggested line and let the
 user decide.
@@ -100,7 +100,7 @@ user decide.
 Tell the user:
 
 > Created:
-> - `docs/policy/<policy-name>.md`
-> - `docs/dev/policy/<policy-name>.ko.md`
+> - `docs/en/policy/<policy-name>.md`
+> - `docs/ko/policy/<policy-name>.md`
 >
-> Add an @-reference to `docs/policy/policy.md` if appropriate.
+> Add an @-reference to `docs/en/policy/policy.md` if appropriate.

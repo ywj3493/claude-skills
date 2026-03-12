@@ -4,7 +4,7 @@
 > **최종 수정일**: YYYY-MM-DD
 > **상태**: 초안 / 검토 중 / 확정
 > **기술 스택**: (자동 감지 결과 기입)
-> **선행 문서**: `docs/specifications/01-requirements.md`, `docs/specifications/02-user-flows.md`, `docs/specifications/03-page-spec.md`
+> **선행 문서**: `docs/en/specifications/01-requirements.md`, `docs/en/specifications/02-user-flows.md`, `docs/en/specifications/03-page-spec.md`
 
 ## 1. 액터 정의 (Actors)
 
