@@ -47,6 +47,10 @@ English, following the user's preference for frontend design documentation.
 
 <!-- Record decisions, discoveries, and blockers here as work progresses -->
 
+- **Issue 005**: Further improvements to the frontend-planning skill (English
+  conversion, domain analysis, directory restructuring) are tracked in
+  `docs/en/issue/issue005.md`.
+
 - **Pipeline**: 6 steps — requirements → user-flows → page-spec → use-cases →
   component-tree → state-api-integration
 - **Output directory**: `docs/specifications/` (same as other specification documents)
