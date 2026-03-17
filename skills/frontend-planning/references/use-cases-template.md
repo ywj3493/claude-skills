@@ -1,10 +1,12 @@
+> [← UI Spec](../requirements/ui-spec.md) | [Component Tree →](component-tree.md)
+
 # Use Cases
 
 > **Created**: YYYY-MM-DD
 > **Last Modified**: YYYY-MM-DD
 > **Status**: Draft / Review / Final
 > **Tech Stack**: (auto-detected)
-> **Prerequisites**: [@<domain>/requirements/requirements.md](<domain>/requirements/requirements.md), [@<domain>/workflows/user-flows.md](<domain>/workflows/user-flows.md), [@<domain>/workflows/page-spec.md](<domain>/workflows/page-spec.md)
+> **Prerequisites**: [@<domain>/requirements/requirements.md](<domain>/requirements/requirements.md), [@<domain>/requirements/user-flows.md](<domain>/requirements/user-flows.md), [@<domain>/requirements/ui-spec.md](<domain>/requirements/ui-spec.md)
 > **Reference Documents**: <!-- list @-references from document discovery -->
 
 ## 1. Actors
@@ -17,10 +19,10 @@
 
 ## 2. Use Case List
 
-| ID | Use Case | Primary Actor | Related Feature | Related Page |
+| ID | Use Case | Primary Actor | Related Feature | Related View |
 |----|----------|---------------|-----------------|--------------|
-| UC-001 | e.g., Sign Up | End User | FR-001 | Sign Up Page |
-| UC-002 | e.g., Login | End User | FR-002 | Login Page |
+| UC-001 | e.g., Sign Up | End User | FR-001 | Sign Up |
+| UC-002 | e.g., Login | End User | FR-002 | Login |
 | UC-003 | | | | |
 
 ## 3. Use Case Details
@@ -29,7 +31,7 @@
 
 **Actor**: (e.g., End User)
 **Related Feature**: (e.g., FR-001)
-**Related Page**: (e.g., Sign Up Page)
+**Related View**: (e.g., Sign Up)
 
 #### Preconditions
 
@@ -81,3 +83,12 @@
 |-------------|------------|------------|-------------|
 | include | UC-002 Login | UC-010 Token Refresh | Token issuance included in login |
 | extend | UC-001 Sign Up | UC-011 Email Verification | Extends when email verification is required |
+
+---
+> **All Documents**
+> [Requirements](../requirements/requirements.md) |
+> [User Flows](../requirements/user-flows.md) |
+> [UI Spec](../requirements/ui-spec.md) |
+> **Use Cases** |
+> [Component Tree](component-tree.md) |
+> [State & API](state-api-integration.md)

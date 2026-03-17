@@ -1,10 +1,12 @@
+> [← Use Cases](use-cases.md) | [State & API →](state-api-integration.md)
+
 # Component Tree
 
 > **Created**: YYYY-MM-DD
 > **Last Modified**: YYYY-MM-DD
 > **Status**: Draft / Review / Final
 > **Tech Stack**: (auto-detected)
-> **Prerequisites**: [@<domain>/requirements/requirements.md](<domain>/requirements/requirements.md), [@<domain>/workflows/user-flows.md](<domain>/workflows/user-flows.md), [@<domain>/workflows/page-spec.md](<domain>/workflows/page-spec.md), [@<domain>/workflows/use-cases.md](<domain>/workflows/use-cases.md)
+> **Prerequisites**: [@<domain>/requirements/requirements.md](<domain>/requirements/requirements.md) through [@<domain>/workflows/use-cases.md](<domain>/workflows/use-cases.md)
 > **Reference Documents**: <!-- list @-references from document discovery -->
 
 ## 1. Overall Component Structure
@@ -120,3 +122,12 @@ interface ChildA1Props {
 | UI (Shared) | N | Button, Input, Modal, Toast |
 | Feature | N | LoginForm, UserProfile |
 | Page | N | LoginPage, DashboardPage |
+
+---
+> **All Documents**
+> [Requirements](../requirements/requirements.md) |
+> [User Flows](../requirements/user-flows.md) |
+> [UI Spec](../requirements/ui-spec.md) |
+> [Use Cases](use-cases.md) |
+> **Component Tree** |
+> [State & API](state-api-integration.md)

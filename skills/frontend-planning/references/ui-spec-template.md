@@ -1,25 +1,27 @@
-# Page Specification
+> [← User Flows](user-flows.md) | [Use Cases →](../workflows/use-cases.md)
+
+# UI Specification
 
 > **Created**: YYYY-MM-DD
 > **Last Modified**: YYYY-MM-DD
 > **Status**: Draft / Review / Final
 > **Tech Stack**: (auto-detected)
-> **Prerequisites**: [@<domain>/requirements/requirements.md](<domain>/requirements/requirements.md), [@<domain>/workflows/user-flows.md](<domain>/workflows/user-flows.md)
+> **Prerequisites**: [@<domain>/requirements/requirements.md](<domain>/requirements/requirements.md), [@<domain>/requirements/user-flows.md](<domain>/requirements/user-flows.md)
 > **Reference Documents**: <!-- list @-references from document discovery -->
 
-## 1. Page List
+## 1. UI Overview
 
-| # | Page | URL | Access | Related Flow |
-|---|------|-----|--------|--------------|
+| # | View | URL / Trigger | Access | Related Flow |
+|---|------|---------------|--------|--------------|
 | 1 | e.g., Login | `/login` | Public | Login Flow |
 | 2 | e.g., Dashboard | `/dashboard` | Authenticated | Dashboard View |
 | 3 | | | | |
 
-## 2. Page Details
+## 2. View Details
 
-### 2.1 (Page Name)
+### 2.1 (View Name)
 
-**URL**: `/path`
+**URL / Trigger**: `/path` or (e.g., triggered by button click)
 **Access**: (e.g., Authenticated / Public)
 **Related Flow**: (reference to the relevant flow)
 
@@ -59,7 +61,7 @@
 | Tablet (768–1023px) | Sidebar hidden, hamburger menu |
 | Mobile (<768px) | Single column, bottom navigation |
 
-#### SEO
+#### SEO (if applicable)
 
 | Property | Value |
 |----------|-------|
@@ -69,7 +71,7 @@
 
 ---
 
-### 2.2 (Next Page Name)
+### 2.2 (Next View Name)
 
 <!-- Repeat the same structure as above -->
 
@@ -86,9 +88,18 @@
 
 - Copyright information, link collections
 
-### 3.3 Error Pages
+### 3.3 Error Views
 
-| Status Code | Page | Description |
+| Status Code | View | Description |
 |-------------|------|-------------|
-| 404 | `/404` | Page not found |
+| 404 | `/404` | Not found |
 | 500 | `/500` | Server error |
+
+---
+> **All Documents**
+> [Requirements](requirements.md) |
+> [User Flows](user-flows.md) |
+> **UI Spec** |
+> [Use Cases](../workflows/use-cases.md) |
+> [Component Tree](../workflows/component-tree.md) |
+> [State & API](../workflows/state-api-integration.md)
