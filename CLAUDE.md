@@ -54,6 +54,7 @@ Load these files before starting any work:
 - [@docs/en/policy/commit-message-rule.md](docs/en/policy/commit-message-rule.md) — Commit message format
 - [@docs/en/policy/naming-conventions.md](docs/en/policy/naming-conventions.md) — File, variable, and branch naming
 - [@docs/en/policy/reference-convention.md](docs/en/policy/reference-convention.md) — Document linking convention
+- [@docs/en/policy/skill-versioning.md](docs/en/policy/skill-versioning.md) — Skill versioning and changelog rules
 
 For active work, also load the relevant issue from `docs/en/issue/`.
 

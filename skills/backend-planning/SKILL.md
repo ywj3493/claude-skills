@@ -1,5 +1,6 @@
 ---
 name: backend-planning
+version: 0.0.1
 description: Generates a 5-step backend planning document pipeline (requirements → user stories → API spec → use cases → sequence diagrams) into docs/en/specifications/<domain>/, with domain analysis, tech stack detection, and user review gates at each step.
 ---
 

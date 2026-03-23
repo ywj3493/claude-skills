@@ -1,5 +1,6 @@
 ---
 name: new-policy
+version: 0.0.1
 description: Creates a new policy document in docs/en/policy/ with the standard format, and simultaneously creates its Korean translation in docs/ko/policy/. Use this when the team needs to establish a new working rule or standard. Triggered by "add a policy", "create a policy for X", "새 정책 만들어줘", "규칙 문서화", or describing a convention that needs to be formalized.
 ---
 

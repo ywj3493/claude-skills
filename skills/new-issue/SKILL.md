@@ -1,5 +1,6 @@
 ---
 name: new-issue
+version: 0.0.1
 description: Creates a new numbered issue document in docs/en/issue/ following the project's standard issue format, and simultaneously creates the corresponding Korean translation in docs/ko/issue/. Use this whenever starting new work — features, bug fixes, tasks, or investigations. The user may say "create an issue", "new issue", "이슈 만들어줘", or simply describe work they want to start.
 ---
 
