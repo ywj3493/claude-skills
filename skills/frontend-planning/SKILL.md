@@ -1,5 +1,6 @@
 ---
 name: frontend-planning
+version: 0.0.1
 description: Generates a 6-step frontend planning document pipeline (requirements → user flows → UI spec → use cases → component tree → state/API integration) into docs/en/specifications/<domain>/, with domain analysis, tech stack detection, and user review gates at each step.
 ---
 

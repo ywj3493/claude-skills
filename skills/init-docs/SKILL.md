@@ -1,5 +1,6 @@
 ---
 name: init-docs
+version: 0.0.1
 description: Initializes the standard docs/ directory structure for a new project. Creates docs/en/{specifications,issue,policy}/, docs/ko/{specifications,issue,policy}/, and docs/reference/, seeds initial policy documents in both English and Korean, and places a CLAUDE.md in the project root. Use this when starting a fresh project that should follow the standard documentation system.
 ---
 
