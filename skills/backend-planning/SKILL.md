@@ -1,10 +1,16 @@
 ---
 name: backend-planning
-version: 0.0.1
-description: Generates a 5-step backend planning document pipeline (requirements → user stories → API spec → use cases → sequence diagrams) into docs/en/specifications/<domain>/, with domain analysis, tech stack detection, and user review gates at each step.
+version: 0.0.2
+description: "[DEPRECATED] Use dev-planning instead. Former 5-step backend planning pipeline."
+deprecated: true
+superseded_by: dev-planning
 ---
 
 # backend-planning
+
+> **DEPRECATED**: This skill has been superseded by `dev-planning`.
+> Use `dev-planning` instead, which supports backend, frontend, and infrastructure
+> domains in a unified pipeline with test traceability.
 
 5-step planning document pipeline for backend projects, organized by domain.
 
