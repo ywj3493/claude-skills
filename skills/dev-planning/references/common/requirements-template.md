@@ -217,5 +217,5 @@ C4Context
 > [User Stories](user-stories.md) |
 > [Use Cases](../workflows/use-cases.md) |
 > [Sequence Diagrams](../workflows/sequence-diagram.md) |
-> [Domain Spec](../workflows/) |
+> [<Domain Spec>](../workflows/<domain-spec>.md) |
 > [Test Spec](../workflows/test-spec.md)

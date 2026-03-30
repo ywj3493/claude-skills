@@ -1,4 +1,4 @@
-> [← Use Cases](use-cases.md) | [Domain Spec →](./)
+> [← Use Cases](use-cases.md) | [<Domain Spec> →](<domain-spec>.md)
 
 # Sequence Diagrams
 
@@ -386,7 +386,7 @@ graph TD
 ## Related Documents
 
 - **Previous**: [← Use Cases](use-cases.md)
-- **Next**: [Domain Spec →](./)
+- **Next**: [<Domain Spec> →](<domain-spec>.md)
 - **Requirements**: [Requirements Analysis](../requirements/requirements.md)
 - **User Stories**: [User Stories](../requirements/user-stories.md)
 - **Architecture**: [Architecture](../../architecture.md)
@@ -403,5 +403,5 @@ graph TD
 > [User Stories](../requirements/user-stories.md) |
 > [Use Cases](use-cases.md) |
 > **Sequence Diagrams** |
-> [Domain Spec](./) |
+> [<Domain Spec>](<domain-spec>.md) |
 > [Test Spec](test-spec.md)

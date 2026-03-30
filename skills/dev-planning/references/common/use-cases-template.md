@@ -281,5 +281,5 @@ sequenceDiagram
 > [User Stories](../requirements/user-stories.md) |
 > **Use Cases** |
 > [Sequence Diagrams](sequence-diagram.md) |
-> [Domain Spec](./) |
+> [<Domain Spec>](<domain-spec>.md) |
 > [Test Spec](test-spec.md)

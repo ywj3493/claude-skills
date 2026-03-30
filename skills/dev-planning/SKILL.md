@@ -326,4 +326,5 @@ Report all generated file paths on completion.
 - **References**: Each step loads all previous step outputs before generating
 - **Review gate**: Never proceed to the next step without user approval
 - **Navigation**: Every domain document has top (prev/next) and bottom (all documents) navigation
+- **Navigation placeholders**: Templates use `<domain-spec>` as a placeholder in navigation links. When generating documents, replace with the actual domain spec filename: `api-spec` (backend), `component-spec` (frontend), `infra-spec` (infra)
 - **`@`-references**: Use for discovered docs per [@docs/en/policy/reference-convention.md](docs/en/policy/reference-convention.md)

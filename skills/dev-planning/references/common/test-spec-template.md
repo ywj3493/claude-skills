@@ -1,4 +1,4 @@
-> [← Domain Spec](./)
+> [← <Domain Spec>](<domain-spec>.md)
 
 # Test Specification
 
@@ -130,7 +130,7 @@ When writing test code based on this specification:
 
 ## Related Documents
 
-- **Previous**: [← Domain Spec](./)
+- **Previous**: [← <Domain Spec>](<domain-spec>.md)
 - **Requirements**: [Requirements Analysis](../requirements/requirements.md)
 - **User Stories**: [User Stories](../requirements/user-stories.md)
 - **Use Cases**: [Use Cases](use-cases.md)
@@ -148,5 +148,5 @@ When writing test code based on this specification:
 > [User Stories](../requirements/user-stories.md) |
 > [Use Cases](use-cases.md) |
 > [Sequence Diagrams](sequence-diagram.md) |
-> [Domain Spec](./) |
+> [<Domain Spec>](<domain-spec>.md) |
 > **Test Spec**

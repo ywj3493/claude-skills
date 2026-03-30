@@ -1,4 +1,4 @@
-> [← Sequence Diagrams](../common/sequence-diagram-template.md) | [Test Spec →](test-spec.md)
+> [← Sequence Diagrams](sequence-diagram.md) | [Test Spec →](test-spec.md)
 
 # Component Specification
 
