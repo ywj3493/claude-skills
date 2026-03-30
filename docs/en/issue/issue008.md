@@ -1,7 +1,8 @@
 # Issue 008: Restructure frontend-planning skill pipeline and templates
 
-**Status**: Open
+**Status**: Superseded
 **Created**: 2026-03-16
+**Superseded by**: [@docs/en/issue/issue010.md](docs/en/issue/issue010.md)
 
 ## Background
 

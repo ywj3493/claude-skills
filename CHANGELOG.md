@@ -3,6 +3,25 @@
 All notable changes to skills in this project are documented here.
 Entries are ordered newest first. Format follows [Keep a Changelog](https://keepachangelog.com/).
 
+## [dev-planning/v0.1.0] - 2026-03-30
+
+### Added
+- Unified planning pipeline: requirements -> user stories -> use cases -> sequence diagrams -> domain spec -> test spec
+- Domain type branching: backend (api-spec), frontend (component-spec), infra (infra-spec placeholder)
+- ID-based test traceability (FR-XXX, AC-XXX, UC-XXX) with dedicated test-spec document
+- Common templates shared across all domain types
+- Document navigation (prev/next and all-documents index) on every template
+
+## [backend-planning/v0.0.2] - 2026-03-30
+
+### Deprecated
+- Superseded by dev-planning. Use dev-planning instead.
+
+## [frontend-planning/v0.0.2] - 2026-03-30
+
+### Deprecated
+- Superseded by dev-planning. Use dev-planning instead.
+
 ## [backend-planning/v0.0.1] - 2026-03-19
 
 ### Added

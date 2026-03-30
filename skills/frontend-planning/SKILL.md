@@ -1,10 +1,16 @@
 ---
 name: frontend-planning
-version: 0.0.1
-description: Generates a 6-step frontend planning document pipeline (requirements → user flows → UI spec → use cases → component tree → state/API integration) into docs/en/specifications/<domain>/, with domain analysis, tech stack detection, and user review gates at each step.
+version: 0.0.2
+description: "[DEPRECATED] Use dev-planning instead. Former 6-step frontend planning pipeline."
+deprecated: true
+superseded_by: dev-planning
 ---
 
 # frontend-planning
+
+> **DEPRECATED**: This skill has been superseded by `dev-planning`.
+> Use `dev-planning` instead, which supports backend, frontend, and infrastructure
+> domains in a unified pipeline with test traceability.
 
 6-step planning document pipeline for frontend projects, organized by domain.
 
