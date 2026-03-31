@@ -3,6 +3,19 @@
 All notable changes to skills in this project are documented here.
 Entries are ordered newest first. Format follows [Keep a Changelog](https://keepachangelog.com/).
 
+## [new-issue/v0.1.0] - 2026-03-31
+
+### Added
+- GitHub Issues mode via `gh issue create` when git remote exists
+- Automatic branch creation for new issues
+- Draft PR creation linked to the issue (`Resolves #N`)
+- Automatic mode detection (`git remote -v` + `gh auth status`)
+- GitHub-native issue references (`Refs: #N`, `Closes #N`)
+
+### Changed
+- Local docs-based issue creation is now fallback for repos without a remote
+- Korean mirror step skipped in GitHub mode
+
 ## [backend-planning/v0.0.1] - 2026-03-19
 
 ### Added

@@ -25,5 +25,7 @@
 - Subject line: 72 characters maximum
 - Subject: imperative mood, lowercase, no trailing period
 - Example: `feat(auth): add OAuth2 login flow`
-- Reference the issue number in the body or footer: `Refs: issue003`
+- Reference the issue number in the body or footer:
+  - GitHub Issues: `Refs: #42` (or `Closes #42` to auto-close)
+  - Local docs issues: `Refs: issue003`
 - Separate body from subject with a blank line

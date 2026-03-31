@@ -25,5 +25,7 @@
 - 제목 줄: 최대 72자
 - 제목: 명령형, 소문자, 마침표 없음
 - 예시: `feat(auth): add OAuth2 login flow`
-- 본문 또는 푸터에 이슈 번호 참조: `Refs: issue003`
+- 본문 또는 푸터에 이슈 번호 참조:
+  - GitHub Issues: `Refs: #42` (또는 `Closes #42`로 자동 종료)
+  - 로컬 docs 이슈: `Refs: issue003`
 - 본문과 제목은 빈 줄로 구분한다
