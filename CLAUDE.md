@@ -24,7 +24,8 @@ docs/
 ## Core Rules
 
 1. **Start with an issue.** Every piece of work — feature, bug fix, refactor,
-   investigation — begins by creating or referencing an issue document in
+   investigation — begins by creating or referencing an issue — either a
+   GitHub Issue (preferred when a remote exists) or a local document in
    `docs/en/issue/`. Do not start implementation without one.
 
 2. **Language directories.** English documents live in `docs/en/`. Korean
@@ -57,8 +58,12 @@ Load these files before starting any work:
 - [@docs/en/policy/skill-versioning.md](docs/en/policy/skill-versioning.md) — Skill versioning and changelog rules
 
 For active work, also load the relevant issue from `docs/en/issue/`.
+For GitHub Issues, load the issue content via `gh issue view <number>`.
 
 ## Issue Document Format
+
+This format applies to local docs-mode issues (`docs/en/issue/`).
+GitHub Issues use the same sections in the issue body (without Status/Created fields).
 
 Each issue document must contain:
 

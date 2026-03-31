@@ -1,3 +1,6 @@
+<!-- This template is used for the docs-mode fallback (no git remote). -->
+<!-- For GitHub mode, the issue body is created directly via gh CLI. -->
+
 # Issue <NNN>: <Title>
 
 **Status**: Open

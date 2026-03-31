@@ -18,7 +18,8 @@
 ## Branch Names
 
 - Feature: `feat/issue<NNN>-<short-description>`
-  - Example: `feat/issue003-user-authentication`
+  - With GitHub Issues: `feat/issue42-user-authentication` (no zero-padding)
+  - With local docs issues: `feat/issue003-user-authentication` (zero-padded)
 - Bug fix: `fix/issue<NNN>-<short-description>`
 - Documentation: `docs/issue<NNN>-<short-description>`
 

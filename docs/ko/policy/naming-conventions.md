@@ -18,7 +18,8 @@
 ## 브랜치 이름
 
 - 기능: `feat/issue<NNN>-<짧은-설명>`
-  - 예시: `feat/issue003-user-authentication`
+  - GitHub Issues 사용 시: `feat/issue42-user-authentication` (0 패딩 없음)
+  - 로컬 docs 이슈 사용 시: `feat/issue003-user-authentication` (0 패딩)
 - 버그 수정: `fix/issue<NNN>-<짧은-설명>`
 - 문서: `docs/issue<NNN>-<짧은-설명>`
 

@@ -108,9 +108,11 @@ Create the following English policy files in `docs/en/policy/`:
 
 ## Workflow
 
-- Every task begins with an issue document in `docs/en/issue/`
-- Issue files are numbered sequentially: issue001.md, issue002.md, ...
-- Do not begin implementation before an issue document exists
+- Every task begins with an issue — either a GitHub Issue (when a git remote
+  exists) or a document in `docs/en/issue/` (when no remote is configured)
+- GitHub Issues are numbered automatically by GitHub
+- Local issue files (fallback) are numbered sequentially: issue001.md, issue002.md, ...
+- Do not begin implementation before an issue exists (GitHub Issue or local document)
 - Update documentation in the same commit as the code change
 
 ## Policy Updates
@@ -158,7 +160,8 @@ Create the following English policy files in `docs/en/policy/`:
 - Subject: imperative mood, lowercase, no trailing period
 - Example: `feat(auth): add OAuth2 login flow`
 - Reference the issue number in the body or footer:
-  `Refs: issue003`
+  - GitHub Issues: `Refs: #42` (or `Closes #42` to auto-close)
+  - Local docs issues: `Refs: issue003`
 - Separate body from subject with a blank line
 ```
 
@@ -187,7 +190,8 @@ Create the following English policy files in `docs/en/policy/`:
 ## Branch Names
 
 - Feature: `feat/issue<NNN>-<short-description>`
-  - Example: `feat/issue003-user-authentication`
+  - With GitHub Issues: `feat/issue42-user-authentication` (no zero-padding)
+  - With local docs issues: `feat/issue003-user-authentication` (zero-padded)
 - Bug fix: `fix/issue<NNN>-<short-description>`
 - Documentation: `docs/issue<NNN>-<short-description>`
 

@@ -9,9 +9,11 @@
 
 ## 워크플로우
 
-- 모든 작업은 `docs/en/issue/`의 이슈 문서 작성으로 시작한다
-- 이슈 파일은 순차적으로 번호를 부여한다: issue001.md, issue002.md, ...
-- 이슈 문서가 없으면 구현을 시작하지 않는다
+- 모든 작업은 이슈로 시작한다 — git remote가 있으면 GitHub Issue, 없으면
+  `docs/en/issue/`의 로컬 문서를 사용한다
+- GitHub Issues는 GitHub이 자동으로 번호를 부여한다
+- 로컬 이슈 파일(fallback)은 순차적으로 번호를 부여한다: issue001.md, issue002.md, ...
+- 이슈가 없으면 구현을 시작하지 않는다 (GitHub Issue 또는 로컬 문서)
 - 코드 변경과 같은 커밋 또는 PR에 관련 문서를 함께 업데이트한다
 
 ## 정책 업데이트

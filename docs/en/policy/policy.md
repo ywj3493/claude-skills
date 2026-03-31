@@ -9,9 +9,11 @@
 
 ## Workflow
 
-- Every task begins with an issue document in `docs/en/issue/`
-- Issue files are numbered sequentially: issue001.md, issue002.md, ...
-- Do not begin implementation before an issue document exists
+- Every task begins with an issue — either a GitHub Issue (when a git remote
+  exists) or a document in `docs/en/issue/` (when no remote is configured)
+- GitHub Issues are numbered automatically by GitHub
+- Local issue files (fallback) are numbered sequentially: issue001.md, issue002.md, ...
+- Do not begin implementation before an issue exists (GitHub Issue or local document)
 - Update documentation in the same commit as the code change
 
 ## Policy Updates
