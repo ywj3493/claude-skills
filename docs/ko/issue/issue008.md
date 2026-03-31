@@ -1,7 +1,8 @@
 # 이슈 008: frontend-planning 스킬 파이프라인 및 템플릿 구조 변경
 
-**상태**: 열림
+**상태**: 대체됨
 **생성일**: 2026-03-16
+**대체 이슈**: [@docs/en/issue/issue010.md](docs/en/issue/issue010.md)
 
 ## 배경
 
