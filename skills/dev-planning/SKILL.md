@@ -1,6 +1,6 @@
 ---
 name: dev-planning
-version: 0.1.0
+version: 0.2.0
 description: Unified planning document pipeline (requirements -> user stories -> use cases -> sequence diagrams -> domain-specific spec -> test spec) with ID-based test traceability. Supports backend, frontend, and infrastructure domains.
 ---
 
@@ -22,6 +22,39 @@ Step 6 generates a test specification referencing IDs from all previous steps.
 - Fixing a single endpoint, component, or small tweak
 - Editing or updating existing specification documents
 - Work that doesn't need multi-document planning
+
+## Execution Requirements
+
+These rules are part of the skill contract. They make the expected working
+discipline explicit so document quality does not depend on which model
+executes the skill.
+
+1. **Templates are mandatory.** Every step loads its template file from
+   `references/` before generating. If a template file is missing, stop and
+   report the missing path — never improvise the document structure from
+   memory of what the template "probably" contains.
+2. **Re-read inputs from disk.** Each step loads all previous step outputs
+   from their files, even if their content appeared earlier in the
+   conversation. The generated documents are the source of truth, not chat
+   history — a document may have been edited by the user between steps.
+3. **IDs are assigned, never guessed.** Use the exact formats from the ID
+   System table, numbered sequentially with no gaps or duplicates within a
+   document. When referencing an ID from an earlier document, verify it
+   exists there before writing the reference.
+4. **Validate traceability before finishing Step 6.** Cross-check the
+   generated test-spec against the earlier documents:
+   - every `AC-USNN-NN` in user-stories.md is covered by at least one test
+   - every ID referenced in test-spec.md exists in its source document
+   Fix any orphan references or uncovered ACs before presenting the step.
+5. **Verify links and diagrams.** Every navigation link must point to a file
+   that exists or will be produced by this pipeline (with `<domain-spec>`
+   placeholders replaced). Every Mermaid block must be syntactically complete:
+   matching fences, declared participants, no placeholder text left inside.
+6. **Respect review gates literally.** After each step, stop and wait for
+   explicit user approval. Never batch multiple steps into a single turn
+   unless the user has explicitly said to skip reviews.
+7. **Report verified paths only.** The completion report lists only files
+   confirmed to exist on disk.
 
 ## Pipeline Overview
 
