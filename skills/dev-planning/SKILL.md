@@ -66,6 +66,7 @@ Step 0.5: Domain analysis & document discovery
 Step 1:   Requirements          -> <domain>/requirements/requirements.md       [common]
 Step 2:   User Stories           -> <domain>/requirements/user-stories.md       [common]
 Step 3:   Use Cases              -> <domain>/workflows/use-cases.md             [common]
+Step 3.5: User Flows (optional)  -> <domain>/workflows/user-flows.md            [frontend only]
 Step 4:   Sequence Diagrams      -> <domain>/workflows/sequence-diagram.md      [common]
 Step 5:   Domain-Specific Spec   -> <domain>/workflows/<spec>.md               [branched]
              Backend:  api-spec.md
@@ -94,6 +95,7 @@ docs/en/specifications/
     │   └── user-stories.md      # Step 2
     └── workflows/
         ├── use-cases.md         # Step 3
+        ├── user-flows.md        # Step 3.5 (optional, frontend only)
         ├── sequence-diagram.md  # Step 4
         ├── api-spec.md          # Step 5 (backend only)
         ├── component-spec.md    # Step 5 (frontend only)
@@ -245,6 +247,35 @@ If no documents found, record "No project documents found" and proceed.
 > **Step 3 complete**: Use cases generated.
 > Please review. Ready to proceed?
 
+### Step 3.5 (Optional, Frontend Only): User Flows
+
+**Output**: `<domain>/workflows/user-flows.md`
+
+For frontend domains, after Step 3 is approved, ask once:
+
+> Generate a **user flows** document? It captures user-perspective navigation
+> flows (entry/exit conditions, happy/alternative/exception paths as
+> flowcharts) — useful for E2E test design. Optional.
+
+If declined, continue to Step 4. If accepted:
+
+1. Load template: `references/frontend/user-flows-template.md`
+2. Load previous outputs: Steps 1-3
+3. For each major flow, define:
+   - Entry and exit conditions
+   - Happy path as a `flowchart TD` Mermaid diagram
+   - Alternative and exception paths
+   - Related requirement (`FR-XXX`) and use case (`UC-XXX`) references
+4. Include flow overview table and flow relationship diagram
+5. When this document is generated, include it in the navigation:
+   insert it between Use Cases and Sequence Diagrams in the top prev/next
+   links of those two documents, and add it to the bottom **All Documents**
+   index of every document in the domain
+6. Wait for review
+
+> **Step 3.5 complete**: User flows generated.
+> Please review. Ready to proceed?
+
 ### Step 4: Sequence Diagrams
 
 **Output**: `<domain>/workflows/sequence-diagram.md`
@@ -326,6 +357,8 @@ Branch based on the domain type detected in Step 0:
    - `AC-USNN-NN` from user stories -> E2E and acceptance tests
    - `UC-<AREA>-NN` main/alternative flows -> integration and unit tests
    - Domain spec endpoints/components -> contract tests
+   - If `user-flows.md` exists, its exception/alternative paths -> additional
+     E2E test scenarios
 4. Generate:
    - Test matrix with Test IDs (`T-NNN`), source references, type, priority
    - Mocking boundaries for unit/integration/E2E levels
@@ -353,6 +386,7 @@ Report all generated file paths on completion.
 > - `<domain>/requirements/requirements.md`
 > - `<domain>/requirements/user-stories.md`
 > - `<domain>/workflows/use-cases.md`
+> - `<domain>/workflows/user-flows.md` (if generated)
 > - `<domain>/workflows/sequence-diagram.md`
 > - `<domain>/workflows/<domain-spec>.md`
 > - `<domain>/workflows/test-spec.md`
@@ -362,7 +396,7 @@ Report all generated file paths on completion.
 
 - **Language**: English
 - **Meta block**: Created, Last Modified, Status, Tech Stack, Reference Documents
-- **Mermaid**: `sequenceDiagram` for flows, `C4Context` for system context, `graph TD/LR` for hierarchies
+- **Mermaid**: `sequenceDiagram` for flows, `C4Context` for system context, `graph TD/LR` for hierarchies, `flowchart TD/LR` for user flows
 - **TypeScript**: `interface` for props, stores, DTOs (frontend domain)
 - **IDs**: FR-XXX, NFR-XXX, US-NN, AC-USNN-NN, UC-XXX — no test content in planning docs
 - **Cross-references**: FR -> UC -> Domain Spec -> Test Spec links
