@@ -1,13 +1,14 @@
 ---
 name: new-policy
-version: 0.1.0
-description: Creates a new policy document in docs/en/policy/ with the standard format, and simultaneously creates its Korean translation in docs/ko/policy/. Use this when the team needs to establish a new working rule or standard. Triggered by "add a policy", "create a policy for X", "새 정책 만들어줘", "규칙 문서화", or describing a convention that needs to be formalized.
+version: 0.2.0
+description: Creates a new policy document in the source-language policy directory (per docs/config.yml, default docs/en/policy/) with the standard format, and simultaneously creates its translation in each configured translation language (default docs/ko/policy/). Use this when the team needs to establish a new working rule or standard. Triggered by "add a policy", "create a policy for X", "새 정책 만들어줘", "규칙 문서화", or describing a convention that needs to be formalized.
 ---
 
 # new-policy
 
-Adds a new policy document to the project following the standard format,
-with an automatic Korean translation in `docs/ko/policy/`.
+Adds a new policy document to the project following the standard format, with
+automatic translation mirrors in each translation language configured in
+`docs/config.yml`. The examples below show the default `en` → `ko` pairing.
 
 ## When to Use
 
@@ -21,21 +22,28 @@ These rules are part of the skill contract. They make the expected working
 discipline explicit so the result does not depend on which model executes the
 skill.
 
-1. **Validate the filename.** The policy filename must match kebab-case
-   (`^[a-z0-9]+(-[a-z0-9]+)*\.md$`). Check `docs/en/policy/` for an existing
-   file with that name before writing — if it exists, this is a policy
-   *change*, which must be discussed with the user first, not silently
+1. **Require the docs structure.** Before anything else, read
+   `docs/config.yml` (fall back to inferring languages from the `docs/`
+   layout) and verify the source-language policy directory exists. If it does
+   not, stop and tell the user to run `/init-docs` first — never create a
+   partial structure ad hoc.
+2. **Validate the filename.** The policy filename must match kebab-case
+   (`^[a-z0-9]+(-[a-z0-9]+)*\.md$`). Check the source policy directory for an
+   existing file with that name before writing — if it exists, this is a
+   policy *change*, which must be discussed with the user first, not silently
    overwritten.
-2. **Use the real date.** The Revision History date comes from `date +%F`,
+3. **Use the real date.** The Revision History date comes from `date +%F`,
    never from an assumed date.
-3. **Create both languages in the same run.** Never finish with only the
-   English file. The Korean mirror must have the identical heading structure;
-   code blocks, file paths, and technical identifiers stay in English.
-4. **Do not edit `policy.md` automatically.** Show the suggested @-reference
+4. **Create all configured languages in the same run.** Never finish with only
+   the source file when translation languages are configured (skip mirrors
+   only when `translation_languages` is empty). Each mirror must have the
+   identical heading structure; code blocks, file paths, and technical
+   identifiers stay in English.
+5. **Do not edit `policy.md` automatically.** Show the suggested @-reference
    line and let the user decide (Step 4) — this is a deliberate gate, not an
    omission to fix.
-5. **Verify before reporting.** Confirm both files exist on disk and have the
-   same section count. The report lists only verified paths.
+6. **Verify before reporting.** Confirm every created file exists on disk and
+   all have the same section count. The report lists only verified paths.
 
 ## Step-by-Step Instructions
 
@@ -52,9 +60,10 @@ Ask the user (or infer from context):
 If the user has described the policy in their message, draft the content and
 ask for confirmation before writing.
 
-### Step 2: Create the English Policy Document
+### Step 2: Create the Source-Language Policy Document
 
-Create `docs/en/policy/<policy-name>.md`:
+Create `docs/<source>/policy/<policy-name>.md` (shown here for the default
+`en`):
 
 ```markdown
 # <Policy Title>
@@ -77,12 +86,16 @@ Create `docs/en/policy/<policy-name>.md`:
 - <YYYY-MM-DD>: Initial version
 ```
 
-### Step 3: Create the Korean Mirror
+### Step 3: Create Translation Mirrors
 
-Create `docs/ko/policy/<policy-name>.md` with a full Korean translation.
+**Skip this step if the project has no translation languages.**
+
+For each configured translation language, create
+`docs/<target>/policy/<policy-name>.md` with a full translation (shown here
+for the default `ko`).
 
 Translation rules (same as sync-translations):
-- All prose and headings → Korean
+- All prose and headings → target language
 - Code blocks, file paths, technical identifiers → keep in English
 - Checkbox and list markers → keep as-is
 
@@ -124,6 +137,6 @@ Tell the user:
 
 > Created:
 > - `docs/en/policy/<policy-name>.md`
-> - `docs/ko/policy/<policy-name>.md`
+> - `docs/ko/policy/<policy-name>.md`  (one line per translation language)
 >
 > Add an @-reference to `docs/en/policy/policy.md` if appropriate.

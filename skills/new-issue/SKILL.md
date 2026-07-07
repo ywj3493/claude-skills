@@ -1,7 +1,7 @@
 ---
 name: new-issue
-version: 0.2.0
-description: Creates a new issue for tracking work. When a git remote exists, creates a GitHub Issue via `gh` CLI, sets up a working branch, and opens a draft PR linked to the issue. When no remote is configured, falls back to creating local issue documents in docs/en/issue/ with Korean translations. Use this whenever starting new work — features, bug fixes, tasks, or investigations. The user may say "create an issue", "new issue", "이슈 만들어줘", or simply describe work they want to start.
+version: 0.3.0
+description: Creates a new issue for tracking work. When a git remote exists, creates a GitHub Issue via `gh` CLI, sets up a working branch, and (optionally) opens a draft PR linked to the issue. When no remote is configured, falls back to creating local issue documents in the source-language issue directory (per docs/config.yml, default docs/en/issue/) with translation mirrors. Use this whenever starting new work — features, bug fixes, tasks, or investigations. The user may say "create an issue", "new issue", "이슈 만들어줘", or simply describe work they want to start.
 ---
 
 # new-issue
@@ -40,11 +40,12 @@ skill. Follow them exactly — do not rely on implicit judgment.
    actually exists: the issue URL and PR URL returned by `gh`, the branch
    shown by `git branch --show-current`, or the files on disk in docs mode.
    The report may contain only verified URLs and paths.
-6. **Keep structural parity.** The draft PR body (GitHub mode) and the Korean
-   mirror (docs mode) must mirror the issue's structure exactly — same
-   sections and the same number of checklist items.
+6. **Keep structural parity.** The draft PR body (GitHub mode) and the
+   translation mirrors (docs mode) must mirror the issue's structure exactly —
+   same sections and the same number of checklist items.
 7. **Ask only at defined gates.** The single confirmation point is the drafted
-   issue content (Step 2G / 3D). All other steps proceed without asking.
+   issue content (Step 2G / 3D), which also settles whether to create the
+   branch and draft PR. All other steps proceed without asking.
 
 ## Step-by-Step Instructions
 
@@ -84,6 +85,15 @@ Otherwise, ask the user for:
 2. **Background** — why is this needed? what problem does it solve?
 3. **Acceptance Criteria** — what does "done" look like?
 4. **Initial Tasks** — what are the first known steps?
+
+When presenting the draft for confirmation, also state the follow-up plan so
+the user can opt out in the same reply:
+
+> After creating the issue I'll set up a working branch and open a draft PR
+> linked to it. Say "issue only" (or similar) to skip the draft PR.
+
+Default (no objection) = create the branch and draft PR. Remember the choice
+for Steps 4G–6G.
 
 ### Step 3G: Create GitHub Issue
 
@@ -135,6 +145,9 @@ is already on a dedicated branch (e.g., created via `git worktree`).
 
 ### Step 5G: Create Draft PR
 
+**Skip this step if the user opted out in Step 2G** — report the issue and
+branch only.
+
 Create a draft pull request linked to the issue. The PR title and body should
 be written in the **same language** as the GitHub Issue (paired language).
 
@@ -176,7 +189,7 @@ Tell the user:
 
 > Created:
 > - GitHub Issue #\<number\>: \<issue URL\>
-> - Draft PR: \<PR URL\>
+> - Draft PR: \<PR URL\>  (omit if skipped in Step 2G)
 > - Branch: `feat/issue<number>-<short-description>`
 >
 > Reference this issue in commit messages with `Refs: #<number>`.
@@ -184,6 +197,14 @@ Tell the user:
 ---
 
 ## Docs Mode (Fallback)
+
+Docs mode uses the languages configured in `docs/config.yml`
+(`source_language` + `translation_languages`; infer from the `docs/` layout if
+the file is missing). The examples below show the default `en` → `ko` pairing.
+
+If the source-language issue directory does not exist, stop and tell the user:
+
+> No documentation structure found. Run `/init-docs` to set it up first.
 
 ### Step 2D: Determine the Next Issue Number
 
@@ -208,9 +229,9 @@ Otherwise, ask the user for:
 3. **Acceptance Criteria** — what does "done" look like?
 4. **Initial Tasks** — what are the first known steps?
 
-### Step 4D: Create the English Issue Document
+### Step 4D: Create the Source-Language Issue Document
 
-Create `docs/en/issue/issue<NNN>.md`:
+Create `docs/<source>/issue/issue<NNN>.md` (shown here for the default `en`):
 
 ```markdown
 # Issue <NNN>: <Title>
@@ -239,10 +260,14 @@ Create `docs/en/issue/issue<NNN>.md`:
 
 See `references/issue-template.md` for the raw template.
 
-### Step 5D: Create the Korean Mirror
+### Step 5D: Create Translation Mirrors
 
-Create `docs/ko/issue/issue<NNN>.md` with the same structure in Korean.
-Code blocks, file paths, commands, and technical identifiers remain in English.
+**Skip this step if the project has no translation languages.**
+
+For each configured translation language, create
+`docs/<target>/issue/issue<NNN>.md` with the same structure in that language
+(shown here for the default `ko`). Code blocks, file paths, commands, and
+technical identifiers remain in English.
 
 ```markdown
 # 이슈 <NNN>: <한국어 제목>
@@ -275,7 +300,7 @@ Tell the user:
 
 > Created:
 > - `docs/en/issue/issue<NNN>.md`
-> - `docs/ko/issue/issue<NNN>.md`
+> - `docs/ko/issue/issue<NNN>.md`  (one line per translation language)
 >
 > Reference this issue in commit messages with `Refs: issue<NNN>`.
 
@@ -294,4 +319,4 @@ Tell the user:
 - Check off completed tasks: `- [x] 1. Task 1`
 - Update **Status** from `Open` → `In Progress` → `Done`
 - Record key decisions in the **Notes** section
-- Update the Korean mirror when significant changes are made
+- Update the translation mirrors when significant changes are made

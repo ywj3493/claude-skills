@@ -6,8 +6,12 @@ of truth and keep it up to date.
 
 ## Documentation Structure
 
+Languages are configured in `docs/config.yml`; this project uses `en` as the
+source language with a `ko` translation mirror.
+
 ```text
 docs/
+├── config.yml            # Language configuration (source + translation languages)
 ├── en/
 │   ├── specifications/   # Domain-based: <domain>/requirements/ and <domain>/workflows/
 │   │   ├── architecture.md, config.md, infrastructure.md  # Cross-cutting top-level docs

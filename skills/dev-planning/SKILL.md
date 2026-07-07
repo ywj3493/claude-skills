@@ -1,6 +1,6 @@
 ---
 name: dev-planning
-version: 0.2.0
+version: 0.3.0
 description: Unified planning document pipeline (requirements -> user stories -> use cases -> sequence diagrams -> domain-specific spec -> test spec) with ID-based test traceability. Supports backend, frontend, and infrastructure domains.
 ---
 
@@ -50,9 +50,11 @@ executes the skill.
    that exists or will be produced by this pipeline (with `<domain-spec>`
    placeholders replaced). Every Mermaid block must be syntactically complete:
    matching fences, declared participants, no placeholder text left inside.
-6. **Respect review gates literally.** After each step, stop and wait for
-   explicit user approval. Never batch multiple steps into a single turn
-   unless the user has explicitly said to skip reviews.
+6. **Respect review gates literally.** In step-by-step mode (the default),
+   stop after each step and wait for explicit user approval — never batch
+   multiple steps into a single turn. Only when the user chose continuous
+   mode in Step 0 (or explicitly says to skip reviews) generate straight
+   through, then present one consolidated review at the end.
 7. **Report verified paths only.** The completion report lists only files
    confirmed to exist on disk.
 
@@ -76,6 +78,9 @@ Step 7:   README (table of contents)
 For multi-domain projects, Steps 1-6 repeat per domain. Step 7 runs once.
 
 ## Output Structure
+
+`docs/en/` denotes the project's source-language directory as configured in
+`docs/config.yml` (default `en`); substitute the configured code if different.
 
 ```text
 docs/en/specifications/
@@ -151,16 +156,23 @@ the domain type.
    - **Infra**: Infrastructure-as-code detected (Terraform, Kubernetes, Ansible, etc.)
    - If both backend and frontend exist, ask the user which domain to plan first
 
-Summarize and confirm with the user:
+Summarize and confirm with the user, including the review mode for the rest
+of the pipeline:
 
 > **Detected tech stack:**
 > - Language: ...
 > - Framework: ...
 > - Domain type: Backend / Frontend / Infra
 >
+> **Review mode** — how should I run Steps 1–7?
+> - `step-by-step` (default): pause for your review after every step
+> - `continuous`: generate all documents, then one consolidated review
+>
 > Does this look correct?
 
-Wait for confirmation before proceeding.
+Wait for confirmation before proceeding. In continuous mode, skip the
+per-step "Please review. Ready to proceed?" gates below and instead present
+all generated documents for a single review after Step 7.
 
 ### Step 0.5: Domain Analysis & Document Discovery
 
@@ -358,6 +370,7 @@ Report all generated file paths on completion.
 - **Participant notation**: `FileName<br/>(Layer)` in sequence diagrams
 - **References**: Each step loads all previous step outputs before generating
 - **Review gate**: Never proceed to the next step without user approval
+  (unless continuous mode was chosen in Step 0)
 - **Navigation**: Every domain document has top (prev/next) and bottom (all documents) navigation
 - **Navigation placeholders**: Templates use `<domain-spec>` as a placeholder in navigation links. When generating documents, replace with the actual domain spec filename: `api-spec` (backend), `component-spec` (frontend), `infra-spec` (infra)
 - **`@`-references**: Use for discovered docs per [@docs/en/policy/reference-convention.md](docs/en/policy/reference-convention.md)
