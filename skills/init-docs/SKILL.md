@@ -1,6 +1,6 @@
 ---
 name: init-docs
-version: 0.0.1
+version: 0.1.0
 description: Initializes the standard docs/ directory structure for a new project. Creates docs/en/{specifications,issue,policy}/, docs/ko/{specifications,issue,policy}/, and docs/reference/, seeds initial policy documents in both English and Korean, and places a CLAUDE.md in the project root. Use this when starting a fresh project that should follow the standard documentation system.
 ---
 
@@ -13,6 +13,31 @@ Sets up the standard project documentation structure from scratch.
 - Starting a new project that needs the standard `docs/` layout
 - User says "set up the project structure", "initialize docs", "프로젝트 초기화", or "docs 만들어줘"
 - The project has no `docs/` directory yet
+
+## Execution Requirements
+
+These rules are part of the skill contract. They make the expected working
+discipline explicit so the result does not depend on which model executes the
+skill.
+
+1. **Survey before creating.** Before Step 2, check what already exists
+   (`ls docs/ CLAUDE.md 2>/dev/null`). Existing files are never overwritten —
+   collect any conflicts and present them to the user instead of writing over
+   them.
+2. **Copy templates verbatim.** Policy file contents come from the blocks
+   embedded in this SKILL.md (or the referenced template files). Copy them
+   exactly — do not paraphrase, summarize, or regenerate them from memory.
+3. **Use the real date.** Fill every `<YYYY-MM-DD>` placeholder from
+   `date +%F`, never from an assumed or remembered date.
+4. **Verify the tree.** After creation, run `find docs -type f | sort` and
+   compare the result against the layout in "What This Skill Creates". If
+   anything is missing or unexpected, fix it before reporting — never report
+   success on a partial tree.
+5. **Translation parity.** Each Korean policy file must have the same heading
+   structure and the same code blocks as its English source (code blocks stay
+   in English).
+6. **Report verified facts only.** The final report lists exactly the files
+   and directories confirmed to exist on disk — nothing assumed.
 
 ## What This Skill Creates
 

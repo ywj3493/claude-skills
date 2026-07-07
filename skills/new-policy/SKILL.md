@@ -1,6 +1,6 @@
 ---
 name: new-policy
-version: 0.0.1
+version: 0.1.0
 description: Creates a new policy document in docs/en/policy/ with the standard format, and simultaneously creates its Korean translation in docs/ko/policy/. Use this when the team needs to establish a new working rule or standard. Triggered by "add a policy", "create a policy for X", "새 정책 만들어줘", "규칙 문서화", or describing a convention that needs to be formalized.
 ---
 
@@ -14,6 +14,28 @@ with an automatic Korean translation in `docs/ko/policy/`.
 - User says "add a policy", "create a policy for X", "새 정책 추가", "규칙 만들어줘"
 - A new convention needs to be formalized (branching strategy, review process, etc.)
 - The user describes a working rule that isn't yet written down
+
+## Execution Requirements
+
+These rules are part of the skill contract. They make the expected working
+discipline explicit so the result does not depend on which model executes the
+skill.
+
+1. **Validate the filename.** The policy filename must match kebab-case
+   (`^[a-z0-9]+(-[a-z0-9]+)*\.md$`). Check `docs/en/policy/` for an existing
+   file with that name before writing — if it exists, this is a policy
+   *change*, which must be discussed with the user first, not silently
+   overwritten.
+2. **Use the real date.** The Revision History date comes from `date +%F`,
+   never from an assumed date.
+3. **Create both languages in the same run.** Never finish with only the
+   English file. The Korean mirror must have the identical heading structure;
+   code blocks, file paths, and technical identifiers stay in English.
+4. **Do not edit `policy.md` automatically.** Show the suggested @-reference
+   line and let the user decide (Step 4) — this is a deliberate gate, not an
+   omission to fix.
+5. **Verify before reporting.** Confirm both files exist on disk and have the
+   same section count. The report lists only verified paths.
 
 ## Step-by-Step Instructions
 

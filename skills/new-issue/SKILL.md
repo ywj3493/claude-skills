@@ -1,6 +1,6 @@
 ---
 name: new-issue
-version: 0.1.0
+version: 0.2.0
 description: Creates a new issue for tracking work. When a git remote exists, creates a GitHub Issue via `gh` CLI, sets up a working branch, and opens a draft PR linked to the issue. When no remote is configured, falls back to creating local issue documents in docs/en/issue/ with Korean translations. Use this whenever starting new work — features, bug fixes, tasks, or investigations. The user may say "create an issue", "new issue", "이슈 만들어줘", or simply describe work they want to start.
 ---
 
@@ -14,6 +14,37 @@ available or local docs as fallback.
 - User says "create an issue", "new issue", "start an issue", "이슈 만들기"
 - Beginning a new feature, bug fix, investigation, or task
 - User describes work that should be formally tracked
+
+## Execution Requirements
+
+These rules are part of the skill contract. They make the expected working
+discipline explicit so the result does not depend on which model executes the
+skill. Follow them exactly — do not rely on implicit judgment.
+
+1. **Decide mode from real output.** Run the Step 1 detection commands and
+   base the mode decision only on their actual output. Never assume the
+   remote or authentication state.
+2. **Never invent identifiers.** Issue numbers, URLs, and branch names must
+   come from command output or directory listings. If the issue number cannot
+   be parsed from the `gh issue create` URL, recover it with
+   `gh issue list --limit 1` — do not guess it.
+3. **Check before writing.** In docs mode, confirm `docs/en/issue/issue<NNN>.md`
+   does not already exist before writing. If it does, re-derive the next
+   number from a fresh listing — never overwrite an existing issue.
+4. **Handle failures explicitly.** When a `gh` or `git` command fails, read
+   the error output, apply the documented recovery (e.g., empty commit before
+   retrying `gh pr create`), and retry once. If it still fails, report the
+   exact error and stop. Never report success for a step that failed or was
+   skipped.
+5. **Verify before reporting.** Before the final report, confirm each artifact
+   actually exists: the issue URL and PR URL returned by `gh`, the branch
+   shown by `git branch --show-current`, or the files on disk in docs mode.
+   The report may contain only verified URLs and paths.
+6. **Keep structural parity.** The draft PR body (GitHub mode) and the Korean
+   mirror (docs mode) must mirror the issue's structure exactly — same
+   sections and the same number of checklist items.
+7. **Ask only at defined gates.** The single confirmation point is the drafted
+   issue content (Step 2G / 3D). All other steps proceed without asking.
 
 ## Step-by-Step Instructions
 

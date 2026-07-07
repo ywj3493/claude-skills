@@ -1,6 +1,6 @@
 ---
 name: sync-translations
-version: 0.0.1
+version: 0.1.0
 description: Audits docs/en/specifications/, docs/en/issue/, and docs/en/policy/ for English documents that are missing a Korean translation in docs/ko/, or where the Korean version appears out of date compared to the English source, then creates or updates those translations. Use this to keep docs/ko/ in sync. Triggered by "sync docs", "번역 동기화", "update translations", "sync translations", or "mirror docs".
 ---
 
@@ -23,6 +23,35 @@ Keeps the `docs/ko/` Korean translations synchronized with the English source do
 | `docs/en/policy/` | `docs/ko/policy/` |
 
 `docs/reference/` is **excluded** — user-managed, language-neutral, no translations needed.
+
+## Execution Requirements
+
+These rules are part of the skill contract. They make the expected working
+discipline explicit so translation quality does not depend on which model
+executes the skill.
+
+1. **Audit exhaustively.** The Missing and Stale lists must be derived from
+   the actual `find` output and cover every English file — no sampling, no
+   "representative subset". Report exact counts.
+2. **Timestamps are a heuristic.** Git commit-date comparison produces false
+   positives (e.g., a formatting-only commit touching the English file).
+   Before rewriting an existing translation flagged as stale, compare the
+   actual content and skip it if the Korean version already reflects the
+   English source — and say so in the report.
+3. **Translate from disk, fully.** Read the entire English source immediately
+   before translating. Never translate from memory, from a summary, or from
+   an earlier conversation excerpt. Long files are translated completely —
+   never truncated with "..." or "(remainder unchanged)".
+4. **Verify structural parity.** After writing each translation, check it
+   against the source: same number of headings, code blocks, table rows, and
+   checkbox items, in the same order. Fix any mismatch before moving to the
+   next file.
+5. **Write only under `docs/ko/`.** English sources and `docs/reference/` are
+   read-only for this skill — never "fix" an English file while translating,
+   even if it contains an error; report the error instead.
+6. **Report per file.** The final report lists every file created, updated,
+   or skipped, with the reason for each skip. Never report a file as synced
+   without having written and verified it.
 
 ## Step-by-Step Instructions
 

@@ -3,6 +3,31 @@
 All notable changes to skills in this project are documented here.
 Entries are ordered newest first. Format follows [Keep a Changelog](https://keepachangelog.com/).
 
+## [dev-planning/v0.2.0] - 2026-07-07
+
+### Added
+- Execution Requirements section: mandatory template loading, disk-based input re-reading, sequential ID assignment, pre-completion traceability validation, link/diagram verification, literal review gates, verified-path reporting
+
+## [new-issue/v0.2.0] - 2026-07-07
+
+### Added
+- Execution Requirements section: output-based mode detection, no invented identifiers, overwrite protection for local issue numbers, explicit failure recovery, pre-report artifact verification, structural parity between issue/PR/mirror
+
+## [init-docs/v0.1.0] - 2026-07-07
+
+### Added
+- Execution Requirements section: pre-creation survey with overwrite protection, verbatim template copying, real-date placeholders, post-creation tree verification, translation parity, verified-facts-only reporting
+
+## [new-policy/v0.1.0] - 2026-07-07
+
+### Added
+- Execution Requirements section: kebab-case filename validation with collision check, real-date revision history, paired-language creation in one run, explicit policy.md gate, pre-report verification
+
+## [sync-translations/v0.1.0] - 2026-07-07
+
+### Added
+- Execution Requirements section: exhaustive audit coverage, content-level stale confirmation over timestamp heuristics, full-source translation from disk, structural parity verification, docs/ko-only write scope, per-file reporting
+
 ## [new-issue/v0.1.0] - 2026-03-31
 
 ### Added
