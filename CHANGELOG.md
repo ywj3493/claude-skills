@@ -10,6 +10,9 @@ Entries are ordered newest first. Format follows [Keep a Changelog](https://keep
 - CLAUDE.md template bundled at references/CLAUDE-template.md so installed copies are self-contained
 
 ### Changed
+- architecture and infrastructure templates upgraded to the richer format from the removed frontend-planning skill (module boundaries, key files, deployment topology, CI/CD pipeline, external services)
+
+### Changed
 - Directory, policy, and mirror creation follows the configured languages instead of hardcoded en/ko; projects may configure zero translation languages
 - Planning-skill note references dev-planning instead of deprecated frontend-planning
 
@@ -26,6 +29,7 @@ Entries are ordered newest first. Format follows [Keep a Changelog](https://keep
 
 ### Added
 - Review mode choice at Step 0: step-by-step (default) or continuous generation with one consolidated review at the end
+- Optional Step 3.5 (frontend only): user-flows document restored from the removed frontend-planning skill as references/frontend/user-flows-template.md; exception/alternative paths feed E2E scenarios in the test spec
 
 ### Changed
 - Output paths documented as source-language-relative (docs/config.yml) instead of hardcoded docs/en
