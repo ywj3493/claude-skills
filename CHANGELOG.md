@@ -3,6 +3,59 @@
 All notable changes to skills in this project are documented here.
 Entries are ordered newest first. Format follows [Keep a Changelog](https://keepachangelog.com/).
 
+## [init-docs/v0.2.0] - 2026-07-07
+
+### Added
+- Configurable languages: Step 1 asks for a source language and translation languages, recorded in docs/config.yml; create-structure.sh accepts language arguments
+- CLAUDE.md template bundled at references/CLAUDE-template.md so installed copies are self-contained
+
+### Changed
+- Directory, policy, and mirror creation follows the configured languages instead of hardcoded en/ko; projects may configure zero translation languages
+- Planning-skill note references dev-planning instead of deprecated frontend-planning
+
+## [new-issue/v0.3.0] - 2026-07-07
+
+### Added
+- Docs mode verifies the docs structure exists and guides to /init-docs when missing
+
+### Changed
+- Draft PR creation is optional — settled at the issue-content confirmation gate ("issue only" skips it)
+- Docs-mode mirrors follow the translation languages in docs/config.yml instead of hardcoded Korean
+
+## [dev-planning/v0.3.0] - 2026-07-07
+
+### Added
+- Review mode choice at Step 0: step-by-step (default) or continuous generation with one consolidated review at the end
+
+### Changed
+- Output paths documented as source-language-relative (docs/config.yml) instead of hardcoded docs/en
+
+## [new-policy/v0.2.0] - 2026-07-07
+
+### Added
+- Docs-structure precondition check with guidance to /init-docs when missing
+
+### Changed
+- Translation mirrors follow the configured translation languages; source-only projects skip mirrors
+
+## [sync-translations/v0.2.0] - 2026-07-07
+
+### Added
+- Step 0 loads docs/config.yml (with directory-layout inference fallback) and stops with guidance when no docs structure exists
+
+### Changed
+- Generalized from hardcoded en → ko to the configured source and translation languages
+
+## [backend-planning] - 2026-07-07
+
+### Removed
+- Skill removed from the repository (deprecated since v0.0.2; superseded by dev-planning)
+
+## [frontend-planning] - 2026-07-07
+
+### Removed
+- Skill removed from the repository (deprecated since v0.0.2; superseded by dev-planning)
+
 ## [dev-planning/v0.2.0] - 2026-07-07
 
 ### Added

@@ -1,0 +1,6 @@
+# Documentation language configuration — read by documentation skills.
+# source_language: language of authored documents (docs/<source_language>/)
+# translation_languages: mirror languages kept in sync by sync-translations
+source_language: en
+translation_languages:
+  - ko

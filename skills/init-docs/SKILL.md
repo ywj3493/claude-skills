@@ -1,7 +1,7 @@
 ---
 name: init-docs
-version: 0.1.0
-description: Initializes the standard docs/ directory structure for a new project. Creates docs/en/{specifications,issue,policy}/, docs/ko/{specifications,issue,policy}/, and docs/reference/, seeds initial policy documents in both English and Korean, and places a CLAUDE.md in the project root. Use this when starting a fresh project that should follow the standard documentation system.
+version: 0.2.0
+description: Initializes the standard docs/ directory structure for a new project. Asks for a source language and optional translation languages (default en -> ko), records them in docs/config.yml, creates docs/<lang>/{specifications,issue,policy}/ per language plus docs/reference/, seeds initial policy documents in every configured language, and places a CLAUDE.md in the project root. Use this when starting a fresh project that should follow the standard documentation system.
 ---
 
 # init-docs
@@ -38,11 +38,20 @@ skill.
    in English).
 6. **Report verified facts only.** The final report lists exactly the files
    and directories confirmed to exist on disk — nothing assumed.
+7. **Honor the language configuration.** Every directory, policy file, and
+   translation mirror follows the languages confirmed in Step 1 and recorded
+   in `docs/config.yml` — never assume English/Korean beyond the defaults the
+   user accepted.
 
 ## What This Skill Creates
 
+Languages are configurable: one **source language** plus zero or more
+**translation languages**, recorded in `docs/config.yml`. The tree below shows
+the default `en` → `ko` pairing; substitute the configured language codes.
+
 ```
 docs/
+├── config.yml                   # Language configuration (source + translations)
 ├── en/
 │   ├── specifications/
 │   │   ├── architecture.md      # Project folder structure (empty template)
@@ -70,30 +79,41 @@ CLAUDE.md  (placed in project root)
 ```
 
 **Note:** Domain directories (e.g., `specifications/auth/`, `specifications/dashboard/`)
-are created at runtime by planning skills such as `frontend-planning`, not by `init-docs`.
+are created at runtime by planning skills such as `dev-planning`, not by `init-docs`.
 
 ## Step-by-Step Instructions
 
-### Step 1: Confirm Before Acting
+### Step 1: Confirm Languages and Scope Before Acting
 
 Tell the user:
 
 > I'm about to set up the standard `docs/` structure in this project. This will
-> create the docs/ directory tree, three initial policy documents (English +
-> Korean), and a CLAUDE.md. Shall I proceed?
+> create the docs/ directory tree, a language configuration file, four initial
+> policy documents (in every configured language), and a CLAUDE.md.
+>
+> Language configuration (recorded in `docs/config.yml`):
+> - Source language: `en` (documents are authored in this language)
+> - Translation languages: `ko` (mirror translations; may be empty)
+>
+> Use these defaults, or tell me a different source/translation setup.
+> Shall I proceed?
 
-Wait for confirmation before creating anything.
+Wait for confirmation before creating anything. Use the confirmed languages in
+every subsequent step — the instructions below show the default `en` → `ko`
+pairing as the example.
 
 ### Step 2: Create Directory Structure
 
-Run the setup script if available:
+Run the setup script if available, passing the confirmed languages
+(source first, then translation languages):
 
 ```bash
-bash skills/init-docs/scripts/create-structure.sh
+bash skills/init-docs/scripts/create-structure.sh en ko
 ```
 
-If the script is not available, create directories manually and add `.gitkeep` files
-so Git tracks the empty directories:
+The script also writes `docs/config.yml`. If the script is not available,
+create the structure manually — one directory tree per configured language,
+`.gitkeep` files so Git tracks the empty directories, and the config file:
 
 ```bash
 mkdir -p docs/en/specifications docs/en/issue docs/en/policy
@@ -102,12 +122,23 @@ mkdir -p docs/reference
 touch docs/en/specifications/.gitkeep docs/en/issue/.gitkeep docs/en/policy/.gitkeep
 touch docs/ko/specifications/.gitkeep docs/ko/issue/.gitkeep docs/ko/policy/.gitkeep
 touch docs/reference/.gitkeep
+cat > docs/config.yml <<'EOF'
+# Documentation language configuration — read by documentation skills.
+source_language: en
+translation_languages:
+  - ko
+EOF
 ```
+
+For a project with no translation languages, omit the mirror directories and
+write `translation_languages: []`.
 
 ### Step 3: Place CLAUDE.md
 
-Copy the content from the skill's template (see `references/CLAUDE-template.md`
-or the `templates/CLAUDE.md` in the source repository) into the project root.
+Copy the content of this skill's `references/CLAUDE-template.md` into the
+project root. If the configured languages differ from the default `en` → `ko`,
+adjust the language codes in the template's structure tree, examples, and
+`@`-reference paths to match.
 
 - If `CLAUDE.md` **does not exist**: create it with the template content.
 - If `CLAUDE.md` **already exists**: do NOT overwrite it. Show the user the
@@ -115,7 +146,10 @@ or the `templates/CLAUDE.md` in the source repository) into the project root.
 
 ### Step 4: Create Initial Policy Files
 
-Create the following English policy files in `docs/en/policy/`:
+Create the following policy files in the source-language policy directory
+(`docs/<source>/policy/` — shown here as `docs/en/policy/`). Copy the blocks
+verbatim; only adjust language names, language codes, and paths where the
+configured languages differ from the default `en` → `ko`:
 
 ---
 
@@ -268,9 +302,12 @@ A bare backtick path without `@` is informational or illustrative only:
 
 ---
 
-### Step 5: Create Korean Policy Mirrors
+### Step 5: Create Policy Translation Mirrors
 
-Translate the four policy files into Korean and place them in `docs/ko/policy/`:
+**Skip this step if the project has no translation languages.**
+
+For each configured translation language, translate the four policy files and
+place them in that language's policy directory (shown here for `ko`):
 
 - `docs/ko/policy/policy.md`
 - `docs/ko/policy/commit-message-rule.md`
@@ -278,7 +315,7 @@ Translate the four policy files into Korean and place them in `docs/ko/policy/`:
 - `docs/ko/policy/reference-convention.md`
 
 Translation rules:
-- All prose and headings → Korean
+- All prose and headings → target language
 - Code blocks (``` ... ```) → keep as-is (English)
 - File paths, type names, branch examples → keep in English
 - Technical acronyms (API, URL, HTTP) → keep in English

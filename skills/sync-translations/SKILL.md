@@ -1,22 +1,26 @@
 ---
 name: sync-translations
-version: 0.1.0
-description: Audits docs/en/specifications/, docs/en/issue/, and docs/en/policy/ for English documents that are missing a Korean translation in docs/ko/, or where the Korean version appears out of date compared to the English source, then creates or updates those translations. Use this to keep docs/ko/ in sync. Triggered by "sync docs", "번역 동기화", "update translations", "sync translations", or "mirror docs".
+version: 0.2.0
+description: Audits the source-language documentation directories (per docs/config.yml, default docs/en/) for documents that are missing a translation in a configured translation language (default docs/ko/), or where a translation appears out of date compared to its source, then creates or updates those translations. Use this to keep translation mirrors in sync. Triggered by "sync docs", "번역 동기화", "update translations", "sync translations", or "mirror docs".
 ---
 
 # sync-translations
 
-Keeps the `docs/ko/` Korean translations synchronized with the English source documents in `docs/en/`.
+Keeps translation mirror directories synchronized with the source-language
+documents, using the language pair(s) configured in `docs/config.yml`.
+The examples below show the default `en` → `ko` pairing.
 
 ## When to Use
 
 - User says "sync docs", "update translations", "sync translations", "번역 동기화", "mirror docs"
-- After a batch of documentation updates where Korean translations may be missing
+- After a batch of documentation updates where translations may be missing
 - Periodically to audit translation completeness across the project
 
 ## Directories in Scope
 
-| English source | Korean translation |
+For each configured translation language (shown here for `ko`):
+
+| Source (`docs/<source>/`) | Translation (`docs/<target>/`) |
 |---|---|
 | `docs/en/specifications/` | `docs/ko/specifications/` |
 | `docs/en/issue/` | `docs/ko/issue/` |
@@ -31,14 +35,15 @@ discipline explicit so translation quality does not depend on which model
 executes the skill.
 
 1. **Audit exhaustively.** The Missing and Stale lists must be derived from
-   the actual `find` output and cover every English file — no sampling, no
-   "representative subset". Report exact counts.
+   the actual `find` output and cover every source file in every configured
+   translation language — no sampling, no "representative subset". Report
+   exact counts.
 2. **Timestamps are a heuristic.** Git commit-date comparison produces false
    positives (e.g., a formatting-only commit touching the English file).
    Before rewriting an existing translation flagged as stale, compare the
-   actual content and skip it if the Korean version already reflects the
-   English source — and say so in the report.
-3. **Translate from disk, fully.** Read the entire English source immediately
+   actual content and skip it if the translation already reflects the source
+   — and say so in the report.
+3. **Translate from disk, fully.** Read the entire source document immediately
    before translating. Never translate from memory, from a summary, or from
    an earlier conversation excerpt. Long files are translated completely —
    never truncated with "..." or "(remainder unchanged)".
@@ -46,18 +51,37 @@ executes the skill.
    against the source: same number of headings, code blocks, table rows, and
    checkbox items, in the same order. Fix any mismatch before moving to the
    next file.
-5. **Write only under `docs/ko/`.** English sources and `docs/reference/` are
-   read-only for this skill — never "fix" an English file while translating,
-   even if it contains an error; report the error instead.
+5. **Write only under translation directories.** Source-language documents and
+   `docs/reference/` are read-only for this skill — never "fix" a source file
+   while translating, even if it contains an error; report the error instead.
 6. **Report per file.** The final report lists every file created, updated,
    or skipped, with the reason for each skip. Never report a file as synced
    without having written and verified it.
 
 ## Step-by-Step Instructions
 
+### Step 0: Load Language Configuration
+
+1. Read `docs/config.yml` for `source_language` and `translation_languages`.
+2. If the file is missing, infer the configuration from the directory layout:
+   language-code directories under `docs/` (excluding `reference/`). If `en/`
+   is present, treat it as the source and the others as translation targets.
+   State the inference in the final report and suggest recording it in
+   `docs/config.yml`.
+3. If `docs/` does not exist or contains no language directories, stop and
+   tell the user:
+
+   > No documentation structure found. Run `/init-docs` to set it up first.
+
+4. If `translation_languages` is empty, report that the project has no
+   translation mirrors configured and stop.
+
+Run Steps 1–4 once per configured translation language. The commands below
+show the default `en` → `ko` pairing; substitute the actual language codes.
+
 ### Step 1: Audit — Find Missing Translations
 
-List all English source files in the three directories:
+List all source files in the three directories:
 
 ```bash
 find docs/en/specifications docs/en/issue docs/en/policy \
@@ -67,18 +91,18 @@ find docs/en/specifications docs/en/issue docs/en/policy \
 For each file found (e.g., `docs/en/issue/issue003.md`), check whether the
 corresponding translation exists (e.g., `docs/ko/issue/issue003.md`).
 
-Build a **Missing** list of files with no Korean translation.
+Build a **Missing** list of files with no translation.
 
 ### Step 2: Audit — Find Stale Translations
 
-For files where a Korean translation exists, compare modification times using git:
+For files where a translation exists, compare modification times using git:
 
 ```bash
 git log --follow -1 --format="%ai" -- docs/en/issue/issue003.md
 git log --follow -1 --format="%ai" -- docs/ko/issue/issue003.md
 ```
 
-If the English source has a more recent commit than the Korean translation, add it
+If the source document has a more recent commit than its translation, add it
 to a **Stale** list.
 
 ### Step 3: Report and Confirm
@@ -102,11 +126,12 @@ Wait for confirmation before writing any files.
 
 For each file in the Missing or Stale lists:
 
-1. Read the English source file completely
-2. Translate all prose content into Korean
-3. Write the file to the corresponding `docs/ko/` path with the same filename
+1. Read the source file completely
+2. Translate all prose content into the target language
+3. Write the file to the corresponding translation path with the same filename
 
-**Naming rule**: Replace `docs/en/` with `docs/ko/` (same filename):
+**Naming rule**: Replace `docs/<source>/` with `docs/<target>/` (same
+filename), e.g. for `en` → `ko`:
 - `docs/en/issue/issue003.md` → `docs/ko/issue/issue003.md`
 - `docs/en/specifications/requirements.md` → `docs/ko/specifications/requirements.md`
 - `docs/en/policy/commit-message-rule.md` → `docs/ko/policy/commit-message-rule.md`
@@ -117,7 +142,7 @@ List every file created or updated with their paths.
 
 ## Translation Rules
 
-**Translate to Korean:**
+**Translate to the target language:**
 - All prose paragraphs and sentences
 - Section headings
 - List item descriptions
@@ -131,8 +156,9 @@ List every file created or updated with their paths.
 - Technical acronyms: API, URL, HTTP, JSON, Git, etc.
 - Checkbox markers: `- [ ]`, `- [x]`
 
-**For technical acronyms on first use**, optionally add a brief Korean
-explanation in parentheses, then use the acronym alone thereafter.
+**For technical acronyms on first use**, optionally add a brief
+target-language explanation in parentheses, then use the acronym alone
+thereafter.
 
 **Preserve markdown structure exactly:**
 - Same heading levels (`#`, `##`, `###`)
