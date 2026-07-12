@@ -1,4 +1,12 @@
-> [← Sequence Diagrams](sequence-diagram.md) | [Test Spec →](test-spec.md)
+<!--
+NAV NOTE: design/ is a dynamic set. At generation time, replace the
+prev-link below with the previous document actually generated for this
+domain (or ../planning/use-case.md if this is the first design document),
+and apply the same substitution to the Related Documents and All Documents
+blocks at the bottom. Never link a design/*.md file that was not generated
+for this domain.
+-->
+> [← Sequence Diagrams](sequence-diagram.md) | [Test Spec →](../verification/test-spec.md)
 
 # API Specification
 
@@ -8,6 +16,10 @@
 > **Tech Stack**: (auto-detected)
 > **Reference Documents**: <!-- list @-references from document discovery -->
 
+> **Generation note**: this file is only produced when the codebase exposes
+> REST/GraphQL endpoints. Request/response entity shapes belong in
+> `data-model.md`, not duplicated here — link to it instead.
+
 ---
 
 ## Table of Contents
@@ -15,9 +27,8 @@
 1. [Overview](#overview)
 2. [Endpoint Catalog](#endpoint-catalog)
 3. [API Endpoints](#api-endpoints)
-4. [Data Models](#data-models)
-5. [Authentication](#authentication)
-6. [Error Responses](#error-responses)
+4. [Authentication](#authentication)
+5. [Error Responses](#error-responses)
 
 ---
 
@@ -48,8 +59,8 @@
 
 | HTTP Method | Path | Auth Required | Summary | Related Use Case | Implementation |
 |-------------|------|--------------|---------|------------------|----------------|
-| POST | `/api/<resource>` | No | <!-- Summary --> | [UC-<AREA>-01](use-cases.md#uc-area-01) | <!-- file.py --> |
-| GET | `/api/<resource>` | Yes | <!-- Summary --> | [UC-<AREA>-02](use-cases.md#uc-area-02) | <!-- file.py --> |
+| POST | `/api/<resource>` | No | <!-- Summary --> | [UC-<AREA>-01](../planning/use-case.md#uc-area-01) | <!-- file.py --> |
+| GET | `/api/<resource>` | Yes | <!-- Summary --> | [UC-<AREA>-02](../planning/use-case.md#uc-area-02) | <!-- file.py --> |
 | GET | `/health` | No | Health check | - | <!-- file.py --> |
 
 ---
@@ -58,7 +69,7 @@
 
 ### METHOD /api/<path>
 
-**Use Case**: [UC-<AREA>-01 (Name)](use-cases.md#uc-area-01-name)
+**Use Case**: [UC-<AREA>-01 (Name)](../planning/use-case.md#uc-area-01-name)
 
 **Description**: <!-- What this endpoint does -->
 
@@ -86,6 +97,8 @@ Content-Type: application/json
 |-------|------|----------|-------------|------------------|
 | `field1` | string | Yes | <!-- Description --> | <!-- Rules --> |
 | `field2` | number | No | <!-- Description --> | <!-- Rules --> |
+
+**Entity Reference**: <!-- link the request/response body to its model in [data-model.md](data-model.md#modelname) when one is generated -->
 
 #### Response
 
@@ -176,46 +189,6 @@ See [Flow Name Sequence Diagram](sequence-diagram.md#flow-name)
 
 ---
 
-## Data Models
-
-### <ModelName>
-
-**Description**: <!-- Model purpose -->
-
-**JSON Schema**:
-
-```json
-{
-  "type": "object",
-  "properties": {
-    "id": {
-      "type": "string",
-      "description": "Unique identifier"
-    },
-    "name": {
-      "type": "string",
-      "description": "Display name"
-    }
-  },
-  "required": ["id", "name"]
-}
-```
-
-**Example**:
-
-```json
-{
-  "id": "abc123",
-  "name": "Example"
-}
-```
-
----
-
-<!-- Repeat ### <ModelName> for each data model -->
-
----
-
 ## Authentication
 
 ### Authentication Flow
@@ -261,13 +234,24 @@ sequenceDiagram
 
 ---
 
+## Sources Read
+
+<!--
+Populated by dev-reverse-docs only — omitted entirely for forward planning
+(dev-planning). List every file/line-range actually opened; every
+[REF: path:line] citation above must trace back to a file listed here.
+-->
+
+---
+
 ## Related Documents
 
 - **Previous**: [← Sequence Diagrams](sequence-diagram.md)
-- **Next**: [Test Spec →](test-spec.md)
-- **Requirements**: [Requirements Analysis](../requirements/requirements.md)
-- **User Stories**: [User Stories](../requirements/user-stories.md)
-- **Use Cases**: [Use Cases](use-cases.md)
+- **Next**: [Test Spec →](../verification/test-spec.md)
+- **Data Models**: [Data Model](data-model.md)
+- **Requirements**: [Requirements Analysis](../planning/requirements.md)
+- **User Stories**: [User Stories](../planning/user-stories.md)
+- **Use Case**: [Use Case](../planning/use-case.md)
 
 ---
 
@@ -277,9 +261,10 @@ sequenceDiagram
 
 ---
 > **All Documents**
-> [Requirements](../requirements/requirements.md) |
-> [User Stories](../requirements/user-stories.md) |
-> [Use Cases](use-cases.md) |
+> <!-- list only the design/*.md files generated for this domain; current file in bold -->
+> [Requirements](../planning/requirements.md) |
+> [User Stories](../planning/user-stories.md) |
+> [Use Case](../planning/use-case.md) |
 > [Sequence Diagrams](sequence-diagram.md) |
 > **API Spec** |
-> [Test Spec](test-spec.md)
+> [Test Spec](../verification/test-spec.md)

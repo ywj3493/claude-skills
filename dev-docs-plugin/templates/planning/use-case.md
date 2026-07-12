@@ -1,4 +1,4 @@
-> [← User Stories](../requirements/user-stories.md) | [Sequence Diagrams →](sequence-diagram.md)
+> [← User Stories](user-stories.md) | [Design Documents →](../design/)
 
 # Use Case Specification
 
@@ -7,6 +7,12 @@
 > **Status**: Draft
 > **Tech Stack**: (auto-detected)
 > **Reference Documents**: <!-- list @-references from document discovery -->
+
+> **Classification note**: this document is a **planning/WHAT** document —
+> it describes actor↔feature relationships (who can do what), not component
+> call order. See the "Document Classification" section in the owning
+> skill's SKILL.md. Sequence diagrams (HOW a use case is implemented) live
+> in `../design/sequence-diagram.md`, not here.
 
 ---
 
@@ -170,9 +176,9 @@ graph TD
 | **Use Case ID** | UC-<AREA>-01 |
 | **Use Case Name** | <!-- Name --> |
 | **Actors** | <!-- Primary Actor (Primary), Secondary Actor (Secondary) --> |
-| **Related Requirements** | [FR-<AREA>-01](../requirements/requirements.md#fr-area), [NFR-SEC-01](../requirements/requirements.md#nfr-sec) |
-| **Related User Stories** | [US-01](../requirements/user-stories.md#us-01-name) |
-| **Sequence Diagram** | [Flow Name](sequence-diagram.md#flow-name) |
+| **Related Requirements** | [FR-<AREA>-01](requirements.md#fr-area), [NFR-SEC-01](requirements.md#nfr-sec) |
+| **Related User Stories** | [US-01](user-stories.md#us-01-name) |
+| **Sequence Diagram** | [Flow Name](../design/sequence-diagram.md#flow-name) |
 
 ### Description
 
@@ -197,6 +203,13 @@ graph TD
 2. <!-- Failure postcondition 2 -->
 
 ### Main Flow
+
+<!--
+This is an actor-level interaction outline (who does what, in what order
+from the actor's perspective) — not an implementation call chain. Keep it
+at that altitude; component-to-component call order belongs in
+../design/sequence-diagram.md.
+-->
 
 ```mermaid
 sequenceDiagram
@@ -262,11 +275,23 @@ sequenceDiagram
 
 ---
 
+## Sources Read
+
+<!--
+Populated by dev-reverse-docs only — omitted entirely for forward planning
+(dev-planning). List every file/line-range actually opened. Use cases
+inferred from code (rather than confirmed via stakeholder intent) must be
+flagged as inferred at the top of this document, per the owning skill's
+grounding rules.
+-->
+
+---
+
 ## Related Documents
 
-- **Previous**: [← User Stories](../requirements/user-stories.md)
-- **Next**: [Sequence Diagrams →](sequence-diagram.md)
-- **Requirements**: [Requirements Analysis](../requirements/requirements.md)
+- **Previous**: [← User Stories](user-stories.md)
+- **Next**: [Design Documents →](../design/)
+- **Requirements**: [Requirements Analysis](requirements.md)
 - **Architecture**: [Architecture](../../architecture.md)
 
 ---
@@ -277,9 +302,8 @@ sequenceDiagram
 
 ---
 > **All Documents**
-> [Requirements](../requirements/requirements.md) |
-> [User Stories](../requirements/user-stories.md) |
-> **Use Cases** |
-> [Sequence Diagrams](sequence-diagram.md) |
-> [<Domain Spec>](<domain-spec>.md) |
-> [Test Spec](test-spec.md)
+> [Requirements](requirements.md) |
+> [User Stories](user-stories.md) |
+> **Use Case** |
+> [Design Documents](../design/) |
+> [Test Spec](../verification/test-spec.md)

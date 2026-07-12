@@ -100,7 +100,7 @@ C4Context
   2. <!-- Step 2 -->
   3. <!-- Step 3 -->
 - **Output**: <!-- What the system produces -->
-- **Related Use Case**: [UC-<AREA>-01](../workflows/use-cases.md#uc-area-01-name)
+- **Related Use Case**: [UC-<AREA>-01](use-case.md#uc-area-01-name)
 
 <!-- Repeat FR-<AREA>-NN blocks for each requirement -->
 
@@ -191,13 +191,25 @@ C4Context
 
 ---
 
+## Sources Read
+
+<!--
+Populated by dev-reverse-docs only — omitted entirely for forward planning
+(dev-planning), since no code exists yet to read from.
+List every file (and line range, if only part of it was read) actually
+opened via Read/Grep while writing this document. Every [REF: path:line]
+citation above must point to a file listed here.
+-->
+
+---
+
 ## Related Documents
 
 ### Specification Chain
 
 - **-> Next**: [User Stories](user-stories.md)
-- **-> Then**: [Use Cases](../workflows/use-cases.md)
-- **-> Then**: [Sequence Diagrams](../workflows/sequence-diagram.md)
+- **-> Then**: [Use Case](use-case.md)
+- **-> Then**: [Design Documents](../design/) <!-- link each design/*.md file actually generated for this domain -->
 
 ### Supporting References
 
@@ -215,7 +227,6 @@ C4Context
 > **All Documents**
 > **Requirements** |
 > [User Stories](user-stories.md) |
-> [Use Cases](../workflows/use-cases.md) |
-> [Sequence Diagrams](../workflows/sequence-diagram.md) |
-> [<Domain Spec>](../workflows/<domain-spec>.md) |
-> [Test Spec](../workflows/test-spec.md)
+> [Use Case](use-case.md) |
+> [Design Documents](../design/) |
+> [Test Spec](../verification/test-spec.md)

@@ -51,6 +51,27 @@ For project-wide releases, use a plain version tag:
 v<major>.<minor>.<patch>
 ```
 
+## Plugin Versioning
+
+A **plugin** (a self-contained `.claude-plugin/plugin.json` bundle of
+skills, agents, and/or other components) is versioned as a single unit,
+separately from the individual skills/agents it bundles:
+
+- The plugin's `plugin.json` `version` field follows the same v0.x.y
+  development-phase scheme as skills (new plugins start at `0.1.0`; `1.0.0`
+  once confirmed stable).
+- Git tag convention: `<plugin-name>/v<major>.<minor>.<patch>` (e.g.
+  `dev-docs/v0.1.0`) — mirrors the skill tag convention, just keyed by
+  plugin name instead of skill name.
+- **Each skill and agent bundled inside the plugin still keeps its own
+  independent `version:`/`version` field**, starting at `0.0.1` per the
+  scheme above, and still gets bumped on its own changes. The plugin
+  version and a bundled skill's version are not the same number and don't
+  need to move together — bumping the plugin version records a
+  packaging-level change (e.g. adding a new bundled skill, changing
+  `plugin.json` metadata), while bumping a bundled skill's version records
+  a change to that skill's own behavior.
+
 ## Changelog
 
 A single `CHANGELOG.md` lives at the project root. Entries are ordered
@@ -69,6 +90,9 @@ A single `CHANGELOG.md` lives at the project root. Entries are ordered
 - Bug fix description
 ```
 
+Plugin-level changes use the same header format, keyed by plugin name
+instead of skill name (e.g. `## [dev-docs/v0.1.0] - YYYY-MM-DD`).
+
 Allowed section headers: `Added`, `Changed`, `Fixed`, `Removed`.
 
 ## When to Bump Versions
@@ -77,7 +101,5 @@ Allowed section headers: `Added`, `Changed`, `Fixed`, `Removed`.
   corresponding CHANGELOG.md entry.
 - Tag the commit after merging to main.
 
-## Related Documents
-
-- [@docs/en/policy/policy.md](docs/en/policy/policy.md) — General working rules
-- [@docs/en/policy/commit-message-rule.md](docs/en/policy/commit-message-rule.md) — Commit message format
+See also: `policy.md`, `commit-message-rule.md` — both in this same
+directory, loaded automatically alongside this file.

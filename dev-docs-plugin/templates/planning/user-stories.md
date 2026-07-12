@@ -1,4 +1,4 @@
-> [← Requirements](requirements.md) | [Use Cases →](../workflows/use-cases.md)
+> [← Requirements](requirements.md) | [Use Case →](use-case.md)
 
 # User Stories
 
@@ -106,12 +106,23 @@ User stories trace back to functional requirements in [requirements.md](requirem
 
 ---
 
+## Sources Read
+
+<!--
+Populated by dev-reverse-docs only — omitted entirely for forward planning
+(dev-planning). List every file/line-range actually opened while inferring
+these stories from code, and note at the top of this document that the
+stories are inferred, not confirmed intent, when this section is present.
+-->
+
+---
+
 ## Related Documents
 
 - **Previous**: [← Requirements](requirements.md)
-- **Next**: [Use Cases →](../workflows/use-cases.md)
+- **Next**: [Use Case →](use-case.md)
 - **Architecture**: [Architecture](../../architecture.md)
-- **Sequence Diagrams**: [Sequence Diagrams](../workflows/sequence-diagram.md)
+- **Design Documents**: [Design Documents](../design/)
 
 ---
 
@@ -123,7 +134,6 @@ User stories trace back to functional requirements in [requirements.md](requirem
 > **All Documents**
 > [Requirements](requirements.md) |
 > **User Stories** |
-> [Use Cases](../workflows/use-cases.md) |
-> [Sequence Diagrams](../workflows/sequence-diagram.md) |
-> [<Domain Spec>](../workflows/<domain-spec>.md) |
-> [Test Spec](../workflows/test-spec.md)
+> [Use Case](use-case.md) |
+> [Design Documents](../design/) |
+> [Test Spec](../verification/test-spec.md)

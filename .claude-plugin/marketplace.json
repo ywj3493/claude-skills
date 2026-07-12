@@ -1,0 +1,17 @@
+{
+  "name": "claude-skills",
+  "owner": {
+    "name": "ywj3493"
+  },
+  "metadata": {
+    "description": "Plugins from the claude-skills docs-driven development workflow repository.",
+    "version": "0.1.0"
+  },
+  "plugins": [
+    {
+      "name": "dev-docs",
+      "source": "./dev-docs-plugin",
+      "description": "Forward feature-planning and reverse-engineering documentation skills with a citation-grounded doc-verifier subagent."
+    }
+  ]
+}

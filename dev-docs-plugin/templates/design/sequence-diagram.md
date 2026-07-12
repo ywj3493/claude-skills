@@ -1,4 +1,4 @@
-> [← Use Cases](use-cases.md) | [<Domain Spec> →](<domain-spec>.md)
+> [← Use Case](../planning/use-case.md) | [Design Documents](.)
 
 # Sequence Diagrams
 
@@ -7,6 +7,10 @@
 > **Status**: Draft
 > **Tech Stack**: (auto-detected)
 > **Reference Documents**: <!-- list @-references from document discovery -->
+
+> **Classification note**: this document is a **design/HOW** document — it
+> shows inter-component call order, not actor↔feature relationships (that's
+> the use case's job, see `../planning/use-case.md`).
 
 ---
 
@@ -32,9 +36,9 @@ This document represents all major flows as sequence diagrams, explicitly showin
 
 ### Related Documents
 
-- [Requirements Analysis](../requirements/requirements.md) - Functional/non-functional requirements
-- [Use Case Specification](use-cases.md) - Detailed use case specifications
-- [User Stories](../requirements/user-stories.md) - User stories
+- [Requirements Analysis](../planning/requirements.md) - Functional/non-functional requirements
+- [Use Case Specification](../planning/use-case.md) - Detailed use case specifications
+- [User Stories](../planning/user-stories.md) - User stories
 
 ---
 
@@ -83,13 +87,72 @@ In sequence diagrams, each participant is displayed in the following format:
 - `ExternalClient<br/>(Infrastructure)` - External Service Adapter
 - `Repository<br/>(Infrastructure)` - Data Storage Adapter
 
+### Source-Linked Mode (dev-reverse-docs only)
+
+When this template is used by **dev-reverse-docs** (documenting existing
+code), every diagram in this file is augmented with source evidence so
+`doc-verifier` can check it claim-by-claim. **dev-planning** (forward mode)
+omits all of this — no code exists yet for a feature being planned.
+
+1. **Participant source links** — every participant gets a `link` line
+   pointing at its source file:
+   ```
+   link <alias>: Source @ <repo_url>/blob/<branch>/<path>
+   ```
+   Resolve `<repo_url>` from the repo's `origin` remote (normalized to
+   `https://`) and `<branch>` from the branch checked out during generation.
+2. **Per-message evidence** — immediately after each arrow, one `Note` line
+   with the real `path:line` the call was found at. Mermaid has no
+   per-message click-through link, so this plain-text `Note` is the
+   fallback that renders in every renderer.
+3. **No fabricated evidence** — a message/flow that can't be confirmed from
+   code gets `[ASSUMED: ...]` in place of the `Note`, never a guessed
+   file:line.
+4. **Hidden raw call-graph block** — a `<!-- CALLGRAPH: ... -->` HTML
+   comment at the end of the flow's section records the raw call edges the
+   diagram was built from, independent of the visible `Note`s, so
+   `doc-verifier` has two things to cross-check instead of one.
+
+**Worked example** (rewriting the first Core Flow below in Source-Linked Mode):
+
+```mermaid
+sequenceDiagram
+    participant C as controller.py<br/>(Presentation)
+    participant UC as UseCase<br/>(Application)
+    participant R as Repository<br/>(Infrastructure)
+    participant DB as Database<br/>(External)
+
+    link C: Source @ https://github.com/<org>/<repo>/blob/<branch>/src/controller.py
+    link UC: Source @ https://github.com/<org>/<repo>/blob/<branch>/src/use_case.py
+    link R: Source @ https://github.com/<org>/<repo>/blob/<branch>/src/repository.py
+
+    C->>UC: execute(params)
+    Note right of UC: src/use_case.py:42
+
+    UC->>R: save(entity)
+    Note right of R: src/repository.py:88
+
+    UC->>UC: sendWebhookIfConfigured()
+    Note right of UC: [ASSUMED: no direct call site found; inferred from config flag]
+
+    R-->>UC: entity
+    UC-->>C: result
+```
+
+```text
+<!-- CALLGRAPH:
+1. controller.py:handle -> UseCase.execute | src/use_case.py:42
+2. UseCase.execute -> Repository.save | src/repository.py:88
+-->
+```
+
 ---
 
 ## Core Flows
 
 ### <Flow Name> Flow
 
-**Use Case**: [UC-<AREA>-01 (Name)](use-cases.md#uc-area-01-name)
+**Use Case**: [UC-<AREA>-01 (Name)](../planning/use-case.md#uc-area-01-name)
 
 **Description**: <!-- Brief description of the flow -->
 
@@ -147,7 +210,7 @@ sequenceDiagram
 
 ### <Another Flow Name> Flow
 
-**Use Case**: [UC-<AREA>-02 (Name)](use-cases.md#uc-area-02-name)
+**Use Case**: [UC-<AREA>-02 (Name)](../planning/use-case.md#uc-area-02-name)
 
 **Description**: <!-- Brief description -->
 
@@ -383,12 +446,23 @@ graph TD
 
 ---
 
+## Sources Read
+
+<!--
+Populated by dev-reverse-docs only — omitted entirely for forward planning
+(dev-planning). List every file/line-range actually opened while building
+these diagrams; every Note and CALLGRAPH entry above must trace back to a
+file listed here.
+-->
+
+---
+
 ## Related Documents
 
-- **Previous**: [← Use Cases](use-cases.md)
-- **Next**: [<Domain Spec> →](<domain-spec>.md)
-- **Requirements**: [Requirements Analysis](../requirements/requirements.md)
-- **User Stories**: [User Stories](../requirements/user-stories.md)
+- **Previous**: [← Use Case](../planning/use-case.md)
+- **Design Documents**: [Design Documents](.)
+- **Requirements**: [Requirements Analysis](../planning/requirements.md)
+- **User Stories**: [User Stories](../planning/user-stories.md)
 - **Architecture**: [Architecture](../../architecture.md)
 
 ---
@@ -399,9 +473,9 @@ graph TD
 
 ---
 > **All Documents**
-> [Requirements](../requirements/requirements.md) |
-> [User Stories](../requirements/user-stories.md) |
-> [Use Cases](use-cases.md) |
+> [Requirements](../planning/requirements.md) |
+> [User Stories](../planning/user-stories.md) |
+> [Use Case](../planning/use-case.md) |
 > **Sequence Diagrams** |
-> [<Domain Spec>](<domain-spec>.md) |
-> [Test Spec](test-spec.md)
+> [Design Documents](.) |
+> [Test Spec](../verification/test-spec.md)
