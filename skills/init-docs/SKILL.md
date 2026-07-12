@@ -1,6 +1,6 @@
 ---
 name: init-docs
-version: 0.2.0
+version: 0.2.1
 description: Initializes the standard docs/ directory structure for a new project. Asks for a source language and optional translation languages (default en -> ko), records them in docs/config.yml, creates docs/<lang>/{specifications,issue,policy}/ per language plus docs/reference/, seeds initial policy documents in every configured language, and places a CLAUDE.md in the project root. Use this when starting a fresh project that should follow the standard documentation system.
 ---
 
@@ -79,7 +79,8 @@ CLAUDE.md  (placed in project root)
 ```
 
 **Note:** Domain directories (e.g., `specifications/auth/`, `specifications/dashboard/`)
-are created at runtime by planning skills such as `dev-planning`, not by `init-docs`.
+are created at runtime by planning skills such as the `dev-docs` plugin's
+`dev-planning`/`dev-reverse-docs` skills, not by `init-docs`.
 
 ## Step-by-Step Instructions
 

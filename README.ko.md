@@ -23,12 +23,38 @@ Requirements)** 이 포함되어 있어, 어떤 모델이 실행하든 결과 �
 | --- | --- | --- |
 | init-docs | `/init-docs` | 표준 `docs/` 구조, 언어 설정, 정책 파일, CLAUDE.md를 생성한다 |
 | new-issue | `/new-issue` | GitHub Issue와 작업 브랜치, (선택) 드래프트 PR을 생성한다 — 원격 저장소가 없으면 로컬 이슈 문서로 대체 |
-| dev-planning | `/dev-planning` | 6단계 기획 파이프라인(요구사항 → 유저 스토리 → 유스케이스 → 시퀀스 다이어그램 → 도메인 명세 → 테스트 명세)을 ID 기반 테스트 추적성과 함께 생성한다 |
 | new-policy | `/new-policy` | 번역 미러와 함께 정책 문서를 추가한다 |
 | sync-translations | `/sync-translations` | 누락되거나 구식이 된 번역 미러를 감지하고 동기화한다 |
 
 각 스킬의 현재 버전은 `SKILL.md` 프론트매터에 있으며, 변경 사항은
 [CHANGELOG.md](CHANGELOG.md)에 기록됩니다.
+
+## 플러그인
+
+| 플러그인 | 스킬 | 용도 |
+| --- | --- | --- |
+| dev-docs | `/dev-docs:dev-planning`, `/dev-docs:dev-reverse-docs` | 새 기능에 대한 사전 기획(`dev-planning`)과, 기존 코드에 대한 근거 기반·검증된 문서화(`dev-reverse-docs`)를 모두 제공하며 동일한 `planning/`/`design/`/`verification/` 문서 구조를 생성한다. `dev-reverse-docs`가 작성한 모든 주장을 실제 소스와 대조하는 읽기 전용 `doc-verifier` 서브에이전트를 포함한다. |
+
+이 저장소의 마켓플레이스
+([.claude-plugin/marketplace.json](.claude-plugin/marketplace.json))에서
+설치할 수 있습니다:
+
+```bash
+claude
+/plugin marketplace add ywj3493/claude-skills
+/plugin install dev-docs@claude-skills
+```
+
+또는 로컬 개발 용도로 직접 불러올 수 있습니다:
+
+```bash
+claude --plugin-dir ./dev-docs-plugin
+```
+
+자세한 내용은 [dev-docs-plugin/README.md](dev-docs-plugin/README.md)를 참조하세요. 위의
+스킬들과 달리 플러그인 스킬은 네임스페이스가 붙습니다
+(`/dev-docs:dev-planning`, `/dev-planning`이 아님) — 여러 플러그인이
+서로 충돌하지 않도록 하기 위함입니다.
 
 ## 설치
 
@@ -42,8 +68,8 @@ npx skills add https://github.com/ywj3493/claude-skills.git
 
 `init-docs`가 다른 스킬들이 사용하는 구조를 만듭니다. `new-policy`,
 `sync-translations`, `new-issue`(docs 모드)는 그 구조가 없으면 먼저
-`/init-docs` 실행을 안내합니다. GitHub 모드의 `new-issue`와 `dev-planning`은
-독립적으로 사용할 수 있습니다.
+`/init-docs` 실행을 안내합니다. GitHub 모드의 `new-issue`와 `dev-docs`
+플러그인의 스킬들은 독립적으로 사용할 수 있습니다.
 
 ## 언어 설정
 
@@ -64,9 +90,10 @@ translation_languages:
 
 ```text
 새 프로젝트
-  └─ /init-docs              docs/ 구조 + 언어 설정 + 정책 파일 + CLAUDE.md
-      └─ /new-issue          GitHub Issue + 브랜치 + 드래프트 PR (또는 로컬 이슈 문서)
-          └─ /dev-planning   구조화된 설계가 필요한 작업의 기획 문서
+  └─ /init-docs                     docs/ 구조 + 언어 설정 + 정책 파일 + CLAUDE.md
+      └─ /new-issue                 GitHub Issue + 브랜치 + 드래프트 PR (또는 로컬 이슈 문서)
+          └─ /dev-docs:dev-planning      새 기능의 기획 문서 (구조화된 설계)
+          └─ /dev-docs:dev-reverse-docs  이미 존재하는 코드의 근거 기반 문서화
           └─ 구현 작업...
               └─ /new-issue          작업 단위마다 반복
               └─ /new-policy         새 규칙을 공식화할 때
@@ -79,9 +106,15 @@ translation_languages:
 skills/                   # Claude Code 스킬 정의
   init-docs/              # /init-docs (+ scripts/, references/ — CLAUDE.md 템플릿 포함)
   new-issue/              # /new-issue
-  dev-planning/           # /dev-planning (+ references/ — 도메인별 템플릿)
   new-policy/             # /new-policy
   sync-translations/      # /sync-translations
+.claude-plugin/
+  marketplace.json        # 플러그인 마켓플레이스 매니페스트 (dev-docs 등록)
+dev-docs-plugin/          # dev-docs 플러그인 (.claude-plugin/plugin.json)
+  skills/dev-planning/         # /dev-docs:dev-planning
+  skills/dev-reverse-docs/     # /dev-docs:dev-reverse-docs
+  agents/doc-verifier.md       # 읽기 전용 근거-코드 대조 검증기
+  templates/              # 두 스킬이 공유: planning/, design/, verification/
 templates/
   CLAUDE.md               # 새 프로젝트용 표준 CLAUDE.md (init-docs 번들 템플릿과 동일)
 docs/                     # 이 저장소 자체의 문서 (시스템 자체 검증용)
@@ -89,16 +122,21 @@ docs/                     # 이 저장소 자체의 문서 (시스템 자체 검
   en/                     # 원본 문서 (policy/, issue/, specifications/)
   ko/                     # 한국어 미러
   reference/              # 사용자 관리 참조 자료
-CHANGELOG.md              # 전체 스킬의 변경 이력 (최신순)
+CHANGELOG.md              # 전체 스킬/플러그인의 변경 이력 (최신순)
 ```
 
 ## 버저닝
 
 스킬은 v0.x 개발 단계를 포함한 시맨틱 버저닝을 따릅니다 —
-[docs/ko/policy/skill-versioning.md](docs/ko/policy/skill-versioning.md)
-참조. Git 태그는 `<skill-name>/v<major>.<minor>.<patch>` 형식을 사용하며
-(예: `dev-planning/v0.3.0`), 모든 스킬 수정은 `SKILL.md`의 `version` 필드
-갱신과 `CHANGELOG.md` 항목 추가를 동반합니다.
+[.claude/rules/skill-versioning.md](.claude/rules/skill-versioning.md)
+참조 (이 저장소 자체의 정책 규칙은 `.claude/rules/`에 영어로만 존재하며
+`docs/ko/` 이중언어 미러 대상이 아닙니다). Git 태그는
+`<skill-name>/v<major>.<minor>.<patch>` 형식을 사용하며
+(예: `new-issue/v0.3.0`), 모든 스킬 수정은 `SKILL.md`의 `version` 필드
+갱신과 `CHANGELOG.md` 항목 추가를 동반합니다. 플러그인(예: `dev-docs`)은
+`<plugin-name>/v<version>` 형식으로 하나의 단위로 버전이 관리되며, 이는
+플러그인에 포함된 각 스킬/에이전트가 개별적으로 유지하는 `version` 필드와는
+별개입니다.
 
 ## 스킬 개발 가이드
 

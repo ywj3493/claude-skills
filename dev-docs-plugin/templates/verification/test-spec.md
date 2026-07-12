@@ -1,4 +1,4 @@
-> [← <Domain Spec>](<domain-spec>.md)
+> [← Design Documents](../design/)
 
 # Test Specification
 
@@ -48,12 +48,27 @@ defined here — not in the planning/design documents.
 | T-003 | UC-<AREA>-01 | Main Flow | Integration | <!-- Test description --> | P0 | - |
 | T-004 | UC-<AREA>-01 | Alt Flow A1 | Unit | <!-- Test description --> | P1 | - |
 | T-005 | UC-<AREA>-01 | Alt Flow A2 | Unit | <!-- Test description --> | P1 | - |
+| T-006 | User Flows §2.1 | Exception Path | E2E | <!-- Test description --> | P1 | - |
+
+<!--
+The T-006 row applies only when design/user-flows.md was generated for
+this domain: derive one E2E test candidate from each Exception Path (and
+notable Alternative Path) entry there. Drop the row otherwise.
+-->
+
 
 **Priority Legend**:
 
 - **P0**: Must pass before merge — covers core happy paths and critical error cases
 - **P1**: Should pass — covers alternative flows and edge cases
 - **P2**: Nice to have — covers optimization and minor edge cases
+
+<!--
+dev-reverse-docs mode: when describing existing test coverage rather than
+defining tests to be written, add a "Source" column citing where each test
+actually lives, e.g. [REF: tests/unit/order_test.py:12], and mark rows with
+no corresponding test file as Status "Missing" rather than "-".
+-->
 
 ---
 
@@ -128,13 +143,24 @@ When writing test code based on this specification:
 
 ---
 
+## Sources Read
+
+<!--
+Populated by dev-reverse-docs only — omitted entirely for forward planning
+(dev-planning). List every test file/line-range actually opened when
+describing existing coverage; every Source-column citation above must
+trace back to a file listed here.
+-->
+
+---
+
 ## Related Documents
 
-- **Previous**: [← <Domain Spec>](<domain-spec>.md)
-- **Requirements**: [Requirements Analysis](../requirements/requirements.md)
-- **User Stories**: [User Stories](../requirements/user-stories.md)
-- **Use Cases**: [Use Cases](use-cases.md)
-- **Sequence Diagrams**: [Sequence Diagrams](sequence-diagram.md)
+- **Previous**: [← Design Documents](../design/)
+- **Requirements**: [Requirements Analysis](../planning/requirements.md)
+- **User Stories**: [User Stories](../planning/user-stories.md)
+- **Use Case**: [Use Case](../planning/use-case.md)
+- **Design Documents**: [Design Documents](../design/) <!-- optionally list the design/*.md files actually generated for this domain -->
 
 ---
 
@@ -144,9 +170,8 @@ When writing test code based on this specification:
 
 ---
 > **All Documents**
-> [Requirements](../requirements/requirements.md) |
-> [User Stories](../requirements/user-stories.md) |
-> [Use Cases](use-cases.md) |
-> [Sequence Diagrams](sequence-diagram.md) |
-> [<Domain Spec>](<domain-spec>.md) |
+> [Requirements](../planning/requirements.md) |
+> [User Stories](../planning/user-stories.md) |
+> [Use Case](../planning/use-case.md) |
+> [Design Documents](../design/) |
 > **Test Spec**

@@ -1,0 +1,11 @@
+{
+  "name": "dev-docs",
+  "version": "0.1.0",
+  "description": "Forward feature-planning and reverse-engineering documentation skills with a citation-grounded doc-verifier subagent.",
+  "author": {
+    "name": "ywj3493"
+  },
+  "homepage": "https://github.com/ywj3493/claude-skills",
+  "repository": "https://github.com/ywj3493/claude-skills",
+  "keywords": ["planning", "documentation", "reverse-engineering", "verification"]
+}

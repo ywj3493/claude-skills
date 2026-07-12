@@ -23,8 +23,8 @@ A bare backtick path without `@` is informational or illustrative only:
 ## Rules
 
 1. An `@`-reference means "this file MUST be loaded before proceeding."
-2. Use `@`-references in CLAUDE.md, policy files, issue documents, and
-   skill definitions where prerequisite files exist.
+2. Use `@`-references in issue documents and skill/plugin definitions where
+   prerequisite files exist.
 3. `@`-references use project-root-relative paths (no leading slash).
 4. Do not `@`-reference files in `docs/reference/` — those are user-managed
    and should be cited with standard backtick paths only.
@@ -35,14 +35,17 @@ A bare backtick path without `@` is informational or illustrative only:
 
 ## For AI Agents
 
-Before starting any task, scan the loaded CLAUDE.md and current issue
-document for `@`-references. Load all referenced files. Then scan those
-files for further `@`-references and load those as well (up to 2 levels).
+Policy rules no longer need this scan-and-load procedure — every file in
+`.claude/rules/` loads automatically every session. The `@`-reference
+convention now primarily governs **issue documents** and **skill/plugin
+definitions**: before starting work on one, scan it for `@`-references,
+load all referenced files, then scan those for further `@`-references and
+load those as well (up to 2 levels).
 
 Extract all references programmatically:
 
 ```bash
-grep -rn '\[@docs/' CLAUDE.md docs/
+grep -rn '\[@docs/' docs/
 ```
 
 ## For Humans
@@ -53,11 +56,10 @@ GitHub and most IDEs, they render as clickable links for easy navigation.
 
 ## Format Examples
 
-**In a list (common in CLAUDE.md and policy files):**
+**In a list (common in issue documents):**
 
 ```markdown
-- [@docs/en/policy/policy.md](docs/en/policy/policy.md) — General working rules
-- [@docs/en/policy/commit-message-rule.md](docs/en/policy/commit-message-rule.md) — Commit message format
+- [@docs/en/specifications/architecture.md](docs/en/specifications/architecture.md) — Architecture structure
 ```
 
 **Inline (common in issue documents):**
@@ -76,3 +78,7 @@ When discussing the `@`-reference convention, use backticks:
 
 - 2026-02-19: Initial version
 - 2026-03-11: Update all example paths to docs/en/ structure
+- 2026-07-10: Relocated from `docs/en/policy/reference-convention.md` to
+  `.claude/rules/reference-convention.md`; narrowed scope to issue
+  documents and skill/plugin definitions now that policy rules auto-load
+  instead of relying on `@`-scanning

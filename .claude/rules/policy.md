@@ -18,11 +18,14 @@
 
 ## Policy Updates
 
-- Changes to policy files must be discussed with the user first
-- Policy changes require updating both the English and Korean versions
+- This rule applies to ad-hoc documents created under `docs/*/policy/` (e.g.
+  via the `new-policy` skill) for downstream-style, project-specific rules —
+  not to the files in this `.claude/rules/` directory itself, which are
+  English-only Claude Code configuration, not part of the bilingual docs
+  product.
+- Changes to `docs/*/policy/` documents must be discussed with the user first
+- Such changes require updating both the English and Korean versions
 
-## Related Policy Files
-
-- [@docs/en/policy/commit-message-rule.md](docs/en/policy/commit-message-rule.md) — Commit message format
-- [@docs/en/policy/naming-conventions.md](docs/en/policy/naming-conventions.md) — Naming conventions for files, code, and branches
-- [@docs/en/policy/reference-convention.md](docs/en/policy/reference-convention.md) — Document linking convention
+See also: `commit-message-rule.md`, `naming-conventions.md`,
+`reference-convention.md`, `skill-versioning.md` — all in this same
+directory, loaded automatically alongside this file.

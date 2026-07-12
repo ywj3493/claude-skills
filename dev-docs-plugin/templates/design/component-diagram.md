@@ -1,12 +1,26 @@
-> [← Sequence Diagrams](sequence-diagram.md) | [Test Spec →](test-spec.md)
+<!--
+NAV NOTE: design/ is a dynamic set. At generation time, replace the
+prev-link below with the previous document actually generated for this
+domain (or ../planning/use-case.md if this is the first design document),
+and apply the same substitution to the Related Documents and All Documents
+blocks at the bottom. Never link a design/*.md file that was not generated
+for this domain.
+-->
+> [← Sequence Diagrams](sequence-diagram.md) | [Test Spec →](../verification/test-spec.md)
 
-# Component Specification
+# Component Diagram
 
 > **Created**: YYYY-MM-DD
 > **Last Modified**: YYYY-MM-DD
 > **Status**: Draft
 > **Tech Stack**: (auto-detected)
 > **Reference Documents**: <!-- list @-references from document discovery -->
+
+> **Generation note**: this file is only produced when the codebase has a
+> frontend component tree. It covers UI structure, component composition,
+> and frontend data-fetching conventions — state management lives in
+> `state-diagram.md`, and request/response shapes live in
+> `api-spec.md`/`data-model.md` (not duplicated here as DTOs).
 
 ---
 
@@ -16,9 +30,7 @@
 2. [Component Tree](#component-tree)
 3. [Shared Components](#shared-components)
 4. [Page Components](#page-components)
-5. [State Management](#state-management)
-6. [API Integration](#api-integration)
-7. [Error Handling](#error-handling)
+5. [Data Fetching & Error Handling](#data-fetching--error-handling)
 
 ---
 
@@ -137,7 +149,7 @@ interface ModalProps {
 ### 4.1 <Page Name>
 
 **URL**: `/path`
-**Related UC**: [UC-<AREA>-01](use-cases.md#uc-area-01)
+**Related UC**: [UC-<AREA>-01](../planning/use-case.md#uc-area-01)
 
 #### Layout
 
@@ -190,114 +202,16 @@ interface ChildA1Props {
 
 ---
 
-## 5. State Management
+## 5. Data Fetching & Error Handling
 
-### 5.1 Strategy
+<!--
+Optional — include when the feature owns frontend data-fetching concerns.
+Endpoint contracts and DTOs stay in api-spec.md/data-model.md when those
+files exist for this domain; this section covers only the client-side
+conventions (caching, client configuration, error UX).
+-->
 
-| Category | Decision |
-|----------|----------|
-| State Management Library | (e.g., Zustand / Redux Toolkit / Pinia) |
-| Server State Management | (e.g., TanStack Query / SWR) |
-| Global vs Local Criteria | (e.g., shared across 2+ pages -> global) |
-
-### 5.2 State Classification
-
-| Category | Description | Management | Examples |
-|----------|-------------|------------|----------|
-| Server State | Data fetched from APIs | TanStack Query | User list, posts |
-| Client State | UI state | Zustand / useState | Modal open, sidebar toggle |
-| Auth State | Authentication info | Zustand (persist) | Token, user profile |
-| Form State | Form input state | React Hook Form | Input values, validation errors |
-
-### 5.3 Store Definitions
-
-#### Auth Store
-
-```typescript
-interface AuthState {
-  user: User | null;
-  token: string | null;
-  isAuthenticated: boolean;
-}
-
-interface AuthActions {
-  login: (credentials: LoginRequest) => Promise<void>;
-  logout: () => void;
-  refreshToken: () => Promise<void>;
-}
-
-interface User {
-  id: string;
-  email: string;
-  name: string;
-  role: 'user' | 'admin';
-}
-```
-
-#### <Next Store Name>
-
-```typescript
-interface SomeState {
-  // define state
-}
-
-interface SomeActions {
-  // define actions
-}
-```
-
----
-
-## 6. API Integration
-
-### 6.1 Endpoint List
-
-| # | Method | Path | Description | Auth | Related UC | Source |
-|---|--------|------|-------------|------|------------|--------|
-| 1 | POST | `/auth/login` | Login | No | UC-AUTH-01 | <!-- @-ref to api-spec --> |
-| 2 | POST | `/auth/signup` | Sign up | No | UC-AUTH-02 | <!-- @-ref to api-spec --> |
-| 3 | GET | `/users/me` | Get current user | Yes | UC-USER-01 | <!-- @-ref to api-spec --> |
-
-### 6.2 Request / Response DTOs
-
-#### POST `/auth/login`
-
-```typescript
-// Request
-interface LoginRequest {
-  email: string;
-  password: string;
-}
-
-// Response (200 OK)
-interface LoginResponse {
-  accessToken: string;
-  refreshToken: string;
-  user: User;
-}
-
-// Error Response (401)
-interface AuthErrorResponse {
-  code: 'INVALID_CREDENTIALS' | 'ACCOUNT_LOCKED';
-  message: string;
-}
-```
-
-#### <Next Endpoint>
-
-```typescript
-// Request
-interface SomeRequest {
-  // define fields
-}
-
-// Response
-interface SomeResponse {
-  // define fields
-}
-```
-
-### 6.3 Caching Strategy
+### 5.1 Caching Strategy
 
 | Data | staleTime | gcTime | Revalidation Trigger |
 |------|-----------|--------|---------------------|
@@ -305,7 +219,7 @@ interface SomeResponse {
 | List data | 1 min | 10 min | On page navigation |
 | Static data | 1 hour | 24 hours | Manual invalidation |
 
-### 6.4 API Client Configuration
+### 5.2 API Client Configuration
 
 ```typescript
 // Base configuration
@@ -321,9 +235,7 @@ interface ApiClientConfig {
 // - Error: Call common error handler
 ```
 
----
-
-## 7. Error Handling
+### 5.3 Error Handling
 
 | HTTP Status | Handling |
 |-------------|----------|
@@ -336,25 +248,37 @@ interface ApiClientConfig {
 
 ---
 
+## Sources Read
+
+<!--
+Populated by dev-reverse-docs only — omitted entirely for forward planning
+(dev-planning). List every component file/line-range actually opened; the
+tree and props above must trace back to a file listed here.
+-->
+
+---
+
 ## Related Documents
 
 - **Previous**: [← Sequence Diagrams](sequence-diagram.md)
-- **Next**: [Test Spec →](test-spec.md)
-- **Requirements**: [Requirements Analysis](../requirements/requirements.md)
-- **User Stories**: [User Stories](../requirements/user-stories.md)
-- **Use Cases**: [Use Cases](use-cases.md)
+- **Next**: [Test Spec →](../verification/test-spec.md)
+- **State Management**: [State Diagram](state-diagram.md)
+- **Requirements**: [Requirements Analysis](../planning/requirements.md)
+- **User Stories**: [User Stories](../planning/user-stories.md)
+- **Use Case**: [Use Case](../planning/use-case.md)
 
 ---
 
 **Version History**:
 
-- 1.0.0 (YYYY-MM-DD): Initial component specification document
+- 1.0.0 (YYYY-MM-DD): Initial component diagram document
 
 ---
 > **All Documents**
-> [Requirements](../requirements/requirements.md) |
-> [User Stories](../requirements/user-stories.md) |
-> [Use Cases](use-cases.md) |
+> <!-- list only the design/*.md files generated for this domain; current file in bold -->
+> [Requirements](../planning/requirements.md) |
+> [User Stories](../planning/user-stories.md) |
+> [Use Case](../planning/use-case.md) |
 > [Sequence Diagrams](sequence-diagram.md) |
-> **Component Spec** |
-> [Test Spec](test-spec.md)
+> **Component Diagram** |
+> [Test Spec](../verification/test-spec.md)
