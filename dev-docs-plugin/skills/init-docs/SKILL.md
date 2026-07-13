@@ -1,6 +1,6 @@
 ---
 name: init-docs
-version: 0.2.1
+version: 0.2.2
 description: Initializes the standard docs/ directory structure for a new project. Asks for a source language and optional translation languages (default en -> ko), records them in docs/config.yml, creates docs/<lang>/{specifications,issue,policy}/ per language plus docs/reference/, seeds initial policy documents in every configured language, and places a CLAUDE.md in the project root. Use this when starting a fresh project that should follow the standard documentation system.
 ---
 
@@ -109,7 +109,7 @@ Run the setup script if available, passing the confirmed languages
 (source first, then translation languages):
 
 ```bash
-bash skills/init-docs/scripts/create-structure.sh en ko
+bash dev-docs-plugin/skills/init-docs/scripts/create-structure.sh en ko
 ```
 
 The script also writes `docs/config.yml`. If the script is not available,

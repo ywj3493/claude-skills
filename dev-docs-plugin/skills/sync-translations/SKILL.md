@@ -1,6 +1,6 @@
 ---
 name: sync-translations
-version: 0.2.0
+version: 0.2.1
 description: Audits the source-language documentation directories (per docs/config.yml, default docs/en/) for documents that are missing a translation in a configured translation language (default docs/ko/), or where a translation appears out of date compared to its source, then creates or updates those translations. Use this to keep translation mirrors in sync. Triggered by "sync docs", "번역 동기화", "update translations", "sync translations", or "mirror docs".
 ---
 
@@ -71,7 +71,7 @@ executes the skill.
 3. If `docs/` does not exist or contains no language directories, stop and
    tell the user:
 
-   > No documentation structure found. Run `/init-docs` to set it up first.
+   > No documentation structure found. Run `/dev-docs:init-docs` to set it up first.
 
 4. If `translation_languages` is empty, report that the project has no
    translation mirrors configured and stop.

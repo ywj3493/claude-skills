@@ -1,6 +1,6 @@
 ---
 name: new-policy
-version: 0.2.0
+version: 0.2.1
 description: Creates a new policy document in the source-language policy directory (per docs/config.yml, default docs/en/policy/) with the standard format, and simultaneously creates its translation in each configured translation language (default docs/ko/policy/). Use this when the team needs to establish a new working rule or standard. Triggered by "add a policy", "create a policy for X", "새 정책 만들어줘", "규칙 문서화", or describing a convention that needs to be formalized.
 ---
 
@@ -25,7 +25,7 @@ skill.
 1. **Require the docs structure.** Before anything else, read
    `docs/config.yml` (fall back to inferring languages from the `docs/`
    layout) and verify the source-language policy directory exists. If it does
-   not, stop and tell the user to run `/init-docs` first — never create a
+   not, stop and tell the user to run `/dev-docs:init-docs` first — never create a
    partial structure ad hoc.
 2. **Validate the filename.** The policy filename must match kebab-case
    (`^[a-z0-9]+(-[a-z0-9]+)*\.md$`). Check the source policy directory for an

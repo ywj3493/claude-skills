@@ -11,7 +11,7 @@
     {
       "name": "dev-docs",
       "source": "./dev-docs-plugin",
-      "description": "Forward feature-planning and reverse-engineering documentation skills with a citation-grounded doc-verifier subagent."
+      "description": "Docs-driven development bundle: scaffold docs/, track issues, sync translations, and plan or reverse-engineer specifications with a citation-grounded doc-verifier subagent."
     }
   ]
 }

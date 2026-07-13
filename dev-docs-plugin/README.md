@@ -1,16 +1,21 @@
 # dev-docs plugin
 
 A [Claude Code plugin](https://docs.claude.com/en/docs/claude-code/plugins)
-bundling two documentation skills and a verification subagent. Both skills
-produce the same `planning/` / `design/` / `verification/` document
-structure under `docs/<lang>/specifications/<domain>/` — one writes it
-forward for code that doesn't exist yet, the other reverse-engineers it
-from code that does.
+bundling the full docs-driven development workflow: scaffold the `docs/`
+structure, track work as issues, keep translations in sync, and plan or
+reverse-engineer specifications. The two specification skills produce the
+same `planning/` / `design/` / `verification/` document structure under
+`docs/<lang>/specifications/<domain>/` — one writes it forward for code that
+doesn't exist yet, the other reverse-engineers it from code that does — and a
+verification subagent grounds the reverse-engineered output in real source.
 
 ## Contents
 
 | Component | Command / Name | Purpose |
 | --- | --- | --- |
+| skill | `/dev-docs:init-docs` | Scaffold the standard `docs/` structure: `docs/config.yml` language config, per-language `specifications/`/`issue/`/`policy/` directories, seed policy documents, and a root `CLAUDE.md` |
+| skill | `/dev-docs:new-issue` | Track a unit of work: create a GitHub Issue with a branch and draft PR when a remote exists, or local issue documents with translation mirrors when it doesn't |
+| skill | `/dev-docs:sync-translations` | Detect docs that are missing a translation mirror or whose mirror is stale versus its source, then create or update those translations |
 | skill | `/dev-docs:dev-planning` | Forward planning pipeline for a new feature or project: requirements → user stories → use case → dynamic design documents → test spec, with ID-based test traceability |
 | skill | `/dev-docs:dev-reverse-docs` | Grounded documentation of existing code: every claim carries a `[REF: path:line]` or `[ASSUMED: ...]` marker, generated pass-by-pass (overview, then per module) |
 | agent | `doc-verifier` | Read-only (`Read, Grep, Glob`) subagent that checks every citation in a `dev-reverse-docs` output against the actual source before the skill reports done |
@@ -58,8 +63,8 @@ claude --plugin-dir ./dev-docs-plugin
 
 ## Host-project expectations
 
-The skills are designed to run inside a project that follows the
-docs-driven structure created by this repository's `init-docs` skill
+The specification skills are designed to run inside a project that follows the
+docs-driven structure created by this plugin's `init-docs` skill
 (`docs/config.yml`, `docs/<lang>/specifications/`, policy documents).
 References such as `[@docs/en/policy/reference-convention.md]` inside the
 skill definitions point at the **host project's** files — `init-docs`

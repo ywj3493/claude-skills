@@ -1,6 +1,6 @@
 ---
 name: new-issue
-version: 0.3.0
+version: 0.3.1
 description: Creates a new issue for tracking work. When a git remote exists, creates a GitHub Issue via `gh` CLI, sets up a working branch, and (optionally) opens a draft PR linked to the issue. When no remote is configured, falls back to creating local issue documents in the source-language issue directory (per docs/config.yml, default docs/en/issue/) with translation mirrors. Use this whenever starting new work — features, bug fixes, tasks, or investigations. The user may say "create an issue", "new issue", "이슈 만들어줘", or simply describe work they want to start.
 ---
 
@@ -204,7 +204,7 @@ the file is missing). The examples below show the default `en` → `ko` pairing.
 
 If the source-language issue directory does not exist, stop and tell the user:
 
-> No documentation structure found. Run `/init-docs` to set it up first.
+> No documentation structure found. Run `/dev-docs:init-docs` to set it up first.
 
 ### Step 2D: Determine the Next Issue Number
 

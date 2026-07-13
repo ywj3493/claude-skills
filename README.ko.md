@@ -21,19 +21,18 @@ Requirements)** 이 포함되어 있어, 어떤 모델이 실행하든 결과 �
 
 | 스킬 | 명령어 | 용도 |
 | --- | --- | --- |
-| init-docs | `/init-docs` | 표준 `docs/` 구조, 언어 설정, 정책 파일, CLAUDE.md를 생성한다 |
-| new-issue | `/new-issue` | GitHub Issue와 작업 브랜치, (선택) 드래프트 PR을 생성한다 — 원격 저장소가 없으면 로컬 이슈 문서로 대체 |
 | new-policy | `/new-policy` | 번역 미러와 함께 정책 문서를 추가한다 |
-| sync-translations | `/sync-translations` | 누락되거나 구식이 된 번역 미러를 감지하고 동기화한다 |
 
 각 스킬의 현재 버전은 `SKILL.md` 프론트매터에 있으며, 변경 사항은
-[CHANGELOG.md](CHANGELOG.md)에 기록됩니다.
+[CHANGELOG.md](CHANGELOG.md)에 기록됩니다. 문서 시스템 라이프사이클 스킬
+(`init-docs`, `new-issue`, `sync-translations`)은 이제 아래 `dev-docs`
+플러그인에 포함되어 배포됩니다.
 
 ## 플러그인
 
 | 플러그인 | 스킬 | 용도 |
 | --- | --- | --- |
-| dev-docs | `/dev-docs:dev-planning`, `/dev-docs:dev-reverse-docs` | 새 기능에 대한 사전 기획(`dev-planning`)과, 기존 코드에 대한 근거 기반·검증된 문서화(`dev-reverse-docs`)를 모두 제공하며 동일한 `planning/`/`design/`/`verification/` 문서 구조를 생성한다. `dev-reverse-docs`가 작성한 모든 주장을 실제 소스와 대조하는 읽기 전용 `doc-verifier` 서브에이전트를 포함한다. |
+| dev-docs | `/dev-docs:init-docs`, `/dev-docs:new-issue`, `/dev-docs:sync-translations`, `/dev-docs:dev-planning`, `/dev-docs:dev-reverse-docs` | 문서 주도 개발 워크플로우 전체를 제공한다: `docs/` 구조 스캐폴딩(`init-docs`), 작업의 이슈 추적(`new-issue`), 번역 미러 동기화(`sync-translations`), 그리고 새 기능 기획(`dev-planning`) 또는 기존 코드로부터의 스펙 역설계(`dev-reverse-docs`)를 동일한 `planning/`/`design/`/`verification/` 구조로 생성한다. `dev-reverse-docs`가 작성한 모든 주장을 실제 소스와 대조하는 읽기 전용 `doc-verifier` 서브에이전트를 포함한다. |
 
 이 저장소의 마켓플레이스
 ([.claude-plugin/marketplace.json](.claude-plugin/marketplace.json))에서
@@ -51,10 +50,10 @@ claude
 claude --plugin-dir ./dev-docs-plugin
 ```
 
-자세한 내용은 [dev-docs-plugin/README.md](dev-docs-plugin/README.md)를 참조하세요. 위의
-스킬들과 달리 플러그인 스킬은 네임스페이스가 붙습니다
-(`/dev-docs:dev-planning`, `/dev-planning`이 아님) — 여러 플러그인이
-서로 충돌하지 않도록 하기 위함입니다.
+자세한 내용은 [dev-docs-plugin/README.md](dev-docs-plugin/README.md)를 참조하세요.
+위의 느슨한 `new-policy` 스킬과 달리 플러그인 스킬은 네임스페이스가 붙어
+(`/dev-docs:init-docs`, `/init-docs`이 아님) 여러 플러그인이 서로 충돌하지
+않도록 합니다.
 
 ## 설치
 
@@ -66,15 +65,16 @@ npx skills add https://github.com/ywj3493/claude-skills.git
 
 ## 스킬 간 의존성
 
-`init-docs`가 다른 스킬들이 사용하는 구조를 만듭니다. `new-policy`,
-`sync-translations`, `new-issue`(docs 모드)는 그 구조가 없으면 먼저
-`/init-docs` 실행을 안내합니다. GitHub 모드의 `new-issue`와 `dev-docs`
-플러그인의 스킬들은 독립적으로 사용할 수 있습니다.
+`/dev-docs:init-docs`가 다른 스킬들이 사용하는 구조를 만듭니다. 느슨한
+`new-policy` 스킬과 `dev-docs` 플러그인의 `sync-translations`,
+`new-issue`(docs 모드) 스킬은 그 구조가 없으면 먼저 `/dev-docs:init-docs`
+실행을 안내합니다. GitHub 모드의 `new-issue`와 스펙 스킬(`dev-planning`,
+`dev-reverse-docs`)은 독립적으로 사용할 수 있습니다.
 
 ## 언어 설정
 
 문서 시스템은 하나의 **원본 언어**와 0개 이상의 **번역 언어**를 지원합니다.
-`/init-docs` 실행 시 선택하며 `docs/config.yml`에 기록됩니다:
+`/dev-docs:init-docs` 실행 시 선택하며 `docs/config.yml`에 기록됩니다:
 
 ```yaml
 source_language: en
@@ -90,31 +90,31 @@ translation_languages:
 
 ```text
 새 프로젝트
-  └─ /init-docs                     docs/ 구조 + 언어 설정 + 정책 파일 + CLAUDE.md
-      └─ /new-issue                 GitHub Issue + 브랜치 + 드래프트 PR (또는 로컬 이슈 문서)
+  └─ /dev-docs:init-docs            docs/ 구조 + 언어 설정 + 정책 파일 + CLAUDE.md
+      └─ /dev-docs:new-issue        GitHub Issue + 브랜치 + 드래프트 PR (또는 로컬 이슈 문서)
           └─ /dev-docs:dev-planning      새 기능의 기획 문서 (구조화된 설계)
           └─ /dev-docs:dev-reverse-docs  이미 존재하는 코드의 근거 기반 문서화
           └─ 구현 작업...
-              └─ /new-issue          작업 단위마다 반복
-              └─ /new-policy         새 규칙을 공식화할 때
-              └─ /sync-translations  번역 미러가 어긋났을 때
+              └─ /dev-docs:new-issue         작업 단위마다 반복
+              └─ /new-policy                 새 규칙을 공식화할 때
+              └─ /dev-docs:sync-translations 번역 미러가 어긋났을 때
 ```
 
 ## 저장소 구조
 
 ```text
-skills/                   # Claude Code 스킬 정의
-  init-docs/              # /init-docs (+ scripts/, references/ — CLAUDE.md 템플릿 포함)
-  new-issue/              # /new-issue
+skills/                   # 느슨한 Claude Code 스킬 정의
   new-policy/             # /new-policy
-  sync-translations/      # /sync-translations
 .claude-plugin/
   marketplace.json        # 플러그인 마켓플레이스 매니페스트 (dev-docs 등록)
 dev-docs-plugin/          # dev-docs 플러그인 (.claude-plugin/plugin.json)
+  skills/init-docs/            # /dev-docs:init-docs (+ scripts/, references/ — CLAUDE.md 템플릿 포함)
+  skills/new-issue/            # /dev-docs:new-issue
+  skills/sync-translations/    # /dev-docs:sync-translations
   skills/dev-planning/         # /dev-docs:dev-planning
   skills/dev-reverse-docs/     # /dev-docs:dev-reverse-docs
   agents/doc-verifier.md       # 읽기 전용 근거-코드 대조 검증기
-  templates/              # 두 스킬이 공유: planning/, design/, verification/
+  templates/              # 스펙 스킬이 공유: planning/, design/, verification/
 templates/
   CLAUDE.md               # 새 프로젝트용 표준 CLAUDE.md (init-docs 번들 템플릿과 동일)
 docs/                     # 이 저장소 자체의 문서 (시스템 자체 검증용)

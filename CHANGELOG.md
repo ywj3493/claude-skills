@@ -3,6 +3,18 @@
 All notable changes to skills and plugins in this project are documented here.
 Entries are ordered newest first. Format follows [Keep a Changelog](https://keepachangelog.com/).
 
+## [dev-docs/v0.2.0] - 2026-07-13
+
+### Added
+- `init-docs` (v0.2.2), `new-issue` (v0.3.1), and `sync-translations` (v0.2.1) folded into the `dev-docs` plugin under `dev-docs-plugin/skills/`, so the plugin now bundles the full docs-driven workflow (five skills + the `doc-verifier` agent) and their commands are namespaced (`/dev-docs:init-docs`, `/dev-docs:new-issue`, `/dev-docs:sync-translations`) (Refs: #24)
+
+### Changed
+- `dev-docs` `plugin.json` description broadened to cover docs scaffolding, issue tracking, and translation sync; `keywords` extended with `scaffolding`, `issues`, `i18n`; matching `marketplace.json` entry description updated
+- `init-docs` (0.2.1 → 0.2.2): `create-structure.sh` next-step hint and the skill's own run command updated to the namespaced `/dev-docs:new-issue` / `dev-docs-plugin/skills/init-docs/...` paths
+- `new-issue` (0.3.0 → 0.3.1) and `sync-translations` (0.2.0 → 0.2.1): "run `/init-docs` first" guidance updated to `/dev-docs:init-docs`
+- `new-policy` (0.2.0 → 0.2.1): "run `/init-docs` first" guidance updated to `/dev-docs:init-docs`; skill remains standalone under `skills/`
+- Root `README.md`/`README.ko.md` moved the three lifecycle skills from the Skills table into the `dev-docs` plugin row (namespaced commands) and updated the workflow diagram and repository-structure listing; `dev-docs-plugin/README.md` Contents table and intro expanded to the five-skill bundle
+
 ## [dev-docs/v0.1.0] - 2026-07-12
 
 ### Added

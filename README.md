@@ -21,19 +21,18 @@ Requirements** so results do not depend on which model runs it.
 
 | Skill | Command | Purpose |
 | --- | --- | --- |
-| init-docs | `/init-docs` | Create the standard `docs/` structure, language configuration, policy files, and CLAUDE.md |
-| new-issue | `/new-issue` | Create a GitHub Issue with a working branch and optional draft PR — or local issue documents when no remote exists |
 | new-policy | `/new-policy` | Add a policy document with translation mirrors |
-| sync-translations | `/sync-translations` | Detect missing or stale translation mirrors and sync them |
 
 Current versions live in each skill's `SKILL.md` frontmatter; changes are
-recorded in [CHANGELOG.md](CHANGELOG.md).
+recorded in [CHANGELOG.md](CHANGELOG.md). The docs-system lifecycle skills
+(`init-docs`, `new-issue`, `sync-translations`) now ship inside the `dev-docs`
+plugin below.
 
 ## Plugins
 
 | Plugin | Skills | Purpose |
 | --- | --- | --- |
-| dev-docs | `/dev-docs:dev-planning`, `/dev-docs:dev-reverse-docs` | Forward feature planning (`dev-planning`) and grounded, citation-verified documentation of existing code (`dev-reverse-docs`), both producing the same `planning/`/`design/`/`verification/` document structure. Bundles a read-only `doc-verifier` subagent that checks every `dev-reverse-docs` claim against the actual source before the skill reports done. |
+| dev-docs | `/dev-docs:init-docs`, `/dev-docs:new-issue`, `/dev-docs:sync-translations`, `/dev-docs:dev-planning`, `/dev-docs:dev-reverse-docs` | The full docs-driven development workflow: scaffold the `docs/` structure (`init-docs`), track work as issues (`new-issue`), keep translation mirrors in sync (`sync-translations`), and plan a new feature (`dev-planning`) or reverse-engineer specs from existing code (`dev-reverse-docs`) into the same `planning/`/`design/`/`verification/` structure. Bundles a read-only `doc-verifier` subagent that checks every `dev-reverse-docs` claim against the actual source before the skill reports done. |
 
 Install from this repository's marketplace
 ([.claude-plugin/marketplace.json](.claude-plugin/marketplace.json)):
@@ -50,9 +49,9 @@ Or load directly for local development:
 claude --plugin-dir ./dev-docs-plugin
 ```
 
-See [dev-docs-plugin/README.md](dev-docs-plugin/README.md) for details. Unlike the skills
-above, plugin skills are namespaced (`/dev-docs:dev-planning`, not
-`/dev-planning`) so multiple plugins never collide.
+See [dev-docs-plugin/README.md](dev-docs-plugin/README.md) for details. Plugin
+skills are namespaced (`/dev-docs:init-docs`, not `/init-docs`) so multiple
+plugins never collide, unlike the loose `new-policy` skill above.
 
 ## Installation
 
@@ -64,16 +63,18 @@ Follow the interactive guide to choose which skills to install.
 
 ## Skill Dependencies
 
-`init-docs` establishes the structure the other skills build on. `new-policy`,
-`sync-translations`, and `new-issue` (docs mode) check for that structure and
-guide you to run `/init-docs` first when it is missing. `new-issue` in GitHub
-mode and the `dev-docs` plugin's skills can be used independently.
+`/dev-docs:init-docs` establishes the structure the other skills build on. The
+loose `new-policy` skill and the `dev-docs` plugin's `sync-translations` and
+`new-issue` (docs mode) skills check for that structure and guide you to run
+`/dev-docs:init-docs` first when it is missing. `new-issue` in GitHub mode and
+the specification skills (`dev-planning`, `dev-reverse-docs`) can be used
+independently.
 
 ## Language Configuration
 
 The docs system supports one **source language** and zero or more
-**translation languages**, chosen when running `/init-docs` and recorded in
-`docs/config.yml`:
+**translation languages**, chosen when running `/dev-docs:init-docs` and
+recorded in `docs/config.yml`:
 
 ```yaml
 source_language: en
@@ -89,31 +90,31 @@ overhead. The default pairing is `en` → `ko`.
 
 ```text
 New project
-  └─ /init-docs                     docs/ structure + language config + policy files + CLAUDE.md
-      └─ /new-issue                 GitHub Issue + branch + draft PR (or local issue docs)
+  └─ /dev-docs:init-docs            docs/ structure + language config + policy files + CLAUDE.md
+      └─ /dev-docs:new-issue        GitHub Issue + branch + draft PR (or local issue docs)
           └─ /dev-docs:dev-planning      planning documents for a new feature (structured design)
           └─ /dev-docs:dev-reverse-docs  grounded docs for code that already exists
           └─ implementation...
-              └─ /new-issue          repeat for each unit of work
-              └─ /new-policy         when a new rule needs formalizing
-              └─ /sync-translations  when translation mirrors drift
+              └─ /dev-docs:new-issue         repeat for each unit of work
+              └─ /new-policy                 when a new rule needs formalizing
+              └─ /dev-docs:sync-translations when translation mirrors drift
 ```
 
 ## Repository Structure
 
 ```text
-skills/                   # Claude Code skill definitions
-  init-docs/              # /init-docs (+ scripts/, references/ incl. CLAUDE.md template)
-  new-issue/              # /new-issue
+skills/                   # Loose Claude Code skill definitions
   new-policy/             # /new-policy
-  sync-translations/      # /sync-translations
 .claude-plugin/
   marketplace.json        # Plugin marketplace manifest (lists dev-docs)
 dev-docs-plugin/          # dev-docs plugin (.claude-plugin/plugin.json)
+  skills/init-docs/            # /dev-docs:init-docs (+ scripts/, references/ incl. CLAUDE.md template)
+  skills/new-issue/            # /dev-docs:new-issue
+  skills/sync-translations/    # /dev-docs:sync-translations
   skills/dev-planning/         # /dev-docs:dev-planning
   skills/dev-reverse-docs/     # /dev-docs:dev-reverse-docs
   agents/doc-verifier.md       # read-only citation-vs-code verifier
-  templates/              # shared by both skills: planning/, design/, verification/
+  templates/              # shared by the specification skills: planning/, design/, verification/
 templates/
   CLAUDE.md               # Standard CLAUDE.md for new projects (same as init-docs' bundled template)
 docs/                     # This repository's own docs (dogfooding the system)
