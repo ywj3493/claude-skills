@@ -1,6 +1,6 @@
 ---
 name: dev-reverse-docs
-version: 0.0.2
+version: 0.1.0
 description: Reverse-engineer grounded planning/design/verification documentation from an EXISTING codebase, module, or feature, with mandatory per-claim source citation and a doc-verifier check after every pass. Triggers on "document this codebase", "generate docs from existing code", "reverse-engineer a spec for this repo/module". Do NOT use this for planning a NEW feature that has no code yet — use dev-planning for that.
 ---
 
@@ -133,7 +133,8 @@ selected module's code actually supports:
 | REST/GraphQL endpoints | `design/api-spec.md` |
 | Backend service/component call chains | `design/sequence-diagram.md` |
 | Frontend component trees | `design/component-diagram.md` |
-| State management (Redux/Vuex/Pinia, etc.) | `design/state-diagram.md` |
+| Domain entity/workflow states with transitions | `design/domain-state-machine.md` |
+| Client-side state management (Redux/Vuex/Pinia, etc.) | `design/client-store.md` |
 | ORM/DB schema | `design/data-model.md` |
 | Multi-step UI journeys (routes, wizards, funnels) | `design/user-flows.md` |
 | IaC / CI-CD / deployment configuration | `design/infra-spec.md` |

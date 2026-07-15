@@ -322,6 +322,7 @@ document.
 > [API Spec](../design/api-spec.md) |
 > [Data Model](../design/data-model.md) |
 > [Component Diagram](../design/component-diagram.md) |
-> [State Diagram](../design/state-diagram.md) |
+> [Domain State Machine](../design/domain-state-machine.md) |
+> [Client Store](../design/client-store.md) |
 > [Infra Spec](../design/infra-spec.md) |
 > [Test Spec](../verification/test-spec.md)

@@ -1,6 +1,6 @@
 ---
 name: dev-planning
-version: 0.0.2
+version: 0.1.0
 description: Forward planning pipeline for a NEW feature or project (requirements -> user stories -> use case -> design documents -> test spec) with ID-based test traceability. Supports backend, frontend, and infrastructure domains. Do NOT use this for documenting or reverse-engineering docs from existing code — use dev-reverse-docs for that.
 ---
 
@@ -106,8 +106,8 @@ Step 3:   Use Case       -> <domain>/planning/use-case.md          [common, WHAT
 --- Planning -> Design review gate (see below) ---
 Step 4:   Design Documents -> <domain>/design/*.md                 [dynamic, HOW]
              selected from: api-spec.md, sequence-diagram.md,
-             component-diagram.md, state-diagram.md, data-model.md,
-             user-flows.md, infra-spec.md
+             component-diagram.md, domain-state-machine.md,
+             client-store.md, data-model.md, user-flows.md, infra-spec.md
 Step 5:   Test Specification -> <domain>/verification/test-spec.md [common]
 Step 6:   README (table of contents)
 ```
@@ -134,7 +134,8 @@ docs/en/specifications/
     │   ├── api-spec.md
     │   ├── sequence-diagram.md
     │   ├── component-diagram.md
-    │   ├── state-diagram.md
+    │   ├── domain-state-machine.md
+    │   ├── client-store.md
     │   ├── data-model.md
     │   ├── user-flows.md
     │   └── infra-spec.md
@@ -152,7 +153,8 @@ feature actually needs based on what it will touch:
 | REST/GraphQL endpoints | `design/api-spec.md` |
 | Backend service/component call chains | `design/sequence-diagram.md` |
 | Frontend component trees | `design/component-diagram.md` |
-| State management (Redux/Vuex/Pinia, etc.) | `design/state-diagram.md` |
+| Domain entity/workflow states with transitions | `design/domain-state-machine.md` |
+| Client-side state management (Redux/Vuex/Pinia, etc.) | `design/client-store.md` |
 | ORM/DB schema changes | `design/data-model.md` |
 | Multi-step UI journeys / screen-to-screen flows | `design/user-flows.md` |
 | Deployment, environments, CI/CD, or infra resources | `design/infra-spec.md` |
@@ -184,7 +186,8 @@ skipping any design file not generated for the domain:
 ```text
 requirements → user-stories → use-case
   → [user-flows → sequence-diagram → api-spec → data-model
-     → component-diagram → state-diagram → infra-spec]   (generated subset)
+     → component-diagram → domain-state-machine → client-store
+     → infra-spec]                                       (generated subset)
   → test-spec
 ```
 
@@ -369,9 +372,11 @@ For each selected file:
   define UI overview (views, URLs, access levels, responsive strategy),
   component tree with Mermaid hierarchy, shared and page-specific
   components with TypeScript prop interfaces
-- **`state-diagram.md`**: load `${CLAUDE_PLUGIN_ROOT}/templates/design/state-diagram.md`;
-  define the state machine (if the feature has entity/workflow states) and
-  the store strategy/definitions (if the feature has client-side state)
+- **`domain-state-machine.md`**: load `${CLAUDE_PLUGIN_ROOT}/templates/design/domain-state-machine.md`;
+  define the entity/workflow state machine and its transition table
+- **`client-store.md`**: load `${CLAUDE_PLUGIN_ROOT}/templates/design/client-store.md`;
+  define the store strategy, state classification, and store definitions
+  for client-side state
 - **`data-model.md`**: load `${CLAUDE_PLUGIN_ROOT}/templates/design/data-model.md`;
   define the entity relationship diagram and JSON-Schema-per-model
 - **`user-flows.md`**: load `${CLAUDE_PLUGIN_ROOT}/templates/design/user-flows.md`;

@@ -3,6 +3,28 @@
 All notable changes to skills and plugins in this project are documented here.
 Entries are ordered newest first. Format follows [Keep a Changelog](https://keepachangelog.com/).
 
+## [dev-docs/v0.4.0] - 2026-07-15
+
+### Added
+- `templates/design/domain-state-machine.md` (Backend-only) and `templates/design/client-store.md` (Frontend-only) — the two halves of the former `state-diagram.md`, so entity/workflow state machines and client-side stores are selected independently (Refs: #30)
+- Every design template's note callout now carries a parsable `> **Domain**: Backend-only | Frontend-only | Infra-only` tag
+
+### Changed
+- Canonical navigation order now runs component-diagram → domain-state-machine → client-store → infra-spec; NAV NOTE comments and All Documents indexes updated across all templates
+
+### Removed
+- `templates/design/state-diagram.md` — split into the two templates above
+
+## [dev-planning/v0.1.0] - 2026-07-15
+
+### Changed
+- Design Document Selection now offers `domain-state-machine.md` and `client-store.md` as independent rows instead of a single `state-diagram.md` (Refs: #30)
+
+## [dev-reverse-docs/v0.1.0] - 2026-07-15
+
+### Changed
+- Design Document Selection now offers `domain-state-machine.md` and `client-store.md` as independent rows instead of a single `state-diagram.md` (Refs: #30)
+
 ## [dev-docs/v0.3.0] - 2026-07-15
 
 ### Added
