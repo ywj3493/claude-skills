@@ -14,8 +14,8 @@ from code that does.
 | Component | Command / Name | Purpose |
 | --- | --- | --- |
 | skill | `/dev-docs:init-docs` | Scaffold the standard `docs/` structure: source-language tree, `docs/config.yml`, initial policy documents, and a project CLAUDE.md. Initializes the source language only — mirroring comes later via `sync-translations` |
-| skill | `/dev-docs:dev-planning` | Forward planning pipeline for a new feature or project: specification (requirements + user stories + conditional multi-actor flows) → dynamic design documents → test spec, with ID-based test traceability |
-| skill | `/dev-docs:dev-reverse-docs` | Grounded documentation of existing code: every claim carries a `[REF: path:line]` or `[ASSUMED: ...]` marker, generated pass-by-pass (overview, then per module) |
+| skill | `/dev-docs:dev-planning` | Forward planning pipeline for a new feature or project: specification (requirements + user stories + conditional multi-actor flows) → dynamic design documents → test spec, with ID-based test traceability. Accepts a `lite`/`full` tier argument (`/dev-docs:dev-planning lite`) |
+| skill | `/dev-docs:dev-reverse-docs` | Grounded documentation of existing code: every claim carries a `[REF: path:line]` or `[ASSUMED: ...]` marker, generated pass-by-pass (overview, then per module). Accepts a `lite`/`full` tier argument (`/dev-docs:dev-reverse-docs lite`) |
 | skill | `/dev-docs:sync-translations` | Audit and sync translation mirrors; when no translation language is configured yet, offers to enable mirroring (updates `docs/config.yml`, creates the mirror tree, translates everything) |
 | agent | `doc-verifier` | Read-only (`Read, Grep, Glob`) subagent that checks every citation in a `dev-reverse-docs` output against the actual source before the skill reports done |
 
@@ -42,6 +42,12 @@ Both documentation skills classify documents on the same axes:
 - **`verification/`**: `test-spec.md`, the single source of truth for test
   definitions, referencing IDs from the other two
 
+Both skills run in one of two **tiers**, chosen by invocation argument or
+an auto-detect heuristic confirmed by the user: **Full** produces the
+structure above; **Lite** (single actor, no external systems, low
+complexity) collapses `design/` into a single `design.md` whose sections
+are condensed forms of the individual design templates.
+
 ## Templates
 
 Shared by `dev-planning` and `dev-reverse-docs`, loaded via
@@ -53,7 +59,7 @@ templates/
 ├── planning/      spec.md
 ├── design/        api-spec.md, sequence-diagram.md, component-diagram.md,
 │                  domain-state-machine.md, client-store.md, data-model.md,
-│                  user-flows.md, infra-spec.md
+│                  user-flows.md, infra-spec.md, design.md (Lite tier)
 └── verification/  test-spec.md
 ```
 

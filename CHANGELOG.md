@@ -19,6 +19,8 @@ Entries are ordered newest first. Format follows [Keep a Changelog](https://keep
 - `templates/planning/requirements.md`, `templates/planning/user-stories.md`, `templates/planning/use-case.md` — merged into `spec.md`; dropped en route: stakeholders table, actor/use-case Mermaid diagrams, use-case category/relationship tables, per-FR Input/Process/Output blocks, per-story NFR tables, and two duplicate footers
 - `templates/design/state-diagram.md` — split into the two design templates above
 
+Known limitation: re-running a Lite domain in Full tier (splitting its `design.md` into individual files) is not automated in this release — rely on the merge-don't-overwrite behavior and manual review.
+
 ## [dev-planning/v0.1.0] - 2026-07-15
 
 ### Added
