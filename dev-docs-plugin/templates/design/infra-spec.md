@@ -1,16 +1,15 @@
 <!--
 NAV NOTE: design/ is a dynamic set. The canonical order of the full
-pipeline is: requirements → user-stories → use-case → [user-flows →
-sequence-diagram → api-spec → data-model → component-diagram →
-domain-state-machine → client-store → infra-spec] → test-spec. At
-generation time, re-chain the
-prev/next links below through only the design documents actually generated
-for this domain, keeping that order: the first generated design document's
-prev is ../planning/use-case.md, and the last generated design document's
-next is ../verification/test-spec.md. Apply the same substitution to the
-All Documents index at the bottom. Always link document to document —
-never a folder — and never link a design/*.md file that was not generated
-for this domain.
+pipeline is: spec → [user-flows → sequence-diagram → api-spec →
+data-model → component-diagram → domain-state-machine → client-store →
+infra-spec] → test-spec. At generation time, re-chain the prev/next
+links below through only the design documents actually generated for
+this domain, keeping that order: the first generated design document's
+prev is ../planning/spec.md, and the last generated design document's
+next is ../verification/test-spec.md. Apply the same substitution to
+the All Documents index at the bottom. Always link document to document
+— never a folder — and never link a design/*.md file that was not
+generated for this domain.
 -->
 > [← Client Store](client-store.md) | [Test Spec →](../verification/test-spec.md)
 
@@ -135,7 +134,7 @@ the topology and resources above must trace back to a file listed here.
 
 ### Supporting References
 
-- [Requirements Analysis](../planning/requirements.md) — Functional and non-functional requirements
+- [Specification](../planning/spec.md) — Requirements, user stories, and multi-actor flows
 - [infrastructure.md](../../infrastructure.md) — Project-wide infrastructure overview
 
 ---
@@ -157,9 +156,7 @@ the topology and resources above must trace back to a file listed here.
 ---
 > **All Documents**
 > <!-- Keep only the design/*.md entries actually generated for this domain; current document in bold, not linked -->
-> [Requirements](../planning/requirements.md) |
-> [User Stories](../planning/user-stories.md) |
-> [Use Case](../planning/use-case.md) |
+> [Specification](../planning/spec.md) |
 > [User Flows](user-flows.md) |
 > [Sequence Diagrams](sequence-diagram.md) |
 > [API Spec](api-spec.md) |

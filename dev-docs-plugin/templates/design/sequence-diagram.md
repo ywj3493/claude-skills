@@ -1,16 +1,15 @@
 <!--
 NAV NOTE: design/ is a dynamic set. The canonical order of the full
-pipeline is: requirements → user-stories → use-case → [user-flows →
-sequence-diagram → api-spec → data-model → component-diagram →
-domain-state-machine → client-store → infra-spec] → test-spec. At
-generation time, re-chain the
-prev/next links below through only the design documents actually generated
-for this domain, keeping that order: the first generated design document's
-prev is ../planning/use-case.md, and the last generated design document's
-next is ../verification/test-spec.md. Apply the same substitution to the
-All Documents index at the bottom. Always link document to document —
-never a folder — and never link a design/*.md file that was not generated
-for this domain.
+pipeline is: spec → [user-flows → sequence-diagram → api-spec →
+data-model → component-diagram → domain-state-machine → client-store →
+infra-spec] → test-spec. At generation time, re-chain the prev/next
+links below through only the design documents actually generated for
+this domain, keeping that order: the first generated design document's
+prev is ../planning/spec.md, and the last generated design document's
+next is ../verification/test-spec.md. Apply the same substitution to
+the All Documents index at the bottom. Always link document to document
+— never a folder — and never link a design/*.md file that was not
+generated for this domain.
 -->
 > [← User Flows](user-flows.md) | [API Spec →](api-spec.md)
 
@@ -18,7 +17,7 @@ for this domain.
 
 > **Classification note**: this document is a **design/HOW** document — it
 > shows inter-component call order, not actor↔feature relationships (that's
-> the use case's job, see `../planning/use-case.md`).
+> the Multi-Actor Flows section's job, see `../planning/spec.md`).
 >
 > **Domain**: Backend-only
 
@@ -46,9 +45,7 @@ This document represents all major flows as sequence diagrams, explicitly showin
 
 ### Related Documents
 
-- [Requirements Analysis](../planning/requirements.md) - Functional/non-functional requirements
-- [Use Case Specification](../planning/use-case.md) - Detailed use case specifications
-- [User Stories](../planning/user-stories.md) - User stories
+- [Specification](../planning/spec.md) — Requirements, user stories, and multi-actor flows
 
 ---
 
@@ -162,7 +159,7 @@ sequenceDiagram
 
 ### <Flow Name> Flow
 
-**Use Case**: [UC-<AREA>-01 (Name)](../planning/use-case.md#uc-area-01-name)
+**Use Case**: [UC-<AREA>-01 (Name)](../planning/spec.md#uc-area-01-name)
 
 **Description**: <!-- Brief description of the flow -->
 
@@ -220,7 +217,7 @@ sequenceDiagram
 
 ### <Another Flow Name> Flow
 
-**Use Case**: [UC-<AREA>-02 (Name)](../planning/use-case.md#uc-area-02-name)
+**Use Case**: [UC-<AREA>-02 (Name)](../planning/spec.md#uc-area-02-name)
 
 **Description**: <!-- Brief description -->
 
@@ -471,8 +468,7 @@ file listed here.
 
 ### Supporting References
 
-- [Requirements Analysis](../planning/requirements.md) — Functional and non-functional requirements
-- [User Stories](../planning/user-stories.md) — Stories and acceptance criteria
+- [Specification](../planning/spec.md) — Requirements, user stories, and multi-actor flows
 - [Architecture](../../architecture.md) — Architecture structure and layer rules
 
 ---
@@ -494,9 +490,7 @@ file listed here.
 ---
 > **All Documents**
 > <!-- Keep only the design/*.md entries actually generated for this domain; current document in bold, not linked -->
-> [Requirements](../planning/requirements.md) |
-> [User Stories](../planning/user-stories.md) |
-> [Use Case](../planning/use-case.md) |
+> [Specification](../planning/spec.md) |
 > [User Flows](user-flows.md) |
 > **Sequence Diagrams** |
 > [API Spec](api-spec.md) |

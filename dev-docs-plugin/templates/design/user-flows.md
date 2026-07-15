@@ -1,25 +1,24 @@
 <!--
 NAV NOTE: design/ is a dynamic set. The canonical order of the full
-pipeline is: requirements → user-stories → use-case → [user-flows →
-sequence-diagram → api-spec → data-model → component-diagram →
-domain-state-machine → client-store → infra-spec] → test-spec. At
-generation time, re-chain the
-prev/next links below through only the design documents actually generated
-for this domain, keeping that order: the first generated design document's
-prev is ../planning/use-case.md, and the last generated design document's
-next is ../verification/test-spec.md. Apply the same substitution to the
-All Documents index at the bottom. Always link document to document —
-never a folder — and never link a design/*.md file that was not generated
-for this domain.
+pipeline is: spec → [user-flows → sequence-diagram → api-spec →
+data-model → component-diagram → domain-state-machine → client-store →
+infra-spec] → test-spec. At generation time, re-chain the prev/next
+links below through only the design documents actually generated for
+this domain, keeping that order: the first generated design document's
+prev is ../planning/spec.md, and the last generated design document's
+next is ../verification/test-spec.md. Apply the same substitution to
+the All Documents index at the bottom. Always link document to document
+— never a folder — and never link a design/*.md file that was not
+generated for this domain.
 -->
-> [← Use Case](../planning/use-case.md) | [Sequence Diagrams →](sequence-diagram.md)
+> [← Specification](../planning/spec.md) | [Sequence Diagrams →](sequence-diagram.md)
 
 # User Flows
 
 > **Generation note**: this file is only produced when the feature has
 > multi-step user-facing journeys (screen-to-screen navigation, wizards,
 > checkout-style funnels). It shows HOW the UI moves the actor through the
-> feature — the actor-level WHAT stays in `../planning/use-case.md`, and
+> feature — the actor-level WHAT stays in `../planning/spec.md`, and
 > component structure lives in `component-diagram.md`. The **Exception
 > Path** entries below feed the E2E scenarios in
 > `../verification/test-spec.md`.
@@ -129,8 +128,7 @@ opened; the flows above must trace back to a file listed here.
 
 ### Supporting References
 
-- [Requirements Analysis](../planning/requirements.md) — Functional and non-functional requirements
-- [User Stories](../planning/user-stories.md) — Stories and acceptance criteria
+- [Specification](../planning/spec.md) — Requirements, user stories, and multi-actor flows
 - [Test Specification](../verification/test-spec.md) — E2E scenarios derived from the exception paths above
 
 ---
@@ -152,9 +150,7 @@ opened; the flows above must trace back to a file listed here.
 ---
 > **All Documents**
 > <!-- Keep only the design/*.md entries actually generated for this domain; current document in bold, not linked -->
-> [Requirements](../planning/requirements.md) |
-> [User Stories](../planning/user-stories.md) |
-> [Use Case](../planning/use-case.md) |
+> [Specification](../planning/spec.md) |
 > **User Flows** |
 > [Sequence Diagrams](sequence-diagram.md) |
 > [API Spec](api-spec.md) |

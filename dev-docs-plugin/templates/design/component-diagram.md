@@ -1,16 +1,15 @@
 <!--
 NAV NOTE: design/ is a dynamic set. The canonical order of the full
-pipeline is: requirements → user-stories → use-case → [user-flows →
-sequence-diagram → api-spec → data-model → component-diagram →
-domain-state-machine → client-store → infra-spec] → test-spec. At
-generation time, re-chain the
-prev/next links below through only the design documents actually generated
-for this domain, keeping that order: the first generated design document's
-prev is ../planning/use-case.md, and the last generated design document's
-next is ../verification/test-spec.md. Apply the same substitution to the
-All Documents index at the bottom. Always link document to document —
-never a folder — and never link a design/*.md file that was not generated
-for this domain.
+pipeline is: spec → [user-flows → sequence-diagram → api-spec →
+data-model → component-diagram → domain-state-machine → client-store →
+infra-spec] → test-spec. At generation time, re-chain the prev/next
+links below through only the design documents actually generated for
+this domain, keeping that order: the first generated design document's
+prev is ../planning/spec.md, and the last generated design document's
+next is ../verification/test-spec.md. Apply the same substitution to
+the All Documents index at the bottom. Always link document to document
+— never a folder — and never link a design/*.md file that was not
+generated for this domain.
 -->
 > [← Data Model](data-model.md) | [Domain State Machine →](domain-state-machine.md)
 
@@ -151,7 +150,7 @@ interface ModalProps {
 ### 4.1 <Page Name>
 
 **URL**: `/path`
-**Related UC**: [UC-<AREA>-01](../planning/use-case.md#uc-area-01)
+**Related UC**: [UC-<AREA>-01](../planning/spec.md#uc-area-01)
 
 #### Layout
 
@@ -265,9 +264,7 @@ tree and props above must trace back to a file listed here.
 ### Supporting References
 
 - [Client Store](client-store.md) — Client-side state management for these components
-- [Requirements Analysis](../planning/requirements.md) — Functional and non-functional requirements
-- [User Stories](../planning/user-stories.md) — Stories and acceptance criteria
-- [Use Case](../planning/use-case.md) — Actor-level flows these views support
+- [Specification](../planning/spec.md) — Requirements, user stories, and multi-actor flows
 
 ---
 
@@ -288,9 +285,7 @@ tree and props above must trace back to a file listed here.
 ---
 > **All Documents**
 > <!-- Keep only the design/*.md entries actually generated for this domain; current document in bold, not linked -->
-> [Requirements](../planning/requirements.md) |
-> [User Stories](../planning/user-stories.md) |
-> [Use Case](../planning/use-case.md) |
+> [Specification](../planning/spec.md) |
 > [User Flows](user-flows.md) |
 > [Sequence Diagrams](sequence-diagram.md) |
 > [API Spec](api-spec.md) |

@@ -1,17 +1,16 @@
 ---
 name: dev-planning
 version: 0.1.0
-description: Forward planning pipeline for a NEW feature or project (requirements -> user stories -> use case -> design documents -> test spec) with ID-based test traceability. Supports backend, frontend, and infrastructure domains. Do NOT use this for documenting or reverse-engineering docs from existing code — use dev-reverse-docs for that.
+description: Forward planning pipeline for a NEW feature or project (specification -> design documents -> test spec) with ID-based test traceability. Supports backend, frontend, and infrastructure domains. Do NOT use this for documenting or reverse-engineering docs from existing code — use dev-reverse-docs for that.
 ---
 
 # dev-planning
 
 Forward planning document pipeline for work that doesn't have code yet: a
-new feature, a new project, or a major addition. The first 3 steps are
-shared across all domains and produce WHAT-level (planning) documents. Step
-4 dynamically selects which HOW-level (design) documents the feature needs.
-Step 5 generates a test specification referencing IDs from every previous
-step.
+new feature, a new project, or a major addition. Step 1 produces the
+WHAT-level (planning) specification. Step 2 dynamically selects which
+HOW-level (design) documents the feature needs. Step 3 generates a test
+specification referencing IDs from every previous step.
 
 ## When to Use
 
@@ -39,9 +38,11 @@ categories. Keep them separate — do not blend WHAT content into a HOW
 document or vice versa.
 
 - **`planning/` — WHAT** (stakeholder view): what the system does, from the
-  actor's perspective. `requirements.md`, `user-stories.md`, and
-  `use-case.md` live here. **Use cases are planning documents, not design
-  documents** — a use case describes actor↔feature relationships (who can
+  actor's perspective. `spec.md` lives here, holding requirements (FR/NFR),
+  user stories with acceptance criteria, and — only when the feature
+  involves 2+ actors or an external system — a **Multi-Actor Flows**
+  section of use cases. **Use cases are planning content, not design
+  content** — a use case describes actor↔feature relationships (who can
   do what, under what pre/postconditions), not how components call each
   other internally. Even though a use case's main flow is drawn as a
   Mermaid `sequenceDiagram`, it stays at the actor/system boundary; it is
@@ -77,14 +78,17 @@ executes the skill.
    exists there before writing the reference.
 4. **Validate traceability before finishing the test-spec step.**
    Cross-check the generated test-spec against the earlier documents:
-   - every `AC-USNN-NN` in user-stories.md is covered by at least one test
+   - every `AC-USNN-NN` in spec.md is covered by at least one test
    - every ID referenced in test-spec.md exists in its source document
    Fix any orphan references or uncovered ACs before presenting the step.
 5. **Verify links and diagrams.** Every navigation link must point to a file
    that exists or will be produced by this pipeline (with the actual
    generated `design/` filenames substituted for any placeholder). Prev/next
    links point document-to-document in canonical order — never to a folder
-   like `../design/`. Every
+   like `../design/`. In-document ID references use GitHub heading-derived
+   anchors (e.g. `### UC-AUTH-01: Login` is linked as
+   `spec.md#uc-auth-01-login`) — renaming a heading breaks its anchor, so
+   re-verify links after any heading change. Every
    Mermaid block must be syntactically complete: matching fences, declared
    participants, no placeholder text left inside.
 6. **Respect review gates literally.** In step-by-step mode (the default),
@@ -100,19 +104,19 @@ executes the skill.
 ```text
 Step 0:   Tech stack detection + domain type classification
 Step 0.5: Domain analysis & document discovery
-Step 1:   Requirements   -> <domain>/planning/requirements.md      [common, WHAT]
-Step 2:   User Stories   -> <domain>/planning/user-stories.md      [common, WHAT]
-Step 3:   Use Case       -> <domain>/planning/use-case.md          [common, WHAT]
+Step 1:   Specification -> <domain>/planning/spec.md               [common, WHAT]
+             requirements (FR/NFR) + user stories/acceptance criteria
+             + Multi-Actor Flows (only with 2+ actors or an external system)
 --- Planning -> Design review gate (see below) ---
-Step 4:   Design Documents -> <domain>/design/*.md                 [dynamic, HOW]
+Step 2:   Design Documents -> <domain>/design/*.md                 [dynamic, HOW]
              selected from: api-spec.md, sequence-diagram.md,
              component-diagram.md, domain-state-machine.md,
              client-store.md, data-model.md, user-flows.md, infra-spec.md
-Step 5:   Test Specification -> <domain>/verification/test-spec.md [common]
-Step 6:   README (table of contents)
+Step 3:   Test Specification -> <domain>/verification/test-spec.md [common]
+Step 4:   README (table of contents)
 ```
 
-For multi-domain projects, Steps 1-5 repeat per domain. Step 6 runs once.
+For multi-domain projects, Steps 1-3 repeat per domain. Step 4 runs once.
 
 ## Output Structure
 
@@ -124,13 +128,11 @@ docs/en/specifications/
 ├── architecture.md              # Cross-cutting (created by init-docs)
 ├── infrastructure.md            # Cross-cutting (created by init-docs)
 ├── config.md                    # Cross-cutting (created by init-docs)
-├── README.md                    # Index of all domains/documents (Step 6)
+├── README.md                    # Index of all domains/documents (Step 4)
 └── <domain>/
     ├── planning/
-    │   ├── requirements.md      # Step 1
-    │   ├── user-stories.md      # Step 2
-    │   └── use-case.md          # Step 3
-    ├── design/                  # Step 4 — dynamic subset of:
+    │   └── spec.md              # Step 1
+    ├── design/                  # Step 2 — dynamic subset of:
     │   ├── api-spec.md
     │   ├── sequence-diagram.md
     │   ├── component-diagram.md
@@ -140,7 +142,7 @@ docs/en/specifications/
     │   ├── user-flows.md
     │   └── infra-spec.md
     └── verification/
-        └── test-spec.md         # Step 5
+        └── test-spec.md         # Step 3
 ```
 
 ## Design Document Selection (dynamic)
@@ -161,7 +163,7 @@ feature actually needs based on what it will touch:
 
 A feature can need more than one — a typical full-stack feature needs
 `api-spec.md` + `data-model.md` + `sequence-diagram.md` together. Confirm
-the selection with the user at the start of Step 4 rather than guessing
+the selection with the user at the start of Step 2 rather than guessing
 from Step 0's domain classification alone; a "backend" project can still
 need `component-diagram.md` if the feature includes an admin UI.
 
@@ -171,11 +173,11 @@ Each document assigns its own IDs. These IDs are referenced by `test-spec.md`
 to derive test cases. Planning/design documents contain **no test
 definitions** — only IDs.
 
-| Document | ID Format | Example |
-|----------|-----------|---------|
-| Requirements | `FR-<AREA>-NN`, `NFR-<CAT>-NN` | FR-AUTH-01, NFR-SEC-01 |
-| User Stories | `US-NN`, `AC-USNN-NN` | US-01, AC-US01-01 |
-| Use Case | `UC-<AREA>-NN` | UC-AUTH-01 |
+| Document / Section | ID Format | Example |
+|--------------------|-----------|---------|
+| spec.md — Requirements | `FR-<AREA>-NN`, `NFR-<CAT>-NN` | FR-AUTH-01, NFR-SEC-01 |
+| spec.md — User Stories | `US-NN`, `AC-USNN-NN` | US-01, AC-US01-01 |
+| spec.md — Multi-Actor Flows (only when generated) | `UC-<AREA>-NN` | UC-AUTH-01 |
 | Design Documents | (endpoint/component/model names; multiple files possible, no unified ID format) | — |
 
 ## Navigation
@@ -184,7 +186,7 @@ definitions** — only IDs.
 skipping any design file not generated for the domain:
 
 ```text
-requirements → user-stories → use-case
+spec
   → [user-flows → sequence-diagram → api-spec → data-model
      → component-diagram → domain-state-machine → client-store
      → infra-spec]                                       (generated subset)
@@ -195,12 +197,12 @@ Every domain document includes two navigation blocks:
 
 **Top** — line 1 of the file, sequential prev/next for linear reading:
 ```markdown
-> [← Requirements](requirements.md) | [User Stories →](user-stories.md)
+> [← Specification](../planning/spec.md) | [API Spec →](api-spec.md)
 ```
-The first document (`requirements.md`) omits "←", the last
+The first document (`spec.md`) omits "←", the last
 (`test-spec.md`) omits "→". The chain crosses domain boundaries
 document-to-document so a reader can click straight from planning through
-design to verification: `use-case.md`'s next is the **first generated**
+design to verification: `spec.md`'s next is the **first generated**
 design document, the **last generated** design document's next is
 `../verification/test-spec.md`, and `test-spec.md`'s prev is the last
 generated design document. Never use a folder link (e.g. `../design/`) in
@@ -211,7 +213,7 @@ Document Information section:
 ```markdown
 ---
 > **All Documents**
-> [Requirements](../planning/requirements.md) | ... | [Test Spec](../verification/test-spec.md)
+> [Specification](../planning/spec.md) | ... | [Test Spec](../verification/test-spec.md)
 ```
 The index lists every generated document in canonical order; the current
 document is shown in **bold** instead of a link. Since `design/` holds a
@@ -222,15 +224,15 @@ substitute the real set at generation time.
 
 ## Planning → Design Review Gate
 
-After Step 3 (`use-case.md`) is approved, stop and explicitly confirm the
-Step 4 design-document selection (the dynamic table above) with the user
+After Step 1 (`spec.md`) is approved, stop and explicitly confirm the
+Step 2 design-document selection (the dynamic table above) with the user
 before generating anything under `design/`. This is a distinct checkpoint
 from the per-step review gates in Execution Requirement 6 — its purpose is
 to lock in *which* design documents will exist before producing any of
 them, since the set isn't fixed.
 
-> **Use case approved.** Based on the requirements and use cases, this
-> feature needs: `<selected design/*.md files>`.
+> **Specification approved.** Based on the requirements, stories, and
+> flows in `spec.md`, this feature needs: `<selected design/*.md files>`.
 > Proceed with these, or adjust the selection?
 
 ## Step-by-Step Instructions
@@ -250,7 +252,7 @@ the domain type.
 2. Detect framework, database, ORM, API style, architecture pattern
 3. Scan directory structure — `src/`, `app/`, `pages/`, `components/`
 4. Classify the **domain type** based on detected stack (Backend / Frontend
-   / Infrastructure / a mix) — used as a starting hint for Step 4's
+   / Infrastructure / a mix) — used as a starting hint for Step 2's
    design-document selection, not as a rigid branch
 5. The detected stack is recorded in the **Document Information** table of
    design/verification documents only — planning documents stay
@@ -264,7 +266,7 @@ of the pipeline:
 > - Framework: ...
 > - Domain type: Backend / Frontend / Infrastructure / a mix
 >
-> **Review mode** — how should I run Steps 1–6?
+> **Review mode** — how should I run Steps 1–4?
 > - `step-by-step` (default): pause for your review after every step
 > - `continuous`: generate all documents, then one consolidated review
 >
@@ -272,7 +274,7 @@ of the pipeline:
 
 Wait for confirmation before proceeding. In continuous mode, skip the
 per-step "Please review. Ready to proceed?" gates below and instead present
-all generated documents for a single review after Step 6.
+all generated documents for a single review after Step 4.
 
 ### Step 0.5: Domain Analysis & Document Discovery
 
@@ -286,73 +288,53 @@ all generated documents for a single review after Step 6.
 **Document Discovery**
 
 5. Scan `README.md`, `CLAUDE.md`, all `.md` files under `docs/en/specifications/` and `docs/en/policy/`
-6. Classify each by first 30 lines: `requirements` / `user-stories` / `use-case` / `api-spec` / `sequence-diagram` / `architecture` / `config` / `infrastructure` / `deployment` / `policy` / `other`
+6. Classify each by first 30 lines: `spec` / `requirements` / `user-stories` / `use-case` / `api-spec` / `sequence-diagram` / `architecture` / `config` / `infrastructure` / `deployment` / `policy` / `other` (the last three planning categories cover legacy documents from the pre-`spec.md` pipeline)
 7. Present discovered documents grouped by category using `@`-reference format
 8. Carry confirmed document list to all subsequent steps
 
 If no documents found, record "No project documents found" and proceed.
 
-### Step 1: Requirements
+### Step 1: Specification
 
-**Output**: `<domain>/planning/requirements.md`
+**Output**: `<domain>/planning/spec.md`
 
-1. Load template: `${CLAUDE_PLUGIN_ROOT}/templates/planning/requirements.md`
-2. Load discovered docs classified as `requirements`, `user-stories`, or `architecture`
-3. Ask user for: system purpose, stakeholders, core features, non-functional requirements, constraints
-4. Generate document with:
-   - System context diagram (C4Context Mermaid)
-   - Functional requirements grouped by area (`FR-<AREA>-NN` format)
-   - Non-functional requirements (`NFR-<CAT>-NN` format) as measurable,
-     stakeholder-facing targets
-   - Constraints (business, operational, development process —
-     implementation-technology constraints belong in Step 4's design
+1. Load template: `${CLAUDE_PLUGIN_ROOT}/templates/planning/spec.md`
+2. Load discovered docs classified as `spec`, `requirements`,
+   `user-stories`, `use-case`, or `architecture`
+3. Ask user for: system purpose, actors, core features, non-functional
+   requirements, constraints
+4. Generate the document section by section:
+   - **Overview**: purpose & scope, the Actors table (Primary/Secondary
+     with goals), and — only when the Multi-Actor gate below is true —
+     the System Context diagram (C4Context Mermaid)
+   - **Functional Requirements** grouped by area (`FR-<AREA>-NN` format)
+   - **Non-Functional Requirements** (`NFR-<CAT>-NN` format) as
+     measurable, stakeholder-facing targets
+   - **Constraints** (business, operational, development process —
+     implementation-technology constraints belong in Step 2's design
      documents, not here)
-   - Requirements traceability matrix
+   - **User Stories**: for each major feature, **As a** [role], **I want
+     to** [capability], **So that** [benefit], with acceptance criteria
+     (`AC-USNN-NN` IDs) in **Given/When/Then** format, normal and error
+     cases, and related requirement references
+   - **Multi-Actor Flows** (`UC-<AREA>-NN`) — **gated**: generate this
+     section only when the feature involves 2+ actors or an external
+     system (Secondary Actor). Each use case defines basic information
+     (actors, related requirements/stories), preconditions and
+     postconditions, a main flow as an actor-level interaction outline
+     (who does what, in order — not a component call chain; that belongs
+     in Step 2's `sequence-diagram.md`), and alternative flows with
+     branch points. When the gate is false, omit the entire section, its
+     Table of Contents entry, and the Traceability matrix's UC column.
+   - **Traceability**: one matrix linking FR → US (AC range) → UC
 5. Wait for review
 
-> **Step 1 complete**: Requirements generated.
-> Please review. Ready to proceed?
-
-### Step 2: User Stories
-
-**Output**: `<domain>/planning/user-stories.md`
-
-1. Load template: `${CLAUDE_PLUGIN_ROOT}/templates/planning/user-stories.md`
-2. Load Step 1 output
-3. For each major feature, create user stories:
-   - **As a** [role], **I want to** [capability], **So that** [benefit]
-   - Acceptance criteria with `AC-USNN-NN` IDs in **Given/When/Then** format
-   - Non-functional requirements per story
-   - Related requirements references
-4. Include story-requirement traceability table with AC count
-5. Wait for review
-
-> **Step 2 complete**: User stories generated.
-> Please review. Ready to proceed?
-
-### Step 3: Use Case
-
-**Output**: `<domain>/planning/use-case.md`
-
-1. Load template: `${CLAUDE_PLUGIN_ROOT}/templates/planning/use-case.md`
-2. Load previous outputs: Steps 1-2
-3. Load discovered docs classified as `use-case` or `architecture`
-4. For each use case (`UC-<AREA>-NN`), define:
-   - Basic information (actors, related requirements, related user stories)
-   - Preconditions and postconditions
-   - Main flow as an actor-level interaction outline (who does what, in
-     order — not a component call chain; that belongs in Step 4's
-     `sequence-diagram.md`)
-   - Alternative flows with branch points
-5. Include actor definitions, use case diagram, relationship table
-6. Wait for review
-
-> **Step 3 complete**: Use case generated.
+> **Step 1 complete**: Specification generated.
 > Please review. Ready to proceed to design-document selection?
 
-Then run the **Planning → Design Review Gate** above before Step 4.
+Then run the **Planning → Design Review Gate** above before Step 2.
 
-### Step 4: Design Documents (dynamic)
+### Step 2: Design Documents (dynamic)
 
 **Output**: `<domain>/design/*.md` (only the files selected at the review gate)
 
@@ -382,28 +364,29 @@ For each selected file:
 - **`user-flows.md`**: load `${CLAUDE_PLUGIN_ROOT}/templates/design/user-flows.md`;
   for each multi-step UI journey, a `flowchart TD` Mermaid with happy,
   alternative, and exception paths plus entry/exit conditions, and a flow
-  relationship diagram — exception paths feed Step 5's E2E scenarios
+  relationship diagram — exception paths feed Step 3's E2E scenarios
 - **`infra-spec.md`**: load `${CLAUDE_PLUGIN_ROOT}/templates/design/infra-spec.md`;
   define deployment topology, environments, CI/CD pipeline, resource
   definitions, monitoring/alerting, and security for the feature
 
-For every file: load previous outputs (Steps 1-3, plus any other `design/`
-files already generated in this step), omit the `## Sources Read` section
-entirely (nothing to cite — this is forward planning), and wait for review
-after all selected files are generated.
+For every file: load previous outputs (Step 1's spec.md, plus any other
+`design/` files already generated in this step), omit the `## Sources
+Read` section entirely (nothing to cite — this is forward planning), and
+wait for review after all selected files are generated.
 
-> **Step 4 complete**: Design documents generated: `<list of files>`.
+> **Step 2 complete**: Design documents generated: `<list of files>`.
 > Please review. Ready to proceed?
 
-### Step 5: Test Specification
+### Step 3: Test Specification
 
 **Output**: `<domain>/verification/test-spec.md`
 
 1. Load template: `${CLAUDE_PLUGIN_ROOT}/templates/verification/test-spec.md`
-2. Load **all** previous outputs: Steps 1-4
+2. Load **all** previous outputs: Steps 1-2
 3. Derive test cases by scanning IDs from earlier documents:
-   - `AC-USNN-NN` from user stories -> E2E and acceptance tests
-   - `UC-<AREA>-NN` main/alternative flows -> integration and unit tests
+   - `AC-USNN-NN` from spec.md's User Stories section -> E2E and acceptance tests
+   - `UC-<AREA>-NN` main/alternative flows from spec.md's Multi-Actor
+     Flows section (when generated) -> integration and unit tests
    - `user-flows.md` exception/alternative paths (when generated) -> E2E scenarios
    - Generated design documents' endpoints/components/models -> contract tests
 4. Generate:
@@ -413,14 +396,14 @@ after all selected files are generated.
    - Test-requirement traceability matrix
 5. Wait for review
 
-> **Step 5 complete**: Test specification generated.
+> **Step 3 complete**: Test specification generated.
 > Please review. Ready to proceed to README?
 
-### Step 6: Generate README
+### Step 4: Generate README
 
 **Output**: `docs/en/specifications/README.md`
 
-After all domains complete Steps 1-5:
+After all domains complete Steps 1-3:
 
 - Single-domain: table of contents linking `planning/`, `design/`, and
   `verification/` documents for that domain
@@ -431,9 +414,7 @@ After all domains complete Steps 1-5:
 Report all generated file paths on completion.
 
 > **Planning complete.** Generated documents:
-> - `<domain>/planning/requirements.md`
-> - `<domain>/planning/user-stories.md`
-> - `<domain>/planning/use-case.md`
+> - `<domain>/planning/spec.md`
 > - `<domain>/design/<selected files>`
 > - `<domain>/verification/test-spec.md`
 > - `docs/en/specifications/README.md`
@@ -446,12 +427,16 @@ Report all generated file paths on completion.
   Stack (design/verification documents only), and Reference Documents,
   followed by the Version History list. No metadata block at the top of
   the document.
-- **Planning docs are non-technical**: `planning/` documents contain no
+- **Planning docs are non-technical**: `planning/spec.md` contains no
   implementation technology — no stacks/frameworks, code-level types, API
-  paths, or architecture patterns, and no Tech Stack row in their Document
-  Information table. Measurable NFR targets and business/operational/
-  process constraints stay in planning; technology choices and technical
-  constraints are recorded in `design/` documents.
+  paths, or architecture patterns, and no Tech Stack row in its Document
+  Information table. Apply the tech-neutrality test to every sentence: if
+  the stack were swapped (Python→Java, REST→GraphQL, PostgreSQL→MongoDB),
+  the sentence must still be true — otherwise it is HOW content and moves
+  to a `design/` document. Refer to external systems by role (Secondary
+  Actor), never by protocol. Measurable NFR targets and business/
+  operational/process constraints stay in planning; technology choices and
+  technical constraints are recorded in `design/` documents.
 - **Mermaid**: `sequenceDiagram` for flows, `C4Context` for system context, `graph TD/LR` for hierarchies, `stateDiagram-v2` for state machines, `erDiagram` for data relationships
 - **TypeScript**: `interface` for props, stores, DTOs — design documents
   only, never in planning documents
