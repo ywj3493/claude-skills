@@ -1,11 +1,11 @@
 {
   "name": "dev-docs",
-  "version": "0.2.0",
-  "description": "Forward feature-planning and reverse-engineering documentation skills with a citation-grounded doc-verifier subagent.",
+  "version": "0.3.0",
+  "description": "Docs-driven development skills: docs/ scaffolding, forward feature planning, citation-grounded reverse-engineering docs with a doc-verifier subagent, and opt-in translation mirror sync.",
   "author": {
     "name": "ywj3493"
   },
   "homepage": "https://github.com/ywj3493/claude-skills",
   "repository": "https://github.com/ywj3493/claude-skills",
-  "keywords": ["planning", "documentation", "reverse-engineering", "verification"]
+  "keywords": ["planning", "documentation", "reverse-engineering", "verification", "scaffolding", "translation"]
 }

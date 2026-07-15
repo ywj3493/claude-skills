@@ -1,7 +1,7 @@
 ---
 name: sync-translations
-version: 0.2.0
-description: Audits the source-language documentation directories (per docs/config.yml, default docs/en/) for documents that are missing a translation in a configured translation language (default docs/ko/), or where a translation appears out of date compared to its source, then creates or updates those translations. Use this to keep translation mirrors in sync. Triggered by "sync docs", "번역 동기화", "update translations", "sync translations", or "mirror docs".
+version: 0.3.0
+description: Audits the source-language documentation directories (per docs/config.yml, default docs/en/) for documents that are missing a translation in a configured translation language (default docs/ko/), or where a translation appears out of date compared to its source, then creates or updates those translations. When no translation languages are configured yet, offers to enable mirroring — records the chosen language(s) in docs/config.yml and creates the mirror directories before syncing. Use this to keep translation mirrors in sync or to opt in to mirroring. Triggered by "sync docs", "번역 동기화", "update translations", "sync translations", "mirror docs", or "add a translation language".
 ---
 
 # sync-translations
@@ -13,6 +13,9 @@ The examples below show the default `en` → `ko` pairing.
 ## When to Use
 
 - User says "sync docs", "update translations", "sync translations", "번역 동기화", "mirror docs"
+- The project wants to **start** mirroring: docs were initialized source-only
+  (`translation_languages: []` from `/dev-docs:init-docs`) and the user now
+  wants a translation language added
 - After a batch of documentation updates where translations may be missing
 - Periodically to audit translation completeness across the project
 
@@ -57,6 +60,10 @@ executes the skill.
 6. **Report per file.** The final report lists every file created, updated,
    or skipped, with the reason for each skip. Never report a file as synced
    without having written and verified it.
+7. **Config changes only with consent.** `docs/config.yml` is updated only
+   after the user explicitly confirms which translation language(s) to add
+   (Step 0). Never add a translation language, create mirror directories, or
+   translate anything based on an assumed language choice.
 
 ## Step-by-Step Instructions
 
@@ -71,10 +78,34 @@ executes the skill.
 3. If `docs/` does not exist or contains no language directories, stop and
    tell the user:
 
-   > No documentation structure found. Run `/init-docs` to set it up first.
+   > No documentation structure found. Run `/dev-docs:init-docs` to set it
+   > up first.
 
-4. If `translation_languages` is empty, report that the project has no
-   translation mirrors configured and stop.
+4. If `translation_languages` is empty (the default after
+   `/dev-docs:init-docs`, which initializes the source language only), offer
+   to enable mirroring instead of stopping:
+
+   > No translation languages are configured yet (`docs/config.yml` has
+   > `translation_languages: []`). Would you like to add one now?
+   > Mirroring keeps a full translation of `specifications/`, `issue/`, and
+   > `policy/` in sync with the source language — for example `ko` for a
+   > Korean mirror.
+
+   - If the user **declines**, stop — the project stays source-only.
+   - If the user **names one or more languages**, then for each chosen
+     language `<target>`:
+     1. Update `docs/config.yml`: replace `translation_languages: []` with a
+        list containing the chosen language code(s). Keep the rest of the
+        file (comments, `source_language`) intact.
+     2. Create the mirror directories with `.gitkeep` files:
+
+        ```bash
+        mkdir -p docs/<target>/specifications docs/<target>/issue docs/<target>/policy
+        touch docs/<target>/specifications/.gitkeep docs/<target>/issue/.gitkeep docs/<target>/policy/.gitkeep
+        ```
+
+     3. Continue to Step 1 — the audit will list every source document as
+        Missing, and the normal flow translates them.
 
 Run Steps 1–4 once per configured translation language. The commands below
 show the default `en` → `ko` pairing; substitute the actual language codes.

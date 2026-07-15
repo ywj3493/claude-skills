@@ -7,8 +7,10 @@ of truth and keep it up to date.
 ## Documentation Structure
 
 Languages are configured in `docs/config.yml` — one `source_language` plus
-zero or more `translation_languages`. The tree below shows the default
-`en` → `ko` pairing; substitute the configured language codes.
+zero or more `translation_languages`. New projects start with the source
+language only (`translation_languages: []`); translation mirrors are added
+later via `/dev-docs:sync-translations`. The tree below shows the `en` → `ko`
+pairing once a `ko` mirror is configured; substitute the configured codes.
 
 ```text
 docs/
@@ -19,7 +21,7 @@ docs/
 │   │   └── <domain>/     # Created by planning skills (e.g., auth/, dashboard/)
 │   ├── issue/            # One file per work item: issue001.md, issue002.md, ...
 │   └── policy/           # Working rules: commit messages, naming conventions, general policy
-├── ko/                   # Translation mirror (one directory per translation language)
+├── ko/                   # Translation mirror (only when configured; added by sync-translations)
 │   ├── specifications/
 │   ├── issue/
 │   └── policy/
@@ -42,7 +44,8 @@ docs/
 3. **Translation mirror.** Every doc created under the source language's
    `specifications/`, `issue/`, and `policy/` directories gets a matching
    translation in each configured translation language. Projects with an
-   empty `translation_languages` list skip this rule.
+   empty `translation_languages` list skip this rule; run
+   `/dev-docs:sync-translations` to opt in to mirroring later.
 
 4. **Reference is read-only.** Never create or modify files in `docs/reference/`.
    That directory is managed exclusively by the user. It sits at the `docs/`

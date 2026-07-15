@@ -41,9 +41,9 @@ Since multiple skills share one repository, tags include the skill name:
 ```
 
 Examples:
-- `backend-planning/v0.0.1`
-- `new-issue/v0.1.0`
-- `frontend-planning/v1.0.0`
+- `init-docs/v0.3.0`
+- `sync-translations/v0.3.0`
+- `dev-planning/v1.0.0`
 
 For project-wide releases, use a plain version tag:
 

@@ -1,7 +1,7 @@
 ---
 name: init-docs
-version: 0.2.1
-description: Initializes the standard docs/ directory structure for a new project. Asks for a source language and optional translation languages (default en -> ko), records them in docs/config.yml, creates docs/<lang>/{specifications,issue,policy}/ per language plus docs/reference/, seeds initial policy documents in every configured language, and places a CLAUDE.md in the project root. Use this when starting a fresh project that should follow the standard documentation system.
+version: 0.3.0
+description: Initializes the standard docs/ directory structure for a new project. Asks for the source (base) language of the documentation (default en), records it in docs/config.yml, creates docs/<source>/{specifications,issue,policy}/ plus docs/reference/, seeds initial policy documents in the source language, and places a CLAUDE.md in the project root. Translation mirrors are NOT created here — they are added later, opt-in, by the sync-translations skill. Use this when starting a fresh project that should follow the standard documentation system.
 ---
 
 # init-docs
@@ -33,25 +33,22 @@ skill.
    compare the result against the layout in "What This Skill Creates". If
    anything is missing or unexpected, fix it before reporting — never report
    success on a partial tree.
-5. **Translation parity.** Each Korean policy file must have the same heading
-   structure and the same code blocks as its English source (code blocks stay
-   in English).
-6. **Report verified facts only.** The final report lists exactly the files
+5. **Report verified facts only.** The final report lists exactly the files
    and directories confirmed to exist on disk — nothing assumed.
-7. **Honor the language configuration.** Every directory, policy file, and
-   translation mirror follows the languages confirmed in Step 1 and recorded
-   in `docs/config.yml` — never assume English/Korean beyond the defaults the
-   user accepted.
+6. **Source language only.** This skill creates the source-language tree and
+   records `translation_languages: []` in `docs/config.yml`. It never creates
+   translation mirror directories or translated documents — that is the
+   opt-in job of `/dev-docs:sync-translations`, run later.
 
 ## What This Skill Creates
 
-Languages are configurable: one **source language** plus zero or more
-**translation languages**, recorded in `docs/config.yml`. The tree below shows
-the default `en` → `ko` pairing; substitute the configured language codes.
+The **source language** (the base language documents are authored in) is
+confirmed in Step 1 and recorded in `docs/config.yml`. The tree below shows
+the default source language `en`; substitute the configured language code.
 
 ```
 docs/
-├── config.yml                   # Language configuration (source + translations)
+├── config.yml                   # Language configuration (source; translations added later)
 ├── en/
 │   ├── specifications/
 │   │   ├── architecture.md      # Project folder structure (empty template)
@@ -63,83 +60,78 @@ docs/
 │       ├── commit-message-rule.md
 │       ├── naming-conventions.md
 │       └── reference-convention.md
-├── ko/
-│   ├── specifications/
-│   │   ├── architecture.md
-│   │   ├── config.md
-│   │   └── infrastructure.md
-│   ├── issue/
-│   └── policy/
-│       ├── policy.md
-│       ├── commit-message-rule.md
-│       ├── naming-conventions.md
-│       └── reference-convention.md
 └── reference/
 CLAUDE.md  (placed in project root)
 ```
 
 **Note:** Domain directories (e.g., `specifications/auth/`, `specifications/dashboard/`)
-are created at runtime by planning skills such as the `dev-docs` plugin's
-`dev-planning`/`dev-reverse-docs` skills, not by `init-docs`.
+are created at runtime by this plugin's `dev-planning`/`dev-reverse-docs`
+skills, not by `init-docs`.
+
+**Note:** Translation mirror trees (e.g., `docs/ko/`) are not part of this
+skill's output. Run `/dev-docs:sync-translations` later to opt in to
+mirroring — it records the translation languages in `docs/config.yml`,
+creates the mirror directories, and translates the existing documents.
 
 ## Step-by-Step Instructions
 
-### Step 1: Confirm Languages and Scope Before Acting
+### Step 1: Confirm the Source Language and Scope Before Acting
 
 Tell the user:
 
 > I'm about to set up the standard `docs/` structure in this project. This will
 > create the docs/ directory tree, a language configuration file, four initial
-> policy documents (in every configured language), and a CLAUDE.md.
+> policy documents, and a CLAUDE.md.
 >
 > Language configuration (recorded in `docs/config.yml`):
-> - Source language: `en` (documents are authored in this language)
-> - Translation languages: `ko` (mirror translations; may be empty)
+> - Source language: `en` (the base language documents are authored in)
 >
-> Use these defaults, or tell me a different source/translation setup.
+> Translation mirrors are not created now — run `/dev-docs:sync-translations`
+> later to add a translation language (e.g. `ko`) and generate the mirrors.
+>
+> Use the default source language `en`, or tell me a different one.
 > Shall I proceed?
 
-Wait for confirmation before creating anything. Use the confirmed languages in
-every subsequent step — the instructions below show the default `en` → `ko`
-pairing as the example.
+Wait for confirmation before creating anything. Use the confirmed source
+language in every subsequent step — the instructions below show the default
+`en` as the example.
 
 ### Step 2: Create Directory Structure
 
-Run the setup script if available, passing the confirmed languages
-(source first, then translation languages):
+Run the setup script, passing the confirmed source language:
 
 ```bash
-bash skills/init-docs/scripts/create-structure.sh en ko
+bash "${CLAUDE_PLUGIN_ROOT}/skills/init-docs/scripts/create-structure.sh" en
 ```
 
-The script also writes `docs/config.yml`. If the script is not available,
-create the structure manually — one directory tree per configured language,
-`.gitkeep` files so Git tracks the empty directories, and the config file:
+The script also writes `docs/config.yml` with an empty translation list. If
+the script is not available, create the structure manually — the
+source-language directory tree, `.gitkeep` files so Git tracks the empty
+directories, and the config file:
 
 ```bash
 mkdir -p docs/en/specifications docs/en/issue docs/en/policy
-mkdir -p docs/ko/specifications docs/ko/issue docs/ko/policy
 mkdir -p docs/reference
 touch docs/en/specifications/.gitkeep docs/en/issue/.gitkeep docs/en/policy/.gitkeep
-touch docs/ko/specifications/.gitkeep docs/ko/issue/.gitkeep docs/ko/policy/.gitkeep
 touch docs/reference/.gitkeep
 cat > docs/config.yml <<'EOF'
 # Documentation language configuration — read by documentation skills.
+# source_language: language of authored documents (docs/<source_language>/)
+# translation_languages: mirror languages kept in sync by sync-translations
 source_language: en
-translation_languages:
-  - ko
+translation_languages: []
 EOF
 ```
 
-For a project with no translation languages, omit the mirror directories and
-write `translation_languages: []`.
-
 ### Step 3: Place CLAUDE.md
 
-Copy the content of this skill's `references/CLAUDE-template.md` into the
-project root. If the configured languages differ from the default `en` → `ko`,
-adjust the language codes in the template's structure tree, examples, and
-`@`-reference paths to match.
+Copy the content of this skill's bundled template at
+`${CLAUDE_PLUGIN_ROOT}/skills/init-docs/references/CLAUDE-template.md` into
+the project root. If the configured source language differs from the default
+`en`, adjust the language codes in the template's structure tree, examples,
+and `@`-reference paths to match. Where the template describes the
+translation mirror (`docs/ko/`), keep it conditional on `docs/config.yml` —
+it becomes active once `sync-translations` adds a translation language.
 
 - If `CLAUDE.md` **does not exist**: create it with the template content.
 - If `CLAUDE.md` **already exists**: do NOT overwrite it. Show the user the
@@ -150,7 +142,7 @@ adjust the language codes in the template's structure tree, examples, and
 Create the following policy files in the source-language policy directory
 (`docs/<source>/policy/` — shown here as `docs/en/policy/`). Copy the blocks
 verbatim; only adjust language names, language codes, and paths where the
-configured languages differ from the default `en` → `ko`:
+configured source language differs from the default `en`:
 
 ---
 
@@ -162,8 +154,9 @@ configured languages differ from the default `en` → `ko`:
 ## Documentation
 
 - All documentation lives in `docs/` and is the source of truth
-- English documents live in `docs/en/`
-- Korean translations live in `docs/ko/` with the same filename
+- Source-language documents live in `docs/en/`
+- Translation mirrors (if configured in `docs/config.yml`) live in
+  `docs/<lang>/` with the same filename
 - `docs/reference/` is user-managed only — never create or edit files there
 
 ## Workflow
@@ -178,7 +171,8 @@ configured languages differ from the default `en` → `ko`:
 ## Policy Updates
 
 - Changes to policy files must be discussed with the user first
-- Policy changes require updating both the English and Korean versions
+- When translation languages are configured, policy changes require updating
+  the source document and every translation mirror
 
 ## Related Policy Files
 
@@ -303,31 +297,17 @@ A bare backtick path without `@` is informational or illustrative only:
 
 ---
 
-### Step 5: Create Policy Translation Mirrors
-
-**Skip this step if the project has no translation languages.**
-
-For each configured translation language, translate the four policy files and
-place them in that language's policy directory (shown here for `ko`):
-
-- `docs/ko/policy/policy.md`
-- `docs/ko/policy/commit-message-rule.md`
-- `docs/ko/policy/naming-conventions.md`
-- `docs/ko/policy/reference-convention.md`
-
-Translation rules:
-- All prose and headings → target language
-- Code blocks (``` ... ```) → keep as-is (English)
-- File paths, type names, branch examples → keep in English
-- Technical acronyms (API, URL, HTTP) → keep in English
-
-### Step 6: Offer First Issue
+### Step 5: Offer First Issue
 
 After completing setup, ask:
 
 > Setup complete. Would you like me to create the first issue document
 > (`docs/en/issue/issue001.md`) to track the initial project setup tasks?
+>
+> When you want a translation mirror later (e.g. Korean), run
+> `/dev-docs:sync-translations` — it will record the language in
+> `docs/config.yml` and generate the mirrors.
 
-### Step 7: Report
+### Step 6: Report
 
 List every file and directory created so the user can verify.
