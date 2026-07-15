@@ -2,7 +2,8 @@
 NAV NOTE: design/ is a dynamic set. The canonical order of the full
 pipeline is: requirements → user-stories → use-case → [user-flows →
 sequence-diagram → api-spec → data-model → component-diagram →
-state-diagram → infra-spec] → test-spec. At generation time, re-chain the
+domain-state-machine → client-store → infra-spec] → test-spec. At
+generation time, re-chain the
 prev/next links below through only the design documents actually generated
 for this domain, keeping that order: the first generated design document's
 prev is ../planning/use-case.md, and the last generated design document's
@@ -11,15 +12,17 @@ All Documents index at the bottom. Always link document to document —
 never a folder — and never link a design/*.md file that was not generated
 for this domain.
 -->
-> [← Data Model](data-model.md) | [State Diagram →](state-diagram.md)
+> [← Data Model](data-model.md) | [Domain State Machine →](domain-state-machine.md)
 
 # Component Diagram
 
 > **Generation note**: this file is only produced when the codebase has a
 > frontend component tree. It covers UI structure, component composition,
 > and frontend data-fetching conventions — state management lives in
-> `state-diagram.md`, and request/response shapes live in
+> `client-store.md`, and request/response shapes live in
 > `api-spec.md`/`data-model.md` (not duplicated here as DTOs).
+>
+> **Domain**: Frontend-only
 
 ---
 
@@ -261,7 +264,7 @@ tree and props above must trace back to a file listed here.
 
 ### Supporting References
 
-- [State Diagram](state-diagram.md) — Client-side state management for these components
+- [Client Store](client-store.md) — Client-side state management for these components
 - [Requirements Analysis](../planning/requirements.md) — Functional and non-functional requirements
 - [User Stories](../planning/user-stories.md) — Stories and acceptance criteria
 - [Use Case](../planning/use-case.md) — Actor-level flows these views support
@@ -293,6 +296,7 @@ tree and props above must trace back to a file listed here.
 > [API Spec](api-spec.md) |
 > [Data Model](data-model.md) |
 > **Component Diagram** |
-> [State Diagram](state-diagram.md) |
+> [Domain State Machine](domain-state-machine.md) |
+> [Client Store](client-store.md) |
 > [Infra Spec](infra-spec.md) |
 > [Test Spec](../verification/test-spec.md)

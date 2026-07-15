@@ -35,9 +35,9 @@ Both documentation skills classify documents on the same axes:
 - **`planning/` — WHAT** (stakeholder view): `requirements.md`,
   `user-stories.md`, `use-case.md`
 - **`design/` — HOW** (developer view): a dynamic subset of `api-spec.md`,
-  `sequence-diagram.md`, `component-diagram.md`, `state-diagram.md`,
-  `data-model.md`, `user-flows.md`, `infra-spec.md` — only the files the
-  feature (or the code evidence) actually calls for
+  `sequence-diagram.md`, `component-diagram.md`, `domain-state-machine.md`,
+  `client-store.md`, `data-model.md`, `user-flows.md`, `infra-spec.md` —
+  only the files the feature (or the code evidence) actually calls for
 - **`verification/`**: `test-spec.md`, the single source of truth for test
   definitions, referencing IDs from the other two
 
@@ -51,7 +51,8 @@ under `skills/init-docs/references/` and `skills/init-docs/scripts/`):
 templates/
 ├── planning/      requirements.md, user-stories.md, use-case.md
 ├── design/        api-spec.md, sequence-diagram.md, component-diagram.md,
-│                  state-diagram.md, data-model.md, user-flows.md, infra-spec.md
+│                  domain-state-machine.md, client-store.md, data-model.md,
+│                  user-flows.md, infra-spec.md
 └── verification/  test-spec.md
 ```
 

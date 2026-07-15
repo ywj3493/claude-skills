@@ -2,7 +2,8 @@
 NAV NOTE: design/ is a dynamic set. The canonical order of the full
 pipeline is: requirements → user-stories → use-case → [user-flows →
 sequence-diagram → api-spec → data-model → component-diagram →
-state-diagram → infra-spec] → test-spec. At generation time, re-chain the
+domain-state-machine → client-store → infra-spec] → test-spec. At
+generation time, re-chain the
 prev/next links below through only the design documents actually generated
 for this domain, keeping that order: the first generated design document's
 prev is ../planning/use-case.md, and the last generated design document's
@@ -22,6 +23,8 @@ for this domain.
 > component structure lives in `component-diagram.md`. The **Exception
 > Path** entries below feed the E2E scenarios in
 > `../verification/test-spec.md`.
+>
+> **Domain**: Frontend-only
 
 ---
 
@@ -157,6 +160,7 @@ opened; the flows above must trace back to a file listed here.
 > [API Spec](api-spec.md) |
 > [Data Model](data-model.md) |
 > [Component Diagram](component-diagram.md) |
-> [State Diagram](state-diagram.md) |
+> [Domain State Machine](domain-state-machine.md) |
+> [Client Store](client-store.md) |
 > [Infra Spec](infra-spec.md) |
 > [Test Spec](../verification/test-spec.md)
