@@ -9,6 +9,7 @@ Entries are ordered newest first. Format follows [Keep a Changelog](https://keep
 - `templates/planning/spec.md` — single planning template merging requirements, user stories, and use cases into a hierarchical FR → US/AC → UC layout; use cases survive as a conditional **Multi-Actor Flows** section gated on "2+ actors or an external system", and the System Context diagram shares the same gate (Refs: #30)
 - `templates/design/domain-state-machine.md` (Backend-only) and `templates/design/client-store.md` (Frontend-only) — the two halves of the former `state-diagram.md`, so entity/workflow state machines and client-side stores are selected independently
 - Every design template's note callout now carries a parsable `> **Domain**: Backend-only | Frontend-only | Infra-only` tag
+- `templates/design/design.md` — Lite-tier single design document whose H2 sections are condensed forms of the individual design templates, each with its own trigger comment and Domain tag; the fixed Lite chain is spec → design → test-spec
 
 ### Changed
 - Canonical navigation order now runs spec → [design subset] → test-spec, with component-diagram → domain-state-machine → client-store → infra-spec inside the design subset; NAV NOTE comments, prev/next links, Related Documents, and All Documents indexes updated across all templates
@@ -20,6 +21,9 @@ Entries are ordered newest first. Format follows [Keep a Changelog](https://keep
 
 ## [dev-planning/v0.1.0] - 2026-07-15
 
+### Added
+- Lite/Full tier selection in Step 0: an explicit invocation argument (`/dev-docs:dev-planning lite|full`) wins; otherwise an auto-detect heuristic (primary actor count, external systems, triggered design categories, regulated domain) proposes a default the user confirms or overrides. Lite generates spec.md + a single merged design.md + test-spec.md; Full keeps the dynamic individual design files (Refs: #30)
+
 ### Changed
 - Steps 1–3 (requirements, user stories, use case) collapsed into a single Step 1 that generates `planning/spec.md`; the pipeline is now Step 1 spec → gate → Step 2 design → Step 3 test-spec → Step 4 README (Refs: #30)
 - Multi-Actor Flows (use cases) and the System Context diagram are generated only when the feature involves 2+ actors or an external system
@@ -28,6 +32,9 @@ Entries are ordered newest first. Format follows [Keep a Changelog](https://keep
 - Execution Requirement 5 documents the heading-derived anchor scheme for ID links (e.g. `spec.md#uc-auth-01-login`)
 
 ## [dev-reverse-docs/v0.1.0] - 2026-07-15
+
+### Added
+- Lite/Full tier selection in Step 0: an explicit invocation argument (`/dev-docs:dev-reverse-docs lite|full`) wins; otherwise code signals (actor-facing surfaces, external integrations, evidence-backed design categories, module size) propose a default the user confirms or overrides. Lite generates spec.md + a single merged design.md + test-spec.md; citations and the doc-verifier loop stay mandatory in both tiers (Refs: #30)
 
 ### Changed
 - Pass 2 planning output is a single `planning/spec.md` (was `requirements.md` + `user-stories.md` + `use-case.md`); grounding, citation, and doc-verifier rules unchanged (Refs: #30)

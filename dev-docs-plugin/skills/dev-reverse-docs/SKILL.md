@@ -1,7 +1,8 @@
 ---
 name: dev-reverse-docs
 version: 0.1.0
-description: Reverse-engineer grounded planning/design/verification documentation from an EXISTING codebase, module, or feature, with mandatory per-claim source citation and a doc-verifier check after every pass. Triggers on "document this codebase", "generate docs from existing code", "reverse-engineer a spec for this repo/module". Do NOT use this for planning a NEW feature that has no code yet — use dev-planning for that.
+description: Reverse-engineer grounded planning/design/verification documentation from an EXISTING codebase, module, or feature, with mandatory per-claim source citation, a doc-verifier check after every pass, and lite/full output tiers (invoke as /dev-docs:dev-reverse-docs lite or full to pin the tier). Triggers on "document this codebase", "generate docs from existing code", "reverse-engineer a spec for this repo/module". Do NOT use this for planning a NEW feature that has no code yet — use dev-planning for that.
+argument-hint: "[lite|full]"
 ---
 
 # dev-reverse-docs
@@ -125,6 +126,39 @@ Design Document Selection table below. Run `doc-verifier` on this pass's
 output before reporting it complete. If the user wants another module
 documented next, repeat Pass 2 for it (Pass 1 does not need to re-run).
 
+## Tier Selection (Lite / Full)
+
+Pass 2 runs in one of two tiers per module. The tier decides the output
+shape, never the grounding bar — citations and the doc-verifier loop are
+mandatory in both tiers.
+
+- **Lite** — small module, one actor-facing surface, no external
+  integrations. Pass 2 generates 3 files: `planning/spec.md` (no
+  Multi-Actor Flows section), `design/design.md` (one merged file
+  holding only the evidence-backed sections), and
+  `verification/test-spec.md`.
+- **Full** — the per-file pipeline: `planning/spec.md` (with Multi-Actor
+  Flows when the code evidence supports it), dynamically selected
+  individual `design/*.md` files, and `verification/test-spec.md`.
+
+How the tier is chosen (in Step 0):
+
+1. **Explicit argument wins.** If the skill invocation carried an
+   argument — `/dev-docs:dev-reverse-docs lite` or `... full` — use that
+   tier without asking.
+2. **Otherwise auto-detect from code signals** gathered during Step 0's
+   scan (or Pass 1's overview): any Full signal ⇒ propose Full, else
+   propose Lite. The user confirms or overrides in Step 0.
+
+| Signal (from the module's code) | Lite | Full |
+|---|---|---|
+| Actor-facing surfaces (distinct API consumers, UIs, roles enforced in auth code) | 1 | 2+ |
+| External integrations (third-party clients, webhooks, message brokers) | 0 | 1+ |
+| Design categories with code evidence (selection table below) | ≤ 3 | ≥ 4 |
+| Module size (source files in scope) | ≲ 30 | larger |
+
+The tier is per **module**: each Pass 2 target gets its own evaluation.
+
 ## Design Document Selection (dynamic)
 
 `design/` is not a fixed set — generate only the files the evidence in the
@@ -145,6 +179,10 @@ Do not generate a file for a category with no evidence — an empty/invented
 `api-spec.md` for a module with no endpoints is exactly the kind of
 hallucination this skill exists to prevent.
 
+In **Lite tier** this same table selects *sections of
+`design/design.md`* instead of individual files — the no-evidence rule
+applies per section.
+
 ## Step-by-Step Instructions
 
 ### Step 0: Scope & Stack Detection
@@ -155,7 +193,10 @@ hallucination this skill exists to prevent.
    single domain classification)
 2. Confirm with the user: full Pass-1 overview first, or (if a module was
    already named) skip straight to Pass 2 for it
-3. Confirm review mode (step-by-step default vs. continuous), same as
+3. Determine the **tier** per the Tier Selection section: an explicit
+   `lite`/`full` invocation argument wins without asking; otherwise
+   propose a default from the code signals and confirm with the user
+4. Confirm review mode (step-by-step default vs. continuous), same as
    `dev-planning` Step 0
 
 ### Step 1: Pass 1 — Overview
@@ -202,15 +243,21 @@ hallucination this skill exists to prevent.
 
 ### Step 3: Pass 2 — Design Documents
 
-**Output**: `<domain>/design/*.md` (dynamic selection)
+**Output**: Full tier — `<domain>/design/*.md` (dynamic selection);
+Lite tier — `<domain>/design/design.md`
 
 1. Apply the Design Document Selection table to the module's actual code
-2. For each selected file, load its template from
-   `${CLAUDE_PLUGIN_ROOT}/templates/design/`
-3. `sequence-diagram.md` specifically: extract the raw call graph first
-   (grep/read call sites), record it in the hidden `<!-- CALLGRAPH: -->`
-   block, *then* draw the diagram and `Note`s from that extraction — never
-   draw the diagram first and back-fill citations
+2. **Full tier**: for each selected file, load its template from
+   `${CLAUDE_PLUGIN_ROOT}/templates/design/`. **Lite tier**: load
+   `${CLAUDE_PLUGIN_ROOT}/templates/design/design.md` and fill only the
+   evidence-backed sections, dropping the unused Table of Contents
+   entries
+3. Sequence diagrams specifically (the `sequence-diagram.md` file in
+   Full, the Core Flows section of `design.md` in Lite): extract the raw
+   call graph first (grep/read call sites), record it in the hidden
+   `<!-- CALLGRAPH: -->` block, *then* draw the diagram and `Note`s from
+   that extraction — never draw the diagram first and back-fill
+   citations. Source-Linked Mode rules apply identically in both tiers
 4. Wait for review
 
 ### Step 4: Pass 2 — Verification Document
@@ -228,7 +275,8 @@ hallucination this skill exists to prevent.
 
 Invoke `doc-verifier` once per document generated in Steps 2-4 (or once per
 pass if the skill's invocation budget favors batching — but every document
-must be checked before Step 6).
+must be checked before Step 6). Lite tier is not exempt: its 3 documents
+(plus `overview.md` from Pass 1) are each verified.
 
 ### Step 6: Fix-Mismatches Loop
 

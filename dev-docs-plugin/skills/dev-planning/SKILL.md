@@ -1,7 +1,8 @@
 ---
 name: dev-planning
 version: 0.1.0
-description: Forward planning pipeline for a NEW feature or project (specification -> design documents -> test spec) with ID-based test traceability. Supports backend, frontend, and infrastructure domains. Do NOT use this for documenting or reverse-engineering docs from existing code — use dev-reverse-docs for that.
+description: Forward planning pipeline for a NEW feature or project (specification -> design documents -> test spec) with ID-based test traceability and lite/full output tiers (invoke as /dev-docs:dev-planning lite or full to pin the tier). Supports backend, frontend, and infrastructure domains. Do NOT use this for documenting or reverse-engineering docs from existing code — use dev-reverse-docs for that.
+argument-hint: "[lite|full]"
 ---
 
 # dev-planning
@@ -99,19 +100,59 @@ executes the skill.
 7. **Report verified paths only.** The completion report lists only files
    confirmed to exist on disk.
 
+## Tier Selection (Lite / Full)
+
+Every domain is planned in one of two tiers. The tier decides the shape
+of the output, never its quality bar.
+
+- **Lite** — single primary actor, no external systems, low
+  business-logic complexity (typical CRUD). Generates 3 files:
+  `planning/spec.md` (no Multi-Actor Flows section), `design/design.md`
+  (one merged file holding only the triggered sections), and
+  `verification/test-spec.md`.
+- **Full** — multiple actors, external-system integration,
+  regulated/security-sensitive, or high domain complexity. Generates
+  `planning/spec.md` (with Multi-Actor Flows when the gate is true),
+  dynamically selected individual `design/*.md` files, and
+  `verification/test-spec.md`.
+
+How the tier is chosen (in Step 0):
+
+1. **Explicit argument wins.** If the skill invocation carried an
+   argument — `/dev-docs:dev-planning lite` or `/dev-docs:dev-planning
+   full` — use that tier without asking.
+2. **Otherwise auto-detect and propose.** Evaluate the signals below
+   against the user's feature description; any Full signal ⇒ propose
+   Full, else propose Lite. The proposal is confirmed (or overridden) by
+   the user in the Step 0 summary — the user's answer always wins.
+
+| Signal | Lite | Full |
+|---|---|---|
+| Distinct primary actors | 1 | 2+ |
+| External systems (Secondary Actors) | 0 | 1+ |
+| Design categories triggered by the selection table | ≤ 3 | ≥ 4 |
+| Regulated / security-sensitive domain (payments, PII, healthcare, auth infrastructure) | No | Yes |
+
+The tier is per **domain**: in a multi-domain project each domain gets
+its own evaluation (a `payment` domain can be Full while `profile` is
+Lite).
+
 ## Pipeline Overview
 
 ```text
-Step 0:   Tech stack detection + domain type classification
+Step 0:   Tech stack detection + domain classification + tier selection
 Step 0.5: Domain analysis & document discovery
 Step 1:   Specification -> <domain>/planning/spec.md               [common, WHAT]
              requirements (FR/NFR) + user stories/acceptance criteria
              + Multi-Actor Flows (only with 2+ actors or an external system)
 --- Planning -> Design review gate (see below) ---
-Step 2:   Design Documents -> <domain>/design/*.md                 [dynamic, HOW]
-             selected from: api-spec.md, sequence-diagram.md,
-             component-diagram.md, domain-state-machine.md,
-             client-store.md, data-model.md, user-flows.md, infra-spec.md
+Step 2:   Design Documents                                         [dynamic, HOW]
+             Full: <domain>/design/*.md — selected from: api-spec.md,
+                   sequence-diagram.md, component-diagram.md,
+                   domain-state-machine.md, client-store.md,
+                   data-model.md, user-flows.md, infra-spec.md
+             Lite: <domain>/design/design.md — one merged file; the
+                   same selection table picks its sections
 Step 3:   Test Specification -> <domain>/verification/test-spec.md [common]
 Step 4:   README (table of contents)
 ```
@@ -145,6 +186,14 @@ docs/en/specifications/
         └── test-spec.md         # Step 3
 ```
 
+In **Lite tier** the `design/` directory holds a single merged file
+instead of the dynamic subset:
+
+```text
+    ├── design/
+    │   └── design.md            # Step 2 (Lite) — sections per the same selection table
+```
+
 ## Design Document Selection (dynamic)
 
 `design/` is not a fixed single-domain branch — decide which files the
@@ -166,6 +215,10 @@ A feature can need more than one — a typical full-stack feature needs
 the selection with the user at the start of Step 2 rather than guessing
 from Step 0's domain classification alone; a "backend" project can still
 need `component-diagram.md` if the feature includes an admin UI.
+
+In **Lite tier** this same table selects *sections of
+`design/design.md`* instead of individual files — each section of that
+template carries the matching trigger and Domain tag.
 
 ## ID System
 
@@ -192,6 +245,9 @@ spec
      → infra-spec]                                       (generated subset)
   → test-spec
 ```
+
+In **Lite tier** the chain is fixed — `spec → design → test-spec` — and
+the All Documents index is just those three documents.
 
 Every domain document includes two navigation blocks:
 
@@ -228,11 +284,13 @@ After Step 1 (`spec.md`) is approved, stop and explicitly confirm the
 Step 2 design-document selection (the dynamic table above) with the user
 before generating anything under `design/`. This is a distinct checkpoint
 from the per-step review gates in Execution Requirement 6 — its purpose is
-to lock in *which* design documents will exist before producing any of
+to lock in *which* design documents will exist (Full tier) or which
+sections `design.md` will contain (Lite tier) before producing any of
 them, since the set isn't fixed.
 
 > **Specification approved.** Based on the requirements, stories, and
-> flows in `spec.md`, this feature needs: `<selected design/*.md files>`.
+> flows in `spec.md`, this feature needs:
+> `<selected design/*.md files — or design.md sections in Lite tier>`.
 > Proceed with these, or adjust the selection?
 
 ## Step-by-Step Instructions
@@ -254,7 +312,11 @@ the domain type.
 4. Classify the **domain type** based on detected stack (Backend / Frontend
    / Infrastructure / a mix) — used as a starting hint for Step 2's
    design-document selection, not as a rigid branch
-5. The detected stack is recorded in the **Document Information** table of
+5. Determine the **tier** per the Tier Selection section: an explicit
+   `lite`/`full` invocation argument wins without asking; otherwise
+   evaluate the auto-detect signals and propose a default in the summary
+   below
+6. The detected stack is recorded in the **Document Information** table of
    design/verification documents only — planning documents stay
    technology-free (see Document Rules)
 
@@ -265,6 +327,10 @@ of the pipeline:
 > - Language: ...
 > - Framework: ...
 > - Domain type: Backend / Frontend / Infrastructure / a mix
+>
+> **Tier**: Lite / Full (auto-detected — signals: `<one line>`) —
+> confirm or override? *(omit this question when the invocation already
+> carried `lite` or `full`)*
 >
 > **Review mode** — how should I run Steps 1–4?
 > - `step-by-step` (default): pause for your review after every step
@@ -336,9 +402,19 @@ Then run the **Planning → Design Review Gate** above before Step 2.
 
 ### Step 2: Design Documents (dynamic)
 
-**Output**: `<domain>/design/*.md` (only the files selected at the review gate)
+**Output**: Full tier — `<domain>/design/*.md` (only the files selected
+at the review gate); Lite tier — `<domain>/design/design.md` (only the
+sections selected at the review gate)
 
-For each selected file:
+**Lite tier**: load `${CLAUDE_PLUGIN_ROOT}/templates/design/design.md`,
+keep only the selected sections (each carries its trigger comment and
+Domain tag), drop the unused Table of Contents entries, and skip the
+per-file instructions below — they describe Full tier. The content rules
+still apply section by section (e.g. the Core Flows section follows the
+`sequence-diagram.md` rules, including omitting Source-Linked Mode for
+forward planning).
+
+**Full tier** — for each selected file:
 
 - **`api-spec.md`**: load `${CLAUDE_PLUGIN_ROOT}/templates/design/api-spec.md`;
   define HTTP method/path/auth per endpoint, request/response schemas with
@@ -389,6 +465,8 @@ wait for review after all selected files are generated.
      Flows section (when generated) -> integration and unit tests
    - `user-flows.md` exception/alternative paths (when generated) -> E2E scenarios
    - Generated design documents' endpoints/components/models -> contract tests
+   - In Lite tier, design references point at `design.md` section anchors
+     (e.g. `../design/design.md#api`) instead of individual files
 4. Generate:
    - Test matrix with Test IDs (`T-NNN`), source references, type, priority
    - Mocking boundaries for unit/integration/E2E levels
@@ -408,12 +486,14 @@ After all domains complete Steps 1-3:
 - Single-domain: table of contents linking `planning/`, `design/`, and
   `verification/` documents for that domain
 - Multi-domain: section per domain + optional per-domain README.md
+- Note each domain's tier (`Tier: Lite` / `Tier: Full`) in its section,
+  so a later Full upgrade of a Lite domain is visible
 - If README exists, merge rather than overwrite
 - Include discovered documents in a **Related Project Documents** section
 
 Report all generated file paths on completion.
 
-> **Planning complete.** Generated documents:
+> **Planning complete.** Tier per domain: Lite / Full. Generated documents:
 > - `<domain>/planning/spec.md`
 > - `<domain>/design/<selected files>`
 > - `<domain>/verification/test-spec.md`
@@ -453,6 +533,7 @@ Report all generated file paths on completion.
   (unless continuous mode was chosen in Step 0)
 - **Navigation**: Every domain document has top (line-1 prev/next) and
   bottom (all documents) navigation following the canonical order in the
-  Navigation section — document-to-document across domain boundaries,
-  never folder links
+  Navigation section (Lite tier: the fixed `spec → design → test-spec`
+  chain) — document-to-document across domain boundaries, never folder
+  links
 - **`@`-references**: Use for discovered docs per [@docs/en/policy/reference-convention.md](docs/en/policy/reference-convention.md)
