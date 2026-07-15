@@ -1,20 +1,19 @@
 <!--
-NAV NOTE: design/ is a dynamic set. At generation time, replace the
-prev-link below with the previous document actually generated for this
-domain (or ../planning/use-case.md if this is the first design document),
-and apply the same substitution to the Related Documents and All Documents
-blocks at the bottom. Never link a design/*.md file that was not generated
+NAV NOTE: design/ is a dynamic set. The canonical order of the full
+pipeline is: requirements → user-stories → use-case → [user-flows →
+sequence-diagram → api-spec → data-model → component-diagram →
+state-diagram → infra-spec] → test-spec. At generation time, re-chain the
+prev/next links below through only the design documents actually generated
+for this domain, keeping that order: the first generated design document's
+prev is ../planning/use-case.md, and the last generated design document's
+next is ../verification/test-spec.md. Apply the same substitution to the
+All Documents index at the bottom. Always link document to document —
+never a folder — and never link a design/*.md file that was not generated
 for this domain.
 -->
-> [← Sequence Diagrams](sequence-diagram.md) | [Test Spec →](../verification/test-spec.md)
+> [← Data Model](data-model.md) | [State Diagram →](state-diagram.md)
 
 # Component Diagram
-
-> **Created**: YYYY-MM-DD
-> **Last Modified**: YYYY-MM-DD
-> **Status**: Draft
-> **Tech Stack**: (auto-detected)
-> **Reference Documents**: <!-- list @-references from document discovery -->
 
 > **Generation note**: this file is only produced when the codebase has a
 > frontend component tree. It covers UI structure, component composition,
@@ -260,14 +259,24 @@ tree and props above must trace back to a file listed here.
 
 ## Related Documents
 
-- **Previous**: [← Sequence Diagrams](sequence-diagram.md)
-- **Next**: [Test Spec →](../verification/test-spec.md)
-- **State Management**: [State Diagram](state-diagram.md)
-- **Requirements**: [Requirements Analysis](../planning/requirements.md)
-- **User Stories**: [User Stories](../planning/user-stories.md)
-- **Use Case**: [Use Case](../planning/use-case.md)
+### Supporting References
+
+- [State Diagram](state-diagram.md) — Client-side state management for these components
+- [Requirements Analysis](../planning/requirements.md) — Functional and non-functional requirements
+- [User Stories](../planning/user-stories.md) — Stories and acceptance criteria
+- [Use Case](../planning/use-case.md) — Actor-level flows these views support
 
 ---
+
+## Document Information
+
+| Field | Value |
+|-------|-------|
+| **Created** | YYYY-MM-DD |
+| **Last Modified** | YYYY-MM-DD |
+| **Status** | Draft |
+| **Tech Stack** | (auto-detected) |
+| **Reference Documents** | <!-- list @-references from document discovery --> |
 
 **Version History**:
 
@@ -275,10 +284,15 @@ tree and props above must trace back to a file listed here.
 
 ---
 > **All Documents**
-> <!-- list only the design/*.md files generated for this domain; current file in bold -->
+> <!-- Keep only the design/*.md entries actually generated for this domain; current document in bold, not linked -->
 > [Requirements](../planning/requirements.md) |
 > [User Stories](../planning/user-stories.md) |
 > [Use Case](../planning/use-case.md) |
+> [User Flows](user-flows.md) |
 > [Sequence Diagrams](sequence-diagram.md) |
+> [API Spec](api-spec.md) |
+> [Data Model](data-model.md) |
 > **Component Diagram** |
+> [State Diagram](state-diagram.md) |
+> [Infra Spec](infra-spec.md) |
 > [Test Spec](../verification/test-spec.md)

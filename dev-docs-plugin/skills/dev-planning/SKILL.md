@@ -1,6 +1,6 @@
 ---
 name: dev-planning
-version: 0.0.1
+version: 0.0.2
 description: Forward planning pipeline for a NEW feature or project (requirements -> user stories -> use case -> design documents -> test spec) with ID-based test traceability. Supports backend, frontend, and infrastructure domains. Do NOT use this for documenting or reverse-engineering docs from existing code — use dev-reverse-docs for that.
 ---
 
@@ -82,7 +82,9 @@ executes the skill.
    Fix any orphan references or uncovered ACs before presenting the step.
 5. **Verify links and diagrams.** Every navigation link must point to a file
    that exists or will be produced by this pipeline (with the actual
-   generated `design/` filenames substituted for any placeholder). Every
+   generated `design/` filenames substituted for any placeholder). Prev/next
+   links point document-to-document in canonical order — never to a folder
+   like `../design/`. Every
    Mermaid block must be syntactically complete: matching fences, declared
    participants, no placeholder text left inside.
 6. **Respect review gates literally.** In step-by-step mode (the default),
@@ -176,25 +178,44 @@ definitions** — only IDs.
 
 ## Navigation
 
+**Canonical pipeline order** — navigation always follows this order,
+skipping any design file not generated for the domain:
+
+```text
+requirements → user-stories → use-case
+  → [user-flows → sequence-diagram → api-spec → data-model
+     → component-diagram → state-diagram → infra-spec]   (generated subset)
+  → test-spec
+```
+
 Every domain document includes two navigation blocks:
 
-**Top** — sequential prev/next for linear reading:
+**Top** — line 1 of the file, sequential prev/next for linear reading:
 ```markdown
 > [← Requirements](requirements.md) | [User Stories →](user-stories.md)
 ```
-First document omits "←", last document omits "→".
+The first document (`requirements.md`) omits "←", the last
+(`test-spec.md`) omits "→". The chain crosses domain boundaries
+document-to-document so a reader can click straight from planning through
+design to verification: `use-case.md`'s next is the **first generated**
+design document, the **last generated** design document's next is
+`../verification/test-spec.md`, and `test-spec.md`'s prev is the last
+generated design document. Never use a folder link (e.g. `../design/`) in
+prev/next.
 
-**Bottom** — full index to jump to any document:
+**Bottom** — full index to jump to any document, placed after the
+Document Information section:
 ```markdown
 ---
 > **All Documents**
 > [Requirements](../planning/requirements.md) | ... | [Test Spec](../verification/test-spec.md)
 ```
-The current document is shown in **bold** instead of a link. Since `design/`
-now holds a dynamic set of files, link to `../design/` (the folder) from
-outside `design/`, and link to the sibling files that were actually
-generated from within it — never link to a `design/*.md` file that wasn't
-produced for this domain.
+The index lists every generated document in canonical order; the current
+document is shown in **bold** instead of a link. Since `design/` holds a
+dynamic set of files, include only the `design/*.md` files actually
+generated for this domain — never link a file that wasn't produced. The
+templates ship with the full canonical set plus a NAV NOTE comment;
+substitute the real set at generation time.
 
 ## Planning → Design Review Gate
 
@@ -228,6 +249,9 @@ the domain type.
 4. Classify the **domain type** based on detected stack (Backend / Frontend
    / Infrastructure / a mix) — used as a starting hint for Step 4's
    design-document selection, not as a rigid branch
+5. The detected stack is recorded in the **Document Information** table of
+   design/verification documents only — planning documents stay
+   technology-free (see Document Rules)
 
 Summarize and confirm with the user, including the review mode for the rest
 of the pipeline:
@@ -275,8 +299,11 @@ If no documents found, record "No project documents found" and proceed.
 4. Generate document with:
    - System context diagram (C4Context Mermaid)
    - Functional requirements grouped by area (`FR-<AREA>-NN` format)
-   - Non-functional requirements (`NFR-<CAT>-NN` format)
-   - Constraints (technical, architecture, operational)
+   - Non-functional requirements (`NFR-<CAT>-NN` format) as measurable,
+     stakeholder-facing targets
+   - Constraints (business, operational, development process —
+     implementation-technology constraints belong in Step 4's design
+     documents, not here)
    - Requirements traceability matrix
 5. Wait for review
 
@@ -409,9 +436,20 @@ Report all generated file paths on completion.
 ## Document Rules
 
 - **Language**: English
-- **Meta block**: Created, Last Modified, Status, Tech Stack, Reference Documents
+- **Document Information**: every document ends with a `## Document
+  Information` section — a table of Created, Last Modified, Status, Tech
+  Stack (design/verification documents only), and Reference Documents,
+  followed by the Version History list. No metadata block at the top of
+  the document.
+- **Planning docs are non-technical**: `planning/` documents contain no
+  implementation technology — no stacks/frameworks, code-level types, API
+  paths, or architecture patterns, and no Tech Stack row in their Document
+  Information table. Measurable NFR targets and business/operational/
+  process constraints stay in planning; technology choices and technical
+  constraints are recorded in `design/` documents.
 - **Mermaid**: `sequenceDiagram` for flows, `C4Context` for system context, `graph TD/LR` for hierarchies, `stateDiagram-v2` for state machines, `erDiagram` for data relationships
-- **TypeScript**: `interface` for props, stores, DTOs (frontend domain)
+- **TypeScript**: `interface` for props, stores, DTOs — design documents
+  only, never in planning documents
 - **IDs**: FR-XXX, NFR-XXX, US-NN, AC-USNN-NN, UC-XXX — no test content in planning docs
 - **Cross-references**: FR -> UC -> Design Documents -> Test Spec links
 - **Given/When/Then**: Acceptance criteria format in user stories
@@ -423,5 +461,8 @@ Report all generated file paths on completion.
 - **References**: Each step loads all previous step outputs before generating
 - **Review gate**: Never proceed to the next step without user approval
   (unless continuous mode was chosen in Step 0)
-- **Navigation**: Every domain document has top (prev/next) and bottom (all documents) navigation
+- **Navigation**: Every domain document has top (line-1 prev/next) and
+  bottom (all documents) navigation following the canonical order in the
+  Navigation section — document-to-document across domain boundaries,
+  never folder links
 - **`@`-references**: Use for discovered docs per [@docs/en/policy/reference-convention.md](docs/en/policy/reference-convention.md)

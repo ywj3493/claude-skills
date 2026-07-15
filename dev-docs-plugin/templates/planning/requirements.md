@@ -1,16 +1,13 @@
+> [User Stories →](user-stories.md)
+
 # Requirements Analysis
 
-> **Created**: YYYY-MM-DD
-> **Last Modified**: YYYY-MM-DD
-> **Status**: Draft
-> **Tech Stack**: (auto-detected)
-> **Reference Documents**: <!-- list @-references from document discovery -->
-
----
-
-## Document Navigation
-
-**Next**: [User Stories →](user-stories.md)
+> **Classification note**: this document is a **planning/WHAT** document —
+> it captures what the system must do in stakeholder language. Do not put
+> implementation technology here (stacks, frameworks, code types, API
+> paths, architecture patterns); that content belongs in the `../design/`
+> documents. Measurable non-functional targets and business/operational
+> constraints are planning content and do belong here.
 
 ---
 
@@ -31,21 +28,21 @@
 **Project Name**: <!-- Project name -->
 **Purpose**: <!-- One-line description of what the system does -->
 **Version**: 0.1.0
-**Architecture**: <!-- e.g., 4-Layer DDD, MVC, Hexagonal, Clean Architecture -->
 
 ### Stakeholders
 
 | Role | Responsibility | Concerns |
 |------|---------------|----------|
-| **Frontend Team** | API integration | Clear API contract, error messages, CORS |
-| **Backend Team** | Implementation and maintenance | Clean architecture, testability, maintainability |
-| **Security Team** | Secure design review | Authentication, authorization, data protection |
-| **DevOps** | Deployment and monitoring | Docker, health checks, observability |
+| **Product Owner** | Feature prioritization and scope | Business value, timeline, scope clarity |
 | **End Users** | Use the application | Reliability, performance, ease of use |
+| **Development Team** | Build and maintain the system | Clear, testable, unambiguous requirements |
+| **Security / Compliance** | Risk and compliance review | Data protection, privacy, regulatory compliance |
+| **Operations** | Keep the service running | Availability, supportability, observability |
 
 ### System Context
 
-<!-- Describe the system's position in the overall architecture -->
+<!-- Describe the system's position among its users and neighboring systems.
+Stay at the actor/system boundary — no protocols, no internal components. -->
 
 ```mermaid
 C4Context
@@ -56,9 +53,9 @@ C4Context
     System_Ext(ext1, "External Service 1", "Description")
     System_Ext(ext2, "External Service 2", "Description")
 
-    Rel(user, system, "Uses", "HTTPS")
-    Rel(system, ext1, "Communicates", "HTTP/gRPC")
-    Rel(system, ext2, "Stores data", "Protocol")
+    Rel(user, system, "Uses")
+    Rel(system, ext1, "Exchanges data with")
+    Rel(system, ext2, "Delegates to")
 
     UpdateLayoutConfig($c4ShapeInRow="3", $c4BoundaryInRow="1")
 ```
@@ -94,12 +91,12 @@ C4Context
 
 **FR-<AREA>-01: <Requirement Name>**
 
-- **Input**: <!-- What the system receives -->
+- **Input**: <!-- What the actor provides -->
 - **Process**:
-  1. <!-- Step 1 -->
+  1. <!-- Step 1, described as observable behavior -->
   2. <!-- Step 2 -->
   3. <!-- Step 3 -->
-- **Output**: <!-- What the system produces -->
+- **Output**: <!-- What the actor receives -->
 - **Related Use Case**: [UC-<AREA>-01](use-case.md#uc-area-01-name)
 
 <!-- Repeat FR-<AREA>-NN blocks for each requirement -->
@@ -111,6 +108,10 @@ C4Context
 ---
 
 ## Non-Functional Requirements
+
+<!-- State each NFR as a measurable, testable target in stakeholder terms
+(e.g., "95% of searches respond within 200ms"). How the target is achieved
+is a design concern — do not name technologies here. -->
 
 ### NFR-SEC: Security
 
@@ -125,69 +126,65 @@ C4Context
 
 | ID | Requirement | Priority | Status |
 |----|-------------|----------|--------|
-| **NFR-PERF-01** | <!-- Performance target --> | SHOULD | Planned |
-| **NFR-PERF-02** | <!-- Performance target --> | SHOULD | Planned |
+| **NFR-PERF-01** | <!-- Measurable performance target --> | SHOULD | Planned |
+| **NFR-PERF-02** | <!-- Measurable performance target --> | SHOULD | Planned |
 
 ---
 
-### NFR-ARCH: Architecture
+### NFR-AVAIL: Availability
 
 | ID | Requirement | Priority | Status |
 |----|-------------|----------|--------|
-| **NFR-ARCH-01** | <!-- Architecture constraint --> | MUST | Planned |
-| **NFR-ARCH-02** | <!-- Architecture constraint --> | MUST | Planned |
+| **NFR-AVAIL-01** | <!-- Availability / recovery target --> | MUST | Planned |
+| **NFR-AVAIL-02** | <!-- Availability / recovery target --> | SHOULD | Planned |
 
 ---
 
-### NFR-DEPLOY: Deployment
+### NFR-USE: Usability
 
 | ID | Requirement | Priority | Status |
 |----|-------------|----------|--------|
-| **NFR-DEPLOY-01** | <!-- Deployment requirement --> | MUST | Planned |
-| **NFR-DEPLOY-02** | <!-- Deployment requirement --> | SHOULD | Planned |
+| **NFR-USE-01** | <!-- Usability / accessibility requirement --> | SHOULD | Planned |
+| **NFR-USE-02** | <!-- Usability / accessibility requirement --> | COULD | Planned |
 
 ---
 
 ## Constraints
 
-### Technical Constraints
+<!-- Implementation-technology constraints (language, framework, database,
+architecture pattern) are design decisions — record them in the
+`../design/` documents, not here. -->
+
+### Business Constraints
 
 | Constraint | Description | Impact |
 |-----------|-------------|--------|
-| **Language** | <!-- e.g., Python 3.11+ --> | <!-- Impact on implementation --> |
-| **Framework** | <!-- e.g., FastAPI 0.115+ --> | <!-- Impact on implementation --> |
-| **Database** | <!-- e.g., PostgreSQL 16+ --> | <!-- Impact on implementation --> |
-
-### Architecture Constraints
-
-| Constraint | Description | Impact |
-|-----------|-------------|--------|
-| <!-- Pattern --> | <!-- e.g., Must follow DDD layer rules --> | <!-- Impact --> |
-| <!-- DI --> | <!-- e.g., All dependencies via DI --> | <!-- Impact --> |
+| <!-- Budget --> | <!-- e.g., Must launch within existing subscription budget --> | <!-- Impact --> |
+| <!-- Schedule --> | <!-- e.g., Must launch before the Q3 campaign --> | <!-- Impact --> |
+| <!-- Regulation --> | <!-- e.g., Must comply with GDPR / local privacy law --> | <!-- Impact --> |
 
 ### Operational Constraints
 
 | Constraint | Description | Impact |
 |-----------|-------------|--------|
-| <!-- External deps --> | <!-- e.g., External API is third-party --> | <!-- Impact --> |
-| <!-- Deployment --> | <!-- e.g., Must work in air-gapped networks --> | <!-- Impact --> |
+| <!-- External deps --> | <!-- e.g., Depends on a third-party service's availability --> | <!-- Impact --> |
+| <!-- Environment --> | <!-- e.g., Must work in air-gapped networks --> | <!-- Impact --> |
 
-### Development Constraints
+### Development Process Constraints
 
 | Constraint | Description | Impact |
 |-----------|-------------|--------|
 | <!-- Process --> | <!-- e.g., Issue documentation first --> | <!-- Impact --> |
 | <!-- Docs --> | <!-- e.g., English documentation --> | <!-- Impact --> |
-| <!-- Diagrams --> | <!-- e.g., Mermaid format only --> | <!-- Impact --> |
 
 ---
 
 ## Requirements Traceability Matrix
 
-| Requirement ID | Category | Description | Use Case | Implementation | Status |
-|---------------|----------|-------------|----------|----------------|--------|
-| **FR-<AREA>-01** | <!-- Area --> | <!-- Brief --> | UC-<AREA>-01 | <!-- file --> | Planned |
-| **FR-<AREA>-02** | <!-- Area --> | <!-- Brief --> | UC-<AREA>-02 | <!-- file --> | Planned |
+| Requirement ID | Category | Description | Use Case | Status |
+|---------------|----------|-------------|----------|--------|
+| **FR-<AREA>-01** | <!-- Area --> | <!-- Brief --> | UC-<AREA>-01 | Planned |
+| **FR-<AREA>-02** | <!-- Area --> | <!-- Brief --> | UC-<AREA>-02 | Planned |
 
 ---
 
@@ -198,18 +195,14 @@ Populated by dev-reverse-docs only — omitted entirely for forward planning
 (dev-planning), since no code exists yet to read from.
 List every file (and line range, if only part of it was read) actually
 opened via Read/Grep while writing this document. Every [REF: path:line]
-citation above must point to a file listed here.
+citation above must point to a file listed here. [REF] citations are
+provenance markers, not design content — they are allowed (and required by
+dev-reverse-docs) even though this is a non-technical planning document.
 -->
 
 ---
 
 ## Related Documents
-
-### Specification Chain
-
-- **-> Next**: [User Stories](user-stories.md)
-- **-> Then**: [Use Case](use-case.md)
-- **-> Then**: [Design Documents](../design/) <!-- link each design/*.md file actually generated for this domain -->
 
 ### Supporting References
 
@@ -219,14 +212,30 @@ citation above must point to a file listed here.
 
 ---
 
+## Document Information
+
+| Field | Value |
+|-------|-------|
+| **Created** | YYYY-MM-DD |
+| **Last Modified** | YYYY-MM-DD |
+| **Status** | Draft |
+| **Reference Documents** | <!-- list @-references from document discovery --> |
+
 **Version History**:
 
 - 1.0.0 (YYYY-MM-DD): Initial requirements analysis document
 
 ---
 > **All Documents**
+> <!-- Keep only the design/*.md entries actually generated for this domain; current document in bold, not linked -->
 > **Requirements** |
 > [User Stories](user-stories.md) |
 > [Use Case](use-case.md) |
-> [Design Documents](../design/) |
+> [User Flows](../design/user-flows.md) |
+> [Sequence Diagrams](../design/sequence-diagram.md) |
+> [API Spec](../design/api-spec.md) |
+> [Data Model](../design/data-model.md) |
+> [Component Diagram](../design/component-diagram.md) |
+> [State Diagram](../design/state-diagram.md) |
+> [Infra Spec](../design/infra-spec.md) |
 > [Test Spec](../verification/test-spec.md)

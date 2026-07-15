@@ -1,6 +1,6 @@
 ---
 name: dev-reverse-docs
-version: 0.0.1
+version: 0.0.2
 description: Reverse-engineer grounded planning/design/verification documentation from an EXISTING codebase, module, or feature, with mandatory per-claim source citation and a doc-verifier check after every pass. Triggers on "document this codebase", "generate docs from existing code", "reverse-engineer a spec for this repo/module". Do NOT use this for planning a NEW feature that has no code yet — use dev-planning for that.
 ---
 
@@ -180,7 +180,12 @@ hallucination this skill exists to prevent.
    through its call chain — before writing anything
 3. `requirements.md`: derive `FR-<AREA>-NN`/`NFR-<CAT>-NN` from what the
    code actually enforces (validation, auth checks, config) — cite each;
-   mark the "Purpose"/stakeholder framing as inferred per Grounding Rule 4
+   mark the "Purpose"/stakeholder framing as inferred per Grounding Rule 4.
+   Write the requirements themselves in stakeholder language — planning
+   documents stay non-technical (no stacks, code types, API paths); the
+   technical detail the code revealed goes into Step 3's design documents.
+   `[REF: path:line]` citations are provenance, not technical content —
+   they are still required on every claim here.
 4. `user-stories.md`: derive from the requirements and observed API/UI
    surface — mark "So that" clauses `[ASSUMED: ...]` unless the intent is
    stated somewhere (comment, doc, commit message you actually read)
@@ -248,15 +253,30 @@ gaps). List:
 ## Document Rules
 
 - **Language**: English
-- **Meta block**: Created, Last Modified, Status, Tech Stack, Reference Documents
+- **Document Information**: every document ends with a `## Document
+  Information` section — a table of Created, Last Modified, Status, Tech
+  Stack (design/verification documents only), and Reference Documents,
+  followed by the Version History list. No metadata block at the top of
+  the document.
+- **Planning docs are non-technical**: `planning/` documents contain no
+  implementation technology (no stacks, code-level types, API paths,
+  architecture patterns) and no Tech Stack row in their Document
+  Information table — the technical detail lives in `design/` documents.
+  `[REF:]`/`[ASSUMED:]` citations are provenance markers, not technical
+  content, and remain mandatory in planning documents.
 - **Mermaid**: `sequenceDiagram` (Source-Linked Mode) for flows, `graph TD/LR` for hierarchies, `stateDiagram-v2` for state machines, `erDiagram` for data relationships
 - **Citations**: `[REF: path:line]` / `[REF: path:start-end]`; `[ASSUMED: <inference>; basis: <evidence>]` for unverifiable-but-needed content
-- **`## Sources Read`**: required in every generated document — every citation must trace back to a file listed there
+- **`## Sources Read`**: required in every generated document — every
+  citation must trace back to a file listed there. It sits after the body
+  sections, before Related Documents and Document Information.
 - **IDs**: FR-XXX, NFR-XXX, US-NN, AC-USNN-NN, UC-XXX — same ID system as `dev-planning`, so a module documented here and later extended via `dev-planning` shares one traceability scheme
 - **Cross-references**: FR -> UC -> Design Documents -> Test Spec links
 - **Given/When/Then**: Acceptance criteria format in user stories
 - **Participant notation**: `FileName<br/>(Layer)` in sequence diagrams, plus the `link`/`Note`/`CALLGRAPH` Source-Linked Mode elements
 - **Review gate**: Never proceed to the next step without user approval (unless continuous mode was chosen in Step 0)
 - **Verification gate**: Never report a document complete before a clean `doc-verifier` pass on it
-- **Navigation**: Every domain document has top (prev/next) and bottom (all documents) navigation, same convention as `dev-planning`
+- **Navigation**: Every domain document has top (line-1 prev/next) and
+  bottom (all documents) navigation, same convention and canonical order
+  as `dev-planning` — document-to-document across domain boundaries, never
+  folder links, and only files actually generated for the domain
 - **`@`-references**: Use for discovered docs per [@docs/en/policy/reference-convention.md](docs/en/policy/reference-convention.md)

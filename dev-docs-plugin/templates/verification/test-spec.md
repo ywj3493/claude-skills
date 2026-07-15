@@ -1,12 +1,14 @@
-> [← Design Documents](../design/)
+<!--
+NAV NOTE: the prev-link below points at the last design document in
+canonical order (infra-spec.md by default). At generation time, replace it
+with the last design/*.md file actually generated for this domain — never
+link the ../design/ folder or a design file that was not generated. Apply
+the same substitution to the All Documents index at the bottom. This is
+the last document in the pipeline, so it has no next-link.
+-->
+> [← Infra Spec](../design/infra-spec.md)
 
 # Test Specification
-
-> **Created**: YYYY-MM-DD
-> **Last Modified**: YYYY-MM-DD
-> **Status**: Draft
-> **Tech Stack**: (auto-detected)
-> **Reference Documents**: <!-- list @-references from document discovery -->
 
 ---
 
@@ -156,13 +158,23 @@ trace back to a file listed here.
 
 ## Related Documents
 
-- **Previous**: [← Design Documents](../design/)
-- **Requirements**: [Requirements Analysis](../planning/requirements.md)
-- **User Stories**: [User Stories](../planning/user-stories.md)
-- **Use Case**: [Use Case](../planning/use-case.md)
-- **Design Documents**: [Design Documents](../design/) <!-- optionally list the design/*.md files actually generated for this domain -->
+### Supporting References
+
+- [Requirements Analysis](../planning/requirements.md) — Functional and non-functional requirements
+- [User Stories](../planning/user-stories.md) — Acceptance criteria driving the E2E tests
+- [Use Case](../planning/use-case.md) — Main/alternative flows driving integration tests
 
 ---
+
+## Document Information
+
+| Field | Value |
+|-------|-------|
+| **Created** | YYYY-MM-DD |
+| **Last Modified** | YYYY-MM-DD |
+| **Status** | Draft |
+| **Tech Stack** | (auto-detected) |
+| **Reference Documents** | <!-- list @-references from document discovery --> |
 
 **Version History**:
 
@@ -170,8 +182,15 @@ trace back to a file listed here.
 
 ---
 > **All Documents**
+> <!-- Keep only the design/*.md entries actually generated for this domain; current document in bold, not linked -->
 > [Requirements](../planning/requirements.md) |
 > [User Stories](../planning/user-stories.md) |
 > [Use Case](../planning/use-case.md) |
-> [Design Documents](../design/) |
+> [User Flows](../design/user-flows.md) |
+> [Sequence Diagrams](../design/sequence-diagram.md) |
+> [API Spec](../design/api-spec.md) |
+> [Data Model](../design/data-model.md) |
+> [Component Diagram](../design/component-diagram.md) |
+> [State Diagram](../design/state-diagram.md) |
+> [Infra Spec](../design/infra-spec.md) |
 > **Test Spec**
