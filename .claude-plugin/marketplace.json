@@ -11,7 +11,7 @@
     {
       "name": "dev-docs",
       "source": "./dev-docs-plugin",
-      "description": "Forward feature-planning and reverse-engineering documentation skills with a citation-grounded doc-verifier subagent."
+      "description": "Docs-driven development skills: docs/ scaffolding, forward feature planning, citation-grounded reverse-engineering docs with a doc-verifier subagent, and opt-in translation mirror sync."
     }
   ]
 }

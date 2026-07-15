@@ -18,7 +18,7 @@ docs/
 │   │   └── <domain>/     # Created by the dev-docs plugin's dev-planning/dev-reverse-docs skills
 │   ├── issue/            # One file per work item: issue001.md, issue002.md, ...
 │   └── policy/           # Scaffolding only — this repo's own core policy lives in .claude/rules/;
-│                         # this directory is for future ad-hoc, downstream-style docs (via new-policy)
+│                         # this directory is for future ad-hoc, downstream-style docs
 ├── ko/
 │   ├── specifications/   # Korean translations of en/specifications/
 │   ├── issue/            # Korean translations of en/issue/

@@ -18,11 +18,10 @@
 
 ## Policy Updates
 
-- This rule applies to ad-hoc documents created under `docs/*/policy/` (e.g.
-  via the `new-policy` skill) for downstream-style, project-specific rules —
-  not to the files in this `.claude/rules/` directory itself, which are
-  English-only Claude Code configuration, not part of the bilingual docs
-  product.
+- This rule applies to ad-hoc documents created under `docs/*/policy/` for
+  downstream-style, project-specific rules — not to the files in this
+  `.claude/rules/` directory itself, which are English-only Claude Code
+  configuration, not part of the bilingual docs product.
 - Changes to `docs/*/policy/` documents must be discussed with the user first
 - Such changes require updating both the English and Korean versions
 

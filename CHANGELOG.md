@@ -3,6 +3,47 @@
 All notable changes to skills and plugins in this project are documented here.
 Entries are ordered newest first. Format follows [Keep a Changelog](https://keepachangelog.com/).
 
+## [dev-docs/v0.3.0] - 2026-07-15
+
+### Added
+- `init-docs` (v0.3.0) and `sync-translations` (v0.3.0) skills bundled into the plugin, moved from the standalone `skills/` directory — the plugin now covers the full docs-driven workflow: scaffold → plan/reverse-doc → translation sync (Refs: #28)
+
+### Changed
+- Plugin description and keywords expanded to cover docs scaffolding and opt-in translation mirror sync (`plugin.json`, `marketplace.json`); plugin README documents the four-skill workflow
+
+### Removed
+- Standalone `skills/` directory — every skill now ships inside the `dev-docs` plugin
+
+## [init-docs/v0.3.0] - 2026-07-15
+
+### Changed
+- Moved into the `dev-docs` plugin (`/dev-docs:init-docs`); script and template paths now resolve via `${CLAUDE_PLUGIN_ROOT}` (Refs: #28)
+- Initialization is source-language only: Step 1 confirms just the source (base) language, `docs/config.yml` is written with `translation_languages: []`, and no mirror directories or translated policy files are created — mirroring is deferred to `sync-translations` as an opt-in step
+- Seeded policy templates describe translation mirrors as conditional on `docs/config.yml` instead of assuming an `en` → `ko` pairing
+- `create-structure.sh` defaults to `en` only (translation-language arguments remain supported for later mirror creation) and its next-steps message no longer references the removed `/new-issue` skill
+
+### Removed
+- Step 5 (policy translation mirrors) — replaced by a pointer to `/dev-docs:sync-translations`
+
+## [sync-translations/v0.3.0] - 2026-07-15
+
+### Added
+- Mirror opt-in flow: when `translation_languages` is empty, the skill offers to enable mirroring — records the confirmed language(s) in `docs/config.yml`, creates the mirror directories, then runs the normal audit-and-translate flow (Refs: #28)
+- Execution Requirement 7: `docs/config.yml` is only updated after explicit user confirmation of the language choice
+
+### Changed
+- Moved into the `dev-docs` plugin (`/dev-docs:sync-translations`); missing-structure guidance now points to `/dev-docs:init-docs`
+
+## [new-issue] - 2026-07-15
+
+### Removed
+- Skill removed from the repository (not absorbed into the plugin consolidation; create GitHub Issues directly via `gh`, or local `docs/<lang>/issue/` documents, instead) (Refs: #28)
+
+## [new-policy] - 2026-07-15
+
+### Removed
+- Skill removed from the repository (its scope shrank after this repository's own policy moved to `.claude/rules/`; ad-hoc `docs/*/policy/` documents can be authored directly) (Refs: #28)
+
 ## [dev-docs/v0.2.0] - 2026-07-15
 
 ### Changed

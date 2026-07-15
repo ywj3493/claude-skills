@@ -3,8 +3,10 @@
 # Creates the standard docs/ directory structure for a new project.
 #
 # Usage: create-structure.sh [<source-lang> [<translation-lang>...]]
-#   e.g. create-structure.sh en ko     (default when no arguments are given)
-#        create-structure.sh en        (source language only, no translations)
+#   e.g. create-structure.sh          (defaults to source language "en", no translations)
+#        create-structure.sh en       (same as the default)
+#        create-structure.sh en ko    (also create the ko mirror tree — used by
+#                                      sync-translations when mirroring is enabled later)
 #
 # Safe to run multiple times — skips directories and files that already exist.
 
@@ -12,7 +14,7 @@ set -e
 
 LANGS=("$@")
 if [ ${#LANGS[@]} -eq 0 ]; then
-  LANGS=(en ko)
+  LANGS=(en)
 fi
 
 echo "Setting up standard docs/ structure for languages: ${LANGS[*]}..."
@@ -82,4 +84,5 @@ echo ""
 echo "Next steps:"
 echo "  1. Claude will create CLAUDE.md in the project root"
 echo "  2. Claude will create initial policy files in docs/${LANGS[0]}/policy/"
-echo "  3. Run /new-issue to create your first issue"
+echo "  3. Create your first issue (GitHub Issue or docs/${LANGS[0]}/issue/issue001.md)"
+echo "  4. Run /dev-docs:sync-translations later to add translation mirrors"
