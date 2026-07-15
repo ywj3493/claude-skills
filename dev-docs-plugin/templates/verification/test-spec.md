@@ -5,6 +5,8 @@ with the last design/*.md file actually generated for this domain — never
 link the ../design/ folder or a design file that was not generated. Apply
 the same substitution to the All Documents index at the bottom. This is
 the last document in the pipeline, so it has no next-link.
+In Lite tier the prev-link is ../design/design.md and the All Documents
+index is just: Specification | Design | Test Spec.
 -->
 > [← Infra Spec](../design/infra-spec.md)
 
