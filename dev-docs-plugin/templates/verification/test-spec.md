@@ -160,9 +160,7 @@ trace back to a file listed here.
 
 ### Supporting References
 
-- [Requirements Analysis](../planning/requirements.md) — Functional and non-functional requirements
-- [User Stories](../planning/user-stories.md) — Acceptance criteria driving the E2E tests
-- [Use Case](../planning/use-case.md) — Main/alternative flows driving integration tests
+- [Specification](../planning/spec.md) — Requirements, user stories, and multi-actor flows
 
 ---
 
@@ -183,9 +181,7 @@ trace back to a file listed here.
 ---
 > **All Documents**
 > <!-- Keep only the design/*.md entries actually generated for this domain; current document in bold, not linked -->
-> [Requirements](../planning/requirements.md) |
-> [User Stories](../planning/user-stories.md) |
-> [Use Case](../planning/use-case.md) |
+> [Specification](../planning/spec.md) |
 > [User Flows](../design/user-flows.md) |
 > [Sequence Diagrams](../design/sequence-diagram.md) |
 > [API Spec](../design/api-spec.md) |

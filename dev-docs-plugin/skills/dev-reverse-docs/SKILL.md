@@ -37,13 +37,15 @@ categories. Keep them separate — do not blend WHAT content into a HOW
 document or vice versa.
 
 - **`planning/` — WHAT** (stakeholder view): what the system does, from the
-  actor's perspective. `requirements.md`, `user-stories.md`, and
-  `use-case.md` live here. **Use cases are planning documents, not design
-  documents** — a use case describes actor↔feature relationships (who can
-  do what, under what pre/postconditions), not how components call each
-  other internally. Even though a use case's main flow is drawn as a
-  Mermaid `sequenceDiagram`, it stays at the actor/system boundary; it is
-  not an implementation call chain.
+  actor's perspective. `spec.md` lives here, holding requirements (FR/NFR),
+  user stories with acceptance criteria, and — only when the code shows
+  2+ actors or an external system — a **Multi-Actor Flows** section of
+  use cases. **Use cases are planning content, not design content** — a
+  use case describes actor↔feature relationships (who can do what, under
+  what pre/postconditions), not how components call each other internally.
+  Even though a use case's main flow is drawn as a Mermaid
+  `sequenceDiagram`, it stays at the actor/system boundary; it is not an
+  implementation call chain.
 - **`design/` — HOW** (developer view): how the system implements what
   planning described — component call order, API contracts, data shapes,
   UI structure, state transitions. `sequence-diagram.md` belongs here
@@ -80,8 +82,8 @@ this skill writes, and `doc-verifier` enforces it after the fact.
    doesn't comment. Never fabricate a file:line to make an assumption look
    verified.
 4. **Sections that require inferring intent from code** (most of
-   `requirements.md`'s "Purpose"/stakeholder framing, and any
-   `user-stories.md` "So that" clause) get a banner at the top of the
+   `spec.md`'s Purpose/stakeholder framing, and any User Story
+   "So that" clause) get a banner at the top of the
    document: "This section is inferred from code — verify with
    stakeholders", plus a citation or `[ASSUMED: ...]` tag on each item.
 5. **Every generated document ends with a `## Sources Read` ledger** —
@@ -172,27 +174,30 @@ hallucination this skill exists to prevent.
 > **Pass 1 complete and verified**: `docs/en/specifications/overview.md`.
 > Which module should I document in detail?
 
-### Step 2: Pass 2 — Planning Documents
+### Step 2: Pass 2 — Planning Document
 
-**Output**: `<domain>/planning/{requirements,user-stories,use-case}.md`
+**Output**: `<domain>/planning/spec.md`
 
-1. Load templates: `${CLAUDE_PLUGIN_ROOT}/templates/planning/*.md`
+1. Load template: `${CLAUDE_PLUGIN_ROOT}/templates/planning/spec.md`
 2. Read the selected module's code — controllers/entry points, then inward
    through its call chain — before writing anything
-3. `requirements.md`: derive `FR-<AREA>-NN`/`NFR-<CAT>-NN` from what the
-   code actually enforces (validation, auth checks, config) — cite each;
-   mark the "Purpose"/stakeholder framing as inferred per Grounding Rule 4.
-   Write the requirements themselves in stakeholder language — planning
-   documents stay non-technical (no stacks, code types, API paths); the
-   technical detail the code revealed goes into Step 3's design documents.
-   `[REF: path:line]` citations are provenance, not technical content —
-   they are still required on every claim here.
-4. `user-stories.md`: derive from the requirements and observed API/UI
+3. Requirements sections: derive `FR-<AREA>-NN`/`NFR-<CAT>-NN` from what
+   the code actually enforces (validation, auth checks, config) — cite
+   each; mark the Purpose/stakeholder framing as inferred per Grounding
+   Rule 4. Write the requirements themselves in stakeholder language —
+   planning documents stay non-technical (no stacks, code types, API
+   paths); the technical detail the code revealed goes into Step 3's
+   design documents. `[REF: path:line]` citations are provenance, not
+   technical content — they are still required on every claim here.
+4. User Stories section: derive from the requirements and observed API/UI
    surface — mark "So that" clauses `[ASSUMED: ...]` unless the intent is
    stated somewhere (comment, doc, commit message you actually read)
-5. `use-case.md`: derive actors and flows from the actual call paths;
+5. Multi-Actor Flows section — **gated**: generate only when the code
+   evidence shows 2+ actors or an external system (spec.md's Multi-Actor
+   gate). Derive actors and flows from the actual call paths;
    preconditions/postconditions must cite the validation/guard code that
-   enforces them
+   enforces them. Omit the section (and its ToC entry and the
+   Traceability UC column) otherwise.
 6. Wait for review
 
 ### Step 3: Pass 2 — Design Documents

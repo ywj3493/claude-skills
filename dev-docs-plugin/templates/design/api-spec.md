@@ -1,16 +1,15 @@
 <!--
 NAV NOTE: design/ is a dynamic set. The canonical order of the full
-pipeline is: requirements → user-stories → use-case → [user-flows →
-sequence-diagram → api-spec → data-model → component-diagram →
-domain-state-machine → client-store → infra-spec] → test-spec. At
-generation time, re-chain the
-prev/next links below through only the design documents actually generated
-for this domain, keeping that order: the first generated design document's
-prev is ../planning/use-case.md, and the last generated design document's
-next is ../verification/test-spec.md. Apply the same substitution to the
-All Documents index at the bottom. Always link document to document —
-never a folder — and never link a design/*.md file that was not generated
-for this domain.
+pipeline is: spec → [user-flows → sequence-diagram → api-spec →
+data-model → component-diagram → domain-state-machine → client-store →
+infra-spec] → test-spec. At generation time, re-chain the prev/next
+links below through only the design documents actually generated for
+this domain, keeping that order: the first generated design document's
+prev is ../planning/spec.md, and the last generated design document's
+next is ../verification/test-spec.md. Apply the same substitution to
+the All Documents index at the bottom. Always link document to document
+— never a folder — and never link a design/*.md file that was not
+generated for this domain.
 -->
 > [← Sequence Diagrams](sequence-diagram.md) | [Data Model →](data-model.md)
 
@@ -61,8 +60,8 @@ for this domain.
 
 | HTTP Method | Path | Auth Required | Summary | Related Use Case | Implementation |
 |-------------|------|--------------|---------|------------------|----------------|
-| POST | `/api/<resource>` | No | <!-- Summary --> | [UC-<AREA>-01](../planning/use-case.md#uc-area-01) | <!-- file.py --> |
-| GET | `/api/<resource>` | Yes | <!-- Summary --> | [UC-<AREA>-02](../planning/use-case.md#uc-area-02) | <!-- file.py --> |
+| POST | `/api/<resource>` | No | <!-- Summary --> | [UC-<AREA>-01](../planning/spec.md#uc-area-01) | <!-- file.py --> |
+| GET | `/api/<resource>` | Yes | <!-- Summary --> | [UC-<AREA>-02](../planning/spec.md#uc-area-02) | <!-- file.py --> |
 | GET | `/health` | No | Health check | - | <!-- file.py --> |
 
 ---
@@ -71,7 +70,7 @@ for this domain.
 
 ### METHOD /api/<path>
 
-**Use Case**: [UC-<AREA>-01 (Name)](../planning/use-case.md#uc-area-01-name)
+**Use Case**: [UC-<AREA>-01 (Name)](../planning/spec.md#uc-area-01-name)
 
 **Description**: <!-- What this endpoint does -->
 
@@ -251,9 +250,7 @@ Populated by dev-reverse-docs only — omitted entirely for forward planning
 ### Supporting References
 
 - [Data Model](data-model.md) — Entity shapes referenced by request/response bodies
-- [Requirements Analysis](../planning/requirements.md) — Functional and non-functional requirements
-- [User Stories](../planning/user-stories.md) — Stories and acceptance criteria
-- [Use Case](../planning/use-case.md) — Actor-level flows behind each endpoint
+- [Specification](../planning/spec.md) — Requirements, user stories, and multi-actor flows
 
 ---
 
@@ -274,9 +271,7 @@ Populated by dev-reverse-docs only — omitted entirely for forward planning
 ---
 > **All Documents**
 > <!-- Keep only the design/*.md entries actually generated for this domain; current document in bold, not linked -->
-> [Requirements](../planning/requirements.md) |
-> [User Stories](../planning/user-stories.md) |
-> [Use Case](../planning/use-case.md) |
+> [Specification](../planning/spec.md) |
 > [User Flows](user-flows.md) |
 > [Sequence Diagrams](sequence-diagram.md) |
 > **API Spec** |

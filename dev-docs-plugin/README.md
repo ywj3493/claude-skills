@@ -14,7 +14,7 @@ from code that does.
 | Component | Command / Name | Purpose |
 | --- | --- | --- |
 | skill | `/dev-docs:init-docs` | Scaffold the standard `docs/` structure: source-language tree, `docs/config.yml`, initial policy documents, and a project CLAUDE.md. Initializes the source language only — mirroring comes later via `sync-translations` |
-| skill | `/dev-docs:dev-planning` | Forward planning pipeline for a new feature or project: requirements → user stories → use case → dynamic design documents → test spec, with ID-based test traceability |
+| skill | `/dev-docs:dev-planning` | Forward planning pipeline for a new feature or project: specification (requirements + user stories + conditional multi-actor flows) → dynamic design documents → test spec, with ID-based test traceability |
 | skill | `/dev-docs:dev-reverse-docs` | Grounded documentation of existing code: every claim carries a `[REF: path:line]` or `[ASSUMED: ...]` marker, generated pass-by-pass (overview, then per module) |
 | skill | `/dev-docs:sync-translations` | Audit and sync translation mirrors; when no translation language is configured yet, offers to enable mirroring (updates `docs/config.yml`, creates the mirror tree, translates everything) |
 | agent | `doc-verifier` | Read-only (`Read, Grep, Glob`) subagent that checks every citation in a `dev-reverse-docs` output against the actual source before the skill reports done |
@@ -32,8 +32,9 @@ from code that does.
 
 Both documentation skills classify documents on the same axes:
 
-- **`planning/` — WHAT** (stakeholder view): `requirements.md`,
-  `user-stories.md`, `use-case.md`
+- **`planning/` — WHAT** (stakeholder view): `spec.md` — requirements
+  (FR/NFR), user stories with acceptance criteria, and a conditional
+  Multi-Actor Flows section (only with 2+ actors or an external system)
 - **`design/` — HOW** (developer view): a dynamic subset of `api-spec.md`,
   `sequence-diagram.md`, `component-diagram.md`, `domain-state-machine.md`,
   `client-store.md`, `data-model.md`, `user-flows.md`, `infra-spec.md` —
@@ -49,7 +50,7 @@ under `skills/init-docs/references/` and `skills/init-docs/scripts/`):
 
 ```text
 templates/
-├── planning/      requirements.md, user-stories.md, use-case.md
+├── planning/      spec.md
 ├── design/        api-spec.md, sequence-diagram.md, component-diagram.md,
 │                  domain-state-machine.md, client-store.md, data-model.md,
 │                  user-flows.md, infra-spec.md

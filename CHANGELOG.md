@@ -6,24 +6,33 @@ Entries are ordered newest first. Format follows [Keep a Changelog](https://keep
 ## [dev-docs/v0.4.0] - 2026-07-15
 
 ### Added
-- `templates/design/domain-state-machine.md` (Backend-only) and `templates/design/client-store.md` (Frontend-only) — the two halves of the former `state-diagram.md`, so entity/workflow state machines and client-side stores are selected independently (Refs: #30)
+- `templates/planning/spec.md` — single planning template merging requirements, user stories, and use cases into a hierarchical FR → US/AC → UC layout; use cases survive as a conditional **Multi-Actor Flows** section gated on "2+ actors or an external system", and the System Context diagram shares the same gate (Refs: #30)
+- `templates/design/domain-state-machine.md` (Backend-only) and `templates/design/client-store.md` (Frontend-only) — the two halves of the former `state-diagram.md`, so entity/workflow state machines and client-side stores are selected independently
 - Every design template's note callout now carries a parsable `> **Domain**: Backend-only | Frontend-only | Infra-only` tag
 
 ### Changed
-- Canonical navigation order now runs component-diagram → domain-state-machine → client-store → infra-spec; NAV NOTE comments and All Documents indexes updated across all templates
+- Canonical navigation order now runs spec → [design subset] → test-spec, with component-diagram → domain-state-machine → client-store → infra-spec inside the design subset; NAV NOTE comments, prev/next links, Related Documents, and All Documents indexes updated across all templates
+- UC anchors moved from `use-case.md#uc-<area>-nn` to `spec.md#uc-<area>-nn` (heading-derived anchors unchanged in format), preserving test-spec traceability paths
 
 ### Removed
-- `templates/design/state-diagram.md` — split into the two templates above
+- `templates/planning/requirements.md`, `templates/planning/user-stories.md`, `templates/planning/use-case.md` — merged into `spec.md`; dropped en route: stakeholders table, actor/use-case Mermaid diagrams, use-case category/relationship tables, per-FR Input/Process/Output blocks, per-story NFR tables, and two duplicate footers
+- `templates/design/state-diagram.md` — split into the two design templates above
 
 ## [dev-planning/v0.1.0] - 2026-07-15
 
 ### Changed
-- Design Document Selection now offers `domain-state-machine.md` and `client-store.md` as independent rows instead of a single `state-diagram.md` (Refs: #30)
+- Steps 1–3 (requirements, user stories, use case) collapsed into a single Step 1 that generates `planning/spec.md`; the pipeline is now Step 1 spec → gate → Step 2 design → Step 3 test-spec → Step 4 README (Refs: #30)
+- Multi-Actor Flows (use cases) and the System Context diagram are generated only when the feature involves 2+ actors or an external system
+- Planning → Design review gate now locks the design selection after spec.md approval; Document Rules state the tech-neutrality test ("still true if the stack were swapped?") and role-based (Secondary Actor) naming for external systems
+- Design Document Selection now offers `domain-state-machine.md` and `client-store.md` as independent rows instead of a single `state-diagram.md`
+- Execution Requirement 5 documents the heading-derived anchor scheme for ID links (e.g. `spec.md#uc-auth-01-login`)
 
 ## [dev-reverse-docs/v0.1.0] - 2026-07-15
 
 ### Changed
-- Design Document Selection now offers `domain-state-machine.md` and `client-store.md` as independent rows instead of a single `state-diagram.md` (Refs: #30)
+- Pass 2 planning output is a single `planning/spec.md` (was `requirements.md` + `user-stories.md` + `use-case.md`); grounding, citation, and doc-verifier rules unchanged (Refs: #30)
+- Multi-Actor Flows section is generated only when code evidence shows 2+ actors or an external system
+- Design Document Selection now offers `domain-state-machine.md` and `client-store.md` as independent rows instead of a single `state-diagram.md`
 
 ## [dev-docs/v0.3.0] - 2026-07-15
 
