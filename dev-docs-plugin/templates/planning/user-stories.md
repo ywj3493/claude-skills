@@ -2,11 +2,9 @@
 
 # User Stories
 
-> **Created**: YYYY-MM-DD
-> **Last Modified**: YYYY-MM-DD
-> **Status**: Draft
-> **Tech Stack**: (auto-detected)
-> **Reference Documents**: <!-- list @-references from document discovery -->
+> **Classification note**: this document is a **planning/WHAT** document —
+> stories and acceptance criteria are written in stakeholder language.
+> Implementation technology belongs in the `../design/` documents.
 
 ---
 
@@ -54,6 +52,9 @@ User stories trace back to functional requirements in [requirements.md](requirem
 - [ ] **AC-US01-05**: **Given** <!-- error precondition -->, **When** <!-- action -->, **Then** <!-- error handling -->
 
 #### Non-Functional Requirements
+
+<!-- Measurable targets in user-observable terms (e.g., "results appear
+within 2 seconds") — not implementation choices. -->
 
 | Item | Requirement | Target |
 |------|-------------|--------|
@@ -113,18 +114,28 @@ Populated by dev-reverse-docs only — omitted entirely for forward planning
 (dev-planning). List every file/line-range actually opened while inferring
 these stories from code, and note at the top of this document that the
 stories are inferred, not confirmed intent, when this section is present.
+[REF] citations are provenance markers, not design content — they are
+allowed even though this is a non-technical planning document.
 -->
 
 ---
 
 ## Related Documents
 
-- **Previous**: [← Requirements](requirements.md)
-- **Next**: [Use Case →](use-case.md)
-- **Architecture**: [Architecture](../../architecture.md)
-- **Design Documents**: [Design Documents](../design/)
+### Supporting References
+
+- [Architecture](../../architecture.md) — Architecture structure and layer rules
 
 ---
+
+## Document Information
+
+| Field | Value |
+|-------|-------|
+| **Created** | YYYY-MM-DD |
+| **Last Modified** | YYYY-MM-DD |
+| **Status** | Draft |
+| **Reference Documents** | <!-- list @-references from document discovery --> |
 
 **Version History**:
 
@@ -132,8 +143,15 @@ stories are inferred, not confirmed intent, when this section is present.
 
 ---
 > **All Documents**
+> <!-- Keep only the design/*.md entries actually generated for this domain; current document in bold, not linked -->
 > [Requirements](requirements.md) |
 > **User Stories** |
 > [Use Case](use-case.md) |
-> [Design Documents](../design/) |
+> [User Flows](../design/user-flows.md) |
+> [Sequence Diagrams](../design/sequence-diagram.md) |
+> [API Spec](../design/api-spec.md) |
+> [Data Model](../design/data-model.md) |
+> [Component Diagram](../design/component-diagram.md) |
+> [State Diagram](../design/state-diagram.md) |
+> [Infra Spec](../design/infra-spec.md) |
 > [Test Spec](../verification/test-spec.md)

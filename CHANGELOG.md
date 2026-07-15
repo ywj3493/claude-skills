@@ -3,6 +3,35 @@
 All notable changes to skills and plugins in this project are documented here.
 Entries are ordered newest first. Format follows [Keep a Changelog](https://keepachangelog.com/).
 
+## [dev-docs/v0.2.0] - 2026-07-15
+
+### Changed
+- All 11 document templates share one skeleton: line-1 prev/next navigation (first document omits "←", last omits "→"), title, optional classification/generation note, table of contents, body, `## Sources Read` (reverse-docs only), `## Related Documents` (supporting references only), `## Document Information`, and the "All Documents" index (Refs: #26)
+- Document metadata (Created, Last Modified, Status, Tech Stack, Reference Documents) moved from the top-of-file blockquote into a bottom `## Document Information` table, with the Version History list beneath it
+- Navigation now chains document-to-document across domain boundaries in a canonical order (requirements → user-stories → use-case → [user-flows → sequence-diagram → api-spec → data-model → component-diagram → state-diagram → infra-spec] → test-spec); folder links (`../design/`) are no longer used in prev/next, and NAV NOTE comments in `use-case.md`, the design templates, and `test-spec.md` instruct substituting the design files actually generated
+- "All Documents" indexes list the full canonical set in every template, with a substitution comment to keep only generated files and bold the current document
+
+### Fixed
+- `templates/planning/requirements.md` used a `## Document Navigation` section instead of the line-1 navigation every other template uses
+- Contradictory design-template navigation (`sequence-diagram.md` and `user-flows.md` both claimed prev = use-case)
+- `templates/design/data-model.md` example referenced the removed `NFR-ARCH` category
+
+### Removed
+- Implementation technology from the planning templates: Tech Stack metadata row, the Architecture project-info field, Technical/Architecture constraint tables (replaced by Business / Operational / Development Process constraints), `NFR-ARCH`/`NFR-DEPLOY` categories (replaced by `NFR-AVAIL`/`NFR-USE`), the traceability matrix's Implementation column, and implementation-level detail (API paths, server/DB participants) in the use-case main-flow example
+
+## [dev-planning/v0.0.2] - 2026-07-15
+
+### Changed
+- Document Rules describe the bottom `## Document Information` table instead of a top meta block, restrict TypeScript interfaces to design documents, and add a "planning docs are non-technical" rule (Refs: #26)
+- Navigation section defines the canonical pipeline order and document-to-document chaining across domain boundaries; Execution Requirement 5 forbids folder links in prev/next
+- Step 0 records the detected tech stack only in design/verification documents; Step 1 derives business/operational/process constraints instead of technical/architecture ones
+
+## [dev-reverse-docs/v0.0.2] - 2026-07-15
+
+### Changed
+- Document Rules describe the bottom `## Document Information` table, the non-technical planning rule (citations stay mandatory as provenance), the `## Sources Read` placement before Related Documents/Document Information, and the canonical navigation order shared with `dev-planning` (Refs: #26)
+- Step 2 writes requirements in stakeholder language, deferring code-revealed technical detail to Step 3's design documents
+
 ## [dev-docs/v0.1.0] - 2026-07-12
 
 ### Added

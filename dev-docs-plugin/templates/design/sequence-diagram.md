@@ -1,12 +1,19 @@
-> [← Use Case](../planning/use-case.md) | [Design Documents](.)
+<!--
+NAV NOTE: design/ is a dynamic set. The canonical order of the full
+pipeline is: requirements → user-stories → use-case → [user-flows →
+sequence-diagram → api-spec → data-model → component-diagram →
+state-diagram → infra-spec] → test-spec. At generation time, re-chain the
+prev/next links below through only the design documents actually generated
+for this domain, keeping that order: the first generated design document's
+prev is ../planning/use-case.md, and the last generated design document's
+next is ../verification/test-spec.md. Apply the same substitution to the
+All Documents index at the bottom. Always link document to document —
+never a folder — and never link a design/*.md file that was not generated
+for this domain.
+-->
+> [← User Flows](user-flows.md) | [API Spec →](api-spec.md)
 
 # Sequence Diagrams
-
-> **Created**: YYYY-MM-DD
-> **Last Modified**: YYYY-MM-DD
-> **Status**: Draft
-> **Tech Stack**: (auto-detected)
-> **Reference Documents**: <!-- list @-references from document discovery -->
 
 > **Classification note**: this document is a **design/HOW** document — it
 > shows inter-component call order, not actor↔feature relationships (that's
@@ -459,13 +466,23 @@ file listed here.
 
 ## Related Documents
 
-- **Previous**: [← Use Case](../planning/use-case.md)
-- **Design Documents**: [Design Documents](.)
-- **Requirements**: [Requirements Analysis](../planning/requirements.md)
-- **User Stories**: [User Stories](../planning/user-stories.md)
-- **Architecture**: [Architecture](../../architecture.md)
+### Supporting References
+
+- [Requirements Analysis](../planning/requirements.md) — Functional and non-functional requirements
+- [User Stories](../planning/user-stories.md) — Stories and acceptance criteria
+- [Architecture](../../architecture.md) — Architecture structure and layer rules
 
 ---
+
+## Document Information
+
+| Field | Value |
+|-------|-------|
+| **Created** | YYYY-MM-DD |
+| **Last Modified** | YYYY-MM-DD |
+| **Status** | Draft |
+| **Tech Stack** | (auto-detected) |
+| **Reference Documents** | <!-- list @-references from document discovery --> |
 
 **Version History**:
 
@@ -473,9 +490,15 @@ file listed here.
 
 ---
 > **All Documents**
+> <!-- Keep only the design/*.md entries actually generated for this domain; current document in bold, not linked -->
 > [Requirements](../planning/requirements.md) |
 > [User Stories](../planning/user-stories.md) |
 > [Use Case](../planning/use-case.md) |
+> [User Flows](user-flows.md) |
 > **Sequence Diagrams** |
-> [Design Documents](.) |
+> [API Spec](api-spec.md) |
+> [Data Model](data-model.md) |
+> [Component Diagram](component-diagram.md) |
+> [State Diagram](state-diagram.md) |
+> [Infra Spec](infra-spec.md) |
 > [Test Spec](../verification/test-spec.md)

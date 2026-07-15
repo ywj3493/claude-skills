@@ -1,18 +1,20 @@
-> [← User Stories](user-stories.md) | [Design Documents →](../design/)
+<!--
+NAV NOTE: the next-link below points at the first design document in
+canonical order (user-flows.md by default). At generation time, replace it
+with the first design/*.md file actually generated for this domain — never
+link the ../design/ folder or a design file that was not generated. Apply
+the same substitution to the All Documents index at the bottom.
+-->
+> [← User Stories](user-stories.md) | [User Flows →](../design/user-flows.md)
 
 # Use Case Specification
-
-> **Created**: YYYY-MM-DD
-> **Last Modified**: YYYY-MM-DD
-> **Status**: Draft
-> **Tech Stack**: (auto-detected)
-> **Reference Documents**: <!-- list @-references from document discovery -->
 
 > **Classification note**: this document is a **planning/WHAT** document —
 > it describes actor↔feature relationships (who can do what), not component
 > call order. See the "Document Classification" section in the owning
 > skill's SKILL.md. Sequence diagrams (HOW a use case is implemented) live
-> in `../design/sequence-diagram.md`, not here.
+> in `../design/sequence-diagram.md`, not here. Keep every flow at the
+> actor/system boundary — no API paths, no internal components.
 
 ---
 
@@ -86,8 +88,8 @@ graph LR
     ExtService[External Service<br/>Description]
     Database[Database<br/>Storage]
 
-    ExtService -->|API calls| System[System Name]
-    System -->|Data storage| Database
+    ExtService -->|Provides data| System[System Name]
+    System -->|Keeps records| Database
 
     style ExtService fill:#ffe1e1
     style Database fill:#ffe1e1
@@ -103,9 +105,9 @@ graph LR
 - <!-- Role 1 -->
 - <!-- Role 2 -->
 
-**Communication**:
+**Interaction**:
 
-- <!-- Protocol and method -->
+- <!-- What the system exchanges with it, at the boundary level -->
 
 **Related Use Cases**:
 
@@ -206,34 +208,32 @@ graph TD
 
 <!--
 This is an actor-level interaction outline (who does what, in what order
-from the actor's perspective) — not an implementation call chain. Keep it
-at that altitude; component-to-component call order belongs in
-../design/sequence-diagram.md.
+from the actor's perspective) — not an implementation call chain. Keep the
+participants at the actor/system boundary (actor, the system, external
+systems); component-to-component call order, API requests, and data
+operations belong in ../design/sequence-diagram.md.
 -->
 
 ```mermaid
 sequenceDiagram
     actor User as User
-    participant Client as Client
-    participant Server as Server
-    participant DB as Database
+    participant System as System
+    participant Ext as External System
 
-    User->>Client: 1. Initiate action
-    Client->>Server: 2. API request<br/>METHOD /api/path<br/>{data}
-    Server->>DB: 3. Data operation
-    DB->>Server: 4. Operation result
-    Server->>Client: 5. Success response<br/>200 OK + ResponseBody
-    Client->>User: 6. Display result
+    User->>System: 1. Requests <action>
+    System->>System: 2. Checks preconditions
+    System->>Ext: 3. Requests <external capability>
+    Ext-->>System: 4. Confirms result
+    System-->>User: 5. Presents outcome
 ```
 
 **Step-by-Step Description**:
 
 1. **User Action**: <!-- What the user does -->
-2. **API Request**: <!-- Client sends request -->
-3. **Data Operation**: <!-- Server processes -->
-4. **Operation Result**: <!-- Database returns -->
-5. **Response Return**: <!-- Server responds -->
-6. **Display Result**: <!-- Client shows result -->
+2. **Precondition Check**: <!-- What the system verifies before acting -->
+3. **External Interaction**: <!-- What the system requests from an external actor, if any -->
+4. **Result Confirmation**: <!-- What the external actor confirms -->
+5. **Outcome**: <!-- What the user sees at the end -->
 
 ### Alternative Flows
 
@@ -282,19 +282,30 @@ Populated by dev-reverse-docs only — omitted entirely for forward planning
 (dev-planning). List every file/line-range actually opened. Use cases
 inferred from code (rather than confirmed via stakeholder intent) must be
 flagged as inferred at the top of this document, per the owning skill's
-grounding rules.
+grounding rules. [REF] citations are provenance markers, not design
+content — they are allowed even though this is a non-technical planning
+document.
 -->
 
 ---
 
 ## Related Documents
 
-- **Previous**: [← User Stories](user-stories.md)
-- **Next**: [Design Documents →](../design/)
-- **Requirements**: [Requirements Analysis](requirements.md)
-- **Architecture**: [Architecture](../../architecture.md)
+### Supporting References
+
+- [Requirements Analysis](requirements.md) — Functional and non-functional requirements
+- [Architecture](../../architecture.md) — Architecture structure and layer rules
 
 ---
+
+## Document Information
+
+| Field | Value |
+|-------|-------|
+| **Created** | YYYY-MM-DD |
+| **Last Modified** | YYYY-MM-DD |
+| **Status** | Draft |
+| **Reference Documents** | <!-- list @-references from document discovery --> |
 
 **Version History**:
 
@@ -302,8 +313,15 @@ grounding rules.
 
 ---
 > **All Documents**
+> <!-- Keep only the design/*.md entries actually generated for this domain; current document in bold, not linked -->
 > [Requirements](requirements.md) |
 > [User Stories](user-stories.md) |
 > **Use Case** |
-> [Design Documents](../design/) |
+> [User Flows](../design/user-flows.md) |
+> [Sequence Diagrams](../design/sequence-diagram.md) |
+> [API Spec](../design/api-spec.md) |
+> [Data Model](../design/data-model.md) |
+> [Component Diagram](../design/component-diagram.md) |
+> [State Diagram](../design/state-diagram.md) |
+> [Infra Spec](../design/infra-spec.md) |
 > [Test Spec](../verification/test-spec.md)
