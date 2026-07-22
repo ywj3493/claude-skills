@@ -13,7 +13,7 @@ from code that does.
 
 | Component | Command / Name | Purpose |
 | --- | --- | --- |
-| skill | `/dev-docs:init-docs` | Scaffold the standard `docs/` structure: source-language tree, `docs/config.yml`, initial policy documents, and a project CLAUDE.md. Initializes the source language only — mirroring comes later via `sync-translations` |
+| skill | `/dev-docs:init-docs` | Scaffold the standard `docs/` structure: source-language tree, `docs/config.yml`, a question-driven `.claude/rules/` setup, and a project CLAUDE.md. Initializes the source language only — mirroring comes later via `sync-translations` |
 | skill | `/dev-docs:dev-planning` | Forward planning pipeline for a new feature or project: specification (requirements + user stories + conditional multi-actor flows) → dynamic design documents → test spec, with ID-based test traceability. Accepts a `lite`/`full` tier argument (`/dev-docs:dev-planning lite`) |
 | skill | `/dev-docs:dev-reverse-docs` | Grounded documentation of existing code: every claim carries a `[REF: path:line]` or `[ASSUMED: ...]` marker, generated pass-by-pass (overview, then per module). Accepts a `lite`/`full` tier argument (`/dev-docs:dev-reverse-docs lite`) |
 | skill | `/dev-docs:sync-translations` | Audit and sync translation mirrors; when no translation language is configured yet, offers to enable mirroring (updates `docs/config.yml`, creates the mirror tree, translates everything) |
@@ -22,7 +22,7 @@ from code that does.
 ## Workflow
 
 ```text
-/dev-docs:init-docs              docs/ structure + source language + policy files + CLAUDE.md
+/dev-docs:init-docs              docs/ structure + source language + .claude/rules + CLAUDE.md
   └─ /dev-docs:dev-planning          planning documents for a new feature
   └─ /dev-docs:dev-reverse-docs      grounded docs for code that already exists
   └─ /dev-docs:sync-translations     opt in to a translation mirror, keep it in sync
@@ -84,13 +84,13 @@ claude --plugin-dir ./dev-docs-plugin
 `dev-planning`, `dev-reverse-docs`, and `sync-translations` are designed to
 run inside a project that follows the docs-driven structure created by this
 plugin's own `init-docs` skill (`docs/config.yml`,
-`docs/<lang>/specifications/`, policy documents) — run
-`/dev-docs:init-docs` first on a fresh project. References such as
-`[@docs/en/policy/reference-convention.md]` inside the skill definitions
-point at the **host project's** files — `init-docs` seeds them there. They
-are not paths inside this plugin, and this repository itself keeps its own
-policy in `.claude/rules/` instead. The documentation skills still work
-without that structure; they simply skip the discovered project documents.
+`docs/<lang>/specifications/`, working rules in `.claude/rules/`) — run
+`/dev-docs:init-docs` first on a fresh project. Document paths inside the
+skill definitions refer to the **host project's** files, not paths inside
+this plugin; `init-docs` seeds the host project's `.claude/rules/` from its
+bundled templates, the same pattern this repository uses for its own
+policy. The documentation skills still work without that structure; they
+simply skip the discovered project documents.
 
 ## Versioning
 

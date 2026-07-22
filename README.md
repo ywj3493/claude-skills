@@ -25,7 +25,7 @@ other plugins:
 
 | Skill / Agent | Command / Name | Purpose |
 | --- | --- | --- |
-| init-docs | `/dev-docs:init-docs` | Create the standard `docs/` structure, source-language configuration, policy files, and CLAUDE.md |
+| init-docs | `/dev-docs:init-docs` | Create the standard `docs/` structure, source-language configuration, working rules in `.claude/rules/` (chosen via setup questions), and CLAUDE.md |
 | dev-planning | `/dev-docs:dev-planning` | Forward planning pipeline for a new feature: requirements → user stories → use case → design documents → test spec, with ID-based test traceability |
 | dev-reverse-docs | `/dev-docs:dev-reverse-docs` | Grounded, citation-verified documentation of existing code (`[REF: path:line]` on every claim) |
 | sync-translations | `/dev-docs:sync-translations` | Opt in to translation mirroring and keep mirrors in sync with source docs |
@@ -82,7 +82,7 @@ mirror overhead.
 
 ```text
 New project
-  └─ /dev-docs:init-docs            docs/ structure + source language + policy files + CLAUDE.md
+  └─ /dev-docs:init-docs            docs/ structure + source language + .claude/rules + CLAUDE.md
       └─ create an issue            GitHub Issue (or docs/<lang>/issue/issue001.md)
           └─ /dev-docs:dev-planning      planning documents for a new feature (structured design)
           └─ /dev-docs:dev-reverse-docs  grounded docs for code that already exists

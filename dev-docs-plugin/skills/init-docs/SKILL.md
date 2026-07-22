@@ -1,7 +1,7 @@
 ---
 name: init-docs
-version: 0.3.0
-description: Initializes the standard docs/ directory structure for a new project. Asks for the source (base) language of the documentation (default en), records it in docs/config.yml, creates docs/<source>/{specifications,issue,policy}/ plus docs/reference/, seeds initial policy documents in the source language, and places a CLAUDE.md in the project root. Translation mirrors are NOT created here — they are added later, opt-in, by the sync-translations skill. Use this when starting a fresh project that should follow the standard documentation system.
+version: 0.4.0
+description: Initializes the standard docs/ directory structure for a new project. Asks for the source (base) language of the documentation (default en), records it in docs/config.yml, creates docs/<source>/{specifications,issue}/ plus docs/reference/, asks which working-rule files to install and seeds them into the project's .claude/rules/, and places a CLAUDE.md in the project root. Translation mirrors are NOT created here — they are added later, opt-in, by the sync-translations skill. Use this when starting a fresh project that should follow the standard documentation system.
 ---
 
 # init-docs
@@ -21,18 +21,22 @@ discipline explicit so the result does not depend on which model executes the
 skill.
 
 1. **Survey before creating.** Before Step 2, check what already exists
-   (`ls docs/ CLAUDE.md 2>/dev/null`). Existing files are never overwritten —
-   collect any conflicts and present them to the user instead of writing over
-   them.
-2. **Copy templates verbatim.** Policy file contents come from the blocks
-   embedded in this SKILL.md (or the referenced template files). Copy them
+   (`ls docs/ CLAUDE.md .claude/rules/ 2>/dev/null`). Existing files are
+   never overwritten — collect any conflicts and present them to the user
+   instead of writing over them.
+2. **Copy templates verbatim.** File contents come from the bundled template
+   files under `references/` (CLAUDE-template.md, the specification
+   templates, and the rule templates under `references/rules/`). Copy them
    exactly — do not paraphrase, summarize, or regenerate them from memory.
+   The only permitted deviations are the adjustments the user explicitly
+   requests in Step 4.
 3. **Use the real date.** Fill every `<YYYY-MM-DD>` placeholder from
    `date +%F`, never from an assumed or remembered date.
-4. **Verify the tree.** After creation, run `find docs -type f | sort` and
-   compare the result against the layout in "What This Skill Creates". If
-   anything is missing or unexpected, fix it before reporting — never report
-   success on a partial tree.
+4. **Verify the tree.** After creation, run
+   `find docs .claude/rules -type f | sort` and compare the result against
+   the layout in "What This Skill Creates". If anything is missing or
+   unexpected, fix it before reporting — never report success on a partial
+   tree.
 5. **Report verified facts only.** The final report lists exactly the files
    and directories confirmed to exist on disk — nothing assumed.
 6. **Source language only.** This skill creates the source-language tree and
@@ -54,14 +58,10 @@ docs/
 │   │   ├── architecture.md      # Project folder structure (empty template)
 │   │   ├── config.md            # Environment variables (empty template)
 │   │   └── infrastructure.md    # Infrastructure description (empty template)
-│   ├── issue/
-│   └── policy/
-│       ├── policy.md
-│       ├── commit-message-rule.md
-│       ├── naming-conventions.md
-│       └── reference-convention.md
+│   └── issue/
 └── reference/
-CLAUDE.md  (placed in project root)
+.claude/rules/                   # Working rules selected in Step 4 (English-only, auto-loaded)
+CLAUDE.md                        # Placed in project root
 ```
 
 **Note:** Domain directories (e.g., `specifications/auth/`, `specifications/dashboard/`)
@@ -80,8 +80,8 @@ creates the mirror directories, and translates the existing documents.
 Tell the user:
 
 > I'm about to set up the standard `docs/` structure in this project. This will
-> create the docs/ directory tree, a language configuration file, four initial
-> policy documents, and a CLAUDE.md.
+> create the docs/ directory tree, a language configuration file, a CLAUDE.md,
+> and working-rule files in `.claude/rules/` (you choose which in a later step).
 >
 > Language configuration (recorded in `docs/config.yml`):
 > - Source language: `en` (the base language documents are authored in)
@@ -110,9 +110,9 @@ source-language directory tree, `.gitkeep` files so Git tracks the empty
 directories, and the config file:
 
 ```bash
-mkdir -p docs/en/specifications docs/en/issue docs/en/policy
+mkdir -p docs/en/specifications docs/en/issue
 mkdir -p docs/reference
-touch docs/en/specifications/.gitkeep docs/en/issue/.gitkeep docs/en/policy/.gitkeep
+touch docs/en/specifications/.gitkeep docs/en/issue/.gitkeep
 touch docs/reference/.gitkeep
 cat > docs/config.yml <<'EOF'
 # Documentation language configuration — read by documentation skills.
@@ -137,165 +137,60 @@ it becomes active once `sync-translations` adds a translation language.
 - If `CLAUDE.md` **already exists**: do NOT overwrite it. Show the user the
   template and offer to merge relevant sections.
 
-### Step 4: Create Initial Policy Files
+### Step 4: Configure .claude/rules/
 
-Create the following policy files in the source-language policy directory
-(`docs/<source>/policy/` — shown here as `docs/en/policy/`). Copy the blocks
-verbatim; only adjust language names, language codes, and paths where the
-configured source language differs from the default `en`:
+Operative working rules live in `.claude/rules/` at the project root —
+Claude Code loads every file in that directory automatically at session
+start, so no manual loading or `@`-referencing is needed. Rule files are
+written in English regardless of the docs source language (they are Claude
+Code configuration, not part of the bilingual docs product), and they are
+**not** mirrored by `sync-translations`.
 
----
+The bundled rule templates live in
+`${CLAUDE_PLUGIN_ROOT}/skills/init-docs/references/rules/`:
 
-**docs/en/policy/policy.md**
+| Template | Purpose |
+| --- | --- |
+| `policy.md` | General workflow policy: docs as source of truth, issue-driven work, `docs/reference/` read-only |
+| `commit-message-rule.md` | Commit message format, types, and issue references |
+| `naming-conventions.md` | File, code, and branch naming |
+| `reference-convention.md` | The `@`-reference convention for required context |
 
-```markdown
-# Project Policy
+1. **Ask which rule sets to install.** Use the AskUserQuestion tool if
+   available (multi-select, all four options pre-selected as the
+   recommended default); otherwise ask in plain text:
 
-## Documentation
+   > Which working rules should I set up in `.claude/rules/`? These load
+   > automatically at the start of every Claude Code session.
+   >
+   > 1. General workflow policy (docs-driven, issue-first)
+   > 2. Commit message rules
+   > 3. Naming conventions
+   > 4. `@`-reference convention
+   >
+   > Default: all four.
 
-- All documentation lives in `docs/` and is the source of truth
-- Source-language documents live in `docs/en/`
-- Translation mirrors (if configured in `docs/config.yml`) live in
-  `docs/<lang>/` with the same filename
-- `docs/reference/` is user-managed only — never create or edit files there
+2. **Ask about adjustments.** Before writing, ask whether the defaults need
+   changes — for example extra commit types, different branch prefixes, or
+   a different issue-numbering scheme. If the user requests adjustments,
+   apply them to the affected template content; otherwise copy verbatim
+   (Execution Requirement 2).
 
-## Workflow
+3. **Create the files.** Make the directory and copy each selected template:
 
-- Every task begins with an issue — either a GitHub Issue (when a git remote
-  exists) or a document in `docs/en/issue/` (when no remote is configured)
-- GitHub Issues are numbered automatically by GitHub
-- Local issue files (fallback) are numbered sequentially: issue001.md, issue002.md, ...
-- Do not begin implementation before an issue exists (GitHub Issue or local document)
-- Update documentation in the same commit as the code change
+   ```bash
+   mkdir -p .claude/rules
+   cp "${CLAUDE_PLUGIN_ROOT}/skills/init-docs/references/rules/<name>.md" .claude/rules/
+   ```
 
-## Policy Updates
-
-- Changes to policy files must be discussed with the user first
-- When translation languages are configured, policy changes require updating
-  the source document and every translation mirror
-
-## Related Policy Files
-
-- [@docs/en/policy/commit-message-rule.md](docs/en/policy/commit-message-rule.md) — Commit message format
-- [@docs/en/policy/naming-conventions.md](docs/en/policy/naming-conventions.md) — Naming conventions for files, code, and branches
-- [@docs/en/policy/reference-convention.md](docs/en/policy/reference-convention.md) — Document linking convention
-```
-
----
-
-**docs/en/policy/commit-message-rule.md**
-
-```markdown
-# Commit Message Rules
-
-## Format
-
-```
-<type>(<scope>): <subject>
-
-[optional body]
-
-[optional footer]
-```
-
-## Types
-
-- `feat`: New feature
-- `fix`: Bug fix
-- `docs`: Documentation changes only
-- `style`: Formatting or whitespace (no logic change)
-- `refactor`: Code restructuring (no feature or fix)
-- `test`: Adding or updating tests
-- `chore`: Build process, dependency updates, tooling
-
-## Rules
-
-- Subject line: 72 characters maximum
-- Subject: imperative mood, lowercase, no trailing period
-- Example: `feat(auth): add OAuth2 login flow`
-- Reference the issue number in the body or footer:
-  - GitHub Issues: `Refs: #42` (or `Closes #42` to auto-close)
-  - Local docs issues: `Refs: issue003`
-- Separate body from subject with a blank line
-```
-
----
-
-**docs/en/policy/naming-conventions.md**
-
-```markdown
-# Naming Conventions
-
-## Files and Directories
-
-- All filenames: lowercase, hyphen-separated (kebab-case)
-- Issue documents: `issue001.md`, `issue002.md` (zero-padded to 3 digits)
-- Translated docs use the same filename under `docs/<lang>/`
-  - English: `docs/en/policy/policy.md` → Korean: `docs/ko/policy/policy.md`
-- No spaces in file or directory names
-
-## Code (language-agnostic defaults)
-
-- Variables and functions: camelCase
-- Constants: UPPER_SNAKE_CASE
-- Classes and types: PascalCase
-- Private members: prefix with underscore `_`
-
-## Branch Names
-
-- Feature: `feat/issue<NNN>-<short-description>`
-  - With GitHub Issues: `feat/issue42-user-authentication` (no zero-padding)
-  - With local docs issues: `feat/issue003-user-authentication` (zero-padded)
-- Bug fix: `fix/issue<NNN>-<short-description>`
-- Documentation: `docs/issue<NNN>-<short-description>`
-
-## Notes
-
-- Language-specific conventions override these defaults
-- Add language-specific rules to this file as the project evolves
-```
-
----
-
-**docs/en/policy/reference-convention.md**
-
-```markdown
-# Document Reference Convention
-
-## Purpose
-
-Establishes a consistent way to mark documents that must be read or loaded
-as prerequisite context, distinguishing them from paths mentioned as
-examples or illustrations.
-
-## Syntax
-
-Use a markdown link with an `@` prefix to indicate **required context**:
-
-    [@docs/en/policy/policy.md](docs/en/policy/policy.md)
-
-A bare backtick path without `@` is informational or illustrative only:
-
-    `docs/en/issue/issue003.md`
-
-## Rules
-
-1. An `@`-reference means "this file MUST be loaded before proceeding."
-2. Use `@`-references in CLAUDE.md, policy files, issue documents, and
-   skill definitions where prerequisite files exist.
-3. `@`-references use project-root-relative paths (no leading slash).
-4. Do not `@`-reference files in `docs/reference/`.
-5. When an `@`-referenced file itself contains `@`-references, load them
-   recursively (up to 2 levels deep).
-6. The markdown link format `[@path](path)` ensures clickable navigation
-   in GitHub and IDEs.
-
-## Revision History
-
-- <YYYY-MM-DD>: Initial version
-```
-
----
+   - If the configured source language differs from `en`, adjust the `docs/`
+     example paths inside the copied files to the configured language code
+     (the prose stays in English).
+   - If the user skipped some rule sets, edit the "See also" line at the end
+     of the copied `policy.md` to list only the files actually installed
+     (drop the line entirely if `policy.md` is the only one).
+   - If a file already exists in `.claude/rules/`, do NOT overwrite it —
+     report the conflict and skip that file (Execution Requirement 1).
 
 ### Step 5: Offer First Issue
 
@@ -310,4 +205,5 @@ After completing setup, ask:
 
 ### Step 6: Report
 
-List every file and directory created so the user can verify.
+List every file and directory created — including the rule files installed
+in `.claude/rules/` — so the user can verify.
