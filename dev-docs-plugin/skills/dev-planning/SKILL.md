@@ -1,6 +1,6 @@
 ---
 name: dev-planning
-version: 0.1.0
+version: 0.1.1
 description: Forward planning pipeline for a NEW feature or project (specification -> design documents -> test spec) with ID-based test traceability and lite/full output tiers (invoke as /dev-docs:dev-planning lite or full to pin the tier). Supports backend, frontend, and infrastructure domains. Do NOT use this for documenting or reverse-engineering docs from existing code — use dev-reverse-docs for that.
 argument-hint: "[lite|full]"
 ---
@@ -353,7 +353,7 @@ all generated documents for a single review after Step 4.
 
 **Document Discovery**
 
-5. Scan `README.md`, `CLAUDE.md`, all `.md` files under `docs/en/specifications/` and `docs/en/policy/`
+5. Scan `README.md`, `CLAUDE.md`, all `.md` files under `docs/en/specifications/` — plus `docs/en/policy/` if that directory exists (older projects initialized before rules moved to `.claude/rules/`)
 6. Classify each by first 30 lines: `spec` / `requirements` / `user-stories` / `use-case` / `api-spec` / `sequence-diagram` / `architecture` / `config` / `infrastructure` / `deployment` / `policy` / `other` (the last three planning categories cover legacy documents from the pre-`spec.md` pipeline)
 7. Present discovered documents grouped by category using `@`-reference format
 8. Carry confirmed document list to all subsequent steps
@@ -536,4 +536,7 @@ Report all generated file paths on completion.
   Navigation section (Lite tier: the fixed `spec → design → test-spec`
   chain) — document-to-document across domain boundaries, never folder
   links
-- **`@`-references**: Use for discovered docs per [@docs/en/policy/reference-convention.md](docs/en/policy/reference-convention.md)
+- **`@`-references**: Use for discovered docs — the convention is defined in
+  the host project's `.claude/rules/reference-convention.md` (auto-loaded
+  when present): a `[@path](path)` link with a project-root-relative path
+  marks required context; bare backtick paths are informational only

@@ -21,7 +21,7 @@ echo "Setting up standard docs/ structure for languages: ${LANGS[*]}..."
 
 # Create one directory tree per language
 for lang in "${LANGS[@]}"; do
-  mkdir -p "docs/$lang/specifications" "docs/$lang/issue" "docs/$lang/policy"
+  mkdir -p "docs/$lang/specifications" "docs/$lang/issue"
 done
 
 # Create language-neutral reference directory
@@ -30,7 +30,7 @@ mkdir -p docs/reference
 # Add .gitkeep files so Git tracks empty directories
 # Only create if no other files exist in the directory yet
 for lang in "${LANGS[@]}"; do
-  for sub in specifications issue policy; do
+  for sub in specifications issue; do
     dir="docs/$lang/$sub"
     if [ -z "$(ls -A "$dir" 2>/dev/null)" ]; then
       touch "$dir/.gitkeep"
@@ -83,6 +83,6 @@ find docs -type d | sort | sed 's/^/  /'
 echo ""
 echo "Next steps:"
 echo "  1. Claude will create CLAUDE.md in the project root"
-echo "  2. Claude will create initial policy files in docs/${LANGS[0]}/policy/"
+echo "  2. Claude will ask which working rules to install in .claude/rules/"
 echo "  3. Create your first issue (GitHub Issue or docs/${LANGS[0]}/issue/issue001.md)"
 echo "  4. Run /dev-docs:sync-translations later to add translation mirrors"

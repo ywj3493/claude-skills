@@ -1,6 +1,6 @@
 ---
 name: dev-reverse-docs
-version: 0.1.0
+version: 0.1.1
 description: Reverse-engineer grounded planning/design/verification documentation from an EXISTING codebase, module, or feature, with mandatory per-claim source citation, a doc-verifier check after every pass, and lite/full output tiers (invoke as /dev-docs:dev-reverse-docs lite or full to pin the tier). Triggers on "document this codebase", "generate docs from existing code", "reverse-engineer a spec for this repo/module". Do NOT use this for planning a NEW feature that has no code yet — use dev-planning for that.
 argument-hint: "[lite|full]"
 ---
@@ -333,4 +333,7 @@ gaps). List:
   bottom (all documents) navigation, same convention and canonical order
   as `dev-planning` — document-to-document across domain boundaries, never
   folder links, and only files actually generated for the domain
-- **`@`-references**: Use for discovered docs per [@docs/en/policy/reference-convention.md](docs/en/policy/reference-convention.md)
+- **`@`-references**: Use for discovered docs — the convention is defined in
+  the host project's `.claude/rules/reference-convention.md` (auto-loaded
+  when present): a `[@path](path)` link with a project-root-relative path
+  marks required context; bare backtick paths are informational only

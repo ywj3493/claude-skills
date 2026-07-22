@@ -3,6 +3,34 @@
 All notable changes to skills and plugins in this project are documented here.
 Entries are ordered newest first. Format follows [Keep a Changelog](https://keepachangelog.com/).
 
+## [init-docs/v0.4.0] - 2026-07-22
+
+### Added
+- Step 4 "Configure .claude/rules/": asks which rule sets to install (general workflow policy, commit message rules, naming conventions, `@`-reference convention — all four the default) and whether the defaults need adjustments, then seeds the selected files into the host project's `.claude/rules/`, where Claude Code auto-loads them every session (Refs: #32)
+- `references/rules/` — the four rule templates, moved out of SKILL.md's embedded blocks and adapted for auto-loaded `.claude/rules/` (plain "See also" cross-references instead of `@`-references, `.claude/rules/` exempted from `@`-referencing) (Refs: #32)
+
+### Changed
+- `references/CLAUDE-template.md` (and the matching root `templates/CLAUDE.md`): Core Rule 5 "Policy is law" and Required Context now point at auto-loaded `.claude/rules/` instead of `@`-referencing four policy files; `policy/` removed from the structure tree and the translation-mirror rule (Refs: #32)
+- `scripts/create-structure.sh` no longer creates `policy/` directories; next-steps output announces the `.claude/rules/` setup question instead of policy file creation (Refs: #32)
+
+### Removed
+- `docs/<source>/policy/` scaffolding and the four seeded policy documents (`policy.md`, `commit-message-rule.md`, `naming-conventions.md`, `reference-convention.md`) — downstream projects now keep their operative rules in `.claude/rules/`, the same pattern this repository adopted in #22 (Refs: #32)
+
+## [sync-translations/v0.4.0] - 2026-07-22
+
+### Removed
+- `policy/` from the mirrored directory set (scope table, mirroring offer, mirror-directory creation, audit `find`, and examples) — init-docs no longer scaffolds a policy directory, and `.claude/rules/` is English-only Claude Code configuration, not a translation target (Refs: #32)
+
+## [dev-planning/v0.1.1] - 2026-07-22
+
+### Fixed
+- Document Discovery scans `docs/en/policy/` only if that directory exists (init-docs no longer creates it), and the `@`-reference document rule states the convention inline, sourced from the host project's `.claude/rules/reference-convention.md` instead of `@`-referencing the no-longer-seeded `docs/en/policy/reference-convention.md` (Refs: #32)
+
+## [dev-reverse-docs/v0.1.1] - 2026-07-22
+
+### Fixed
+- `@`-reference document rule states the convention inline, sourced from the host project's `.claude/rules/reference-convention.md` instead of `@`-referencing the no-longer-seeded `docs/en/policy/reference-convention.md` (Refs: #32)
+
 ## [dev-docs/v0.4.0] - 2026-07-15
 
 ### Added

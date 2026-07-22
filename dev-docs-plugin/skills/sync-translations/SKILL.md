@@ -1,6 +1,6 @@
 ---
 name: sync-translations
-version: 0.3.0
+version: 0.4.0
 description: Audits the source-language documentation directories (per docs/config.yml, default docs/en/) for documents that are missing a translation in a configured translation language (default docs/ko/), or where a translation appears out of date compared to its source, then creates or updates those translations. When no translation languages are configured yet, offers to enable mirroring — records the chosen language(s) in docs/config.yml and creates the mirror directories before syncing. Use this to keep translation mirrors in sync or to opt in to mirroring. Triggered by "sync docs", "번역 동기화", "update translations", "sync translations", "mirror docs", or "add a translation language".
 ---
 
@@ -27,7 +27,6 @@ For each configured translation language (shown here for `ko`):
 |---|---|
 | `docs/en/specifications/` | `docs/ko/specifications/` |
 | `docs/en/issue/` | `docs/ko/issue/` |
-| `docs/en/policy/` | `docs/ko/policy/` |
 
 `docs/reference/` is **excluded** — user-managed, language-neutral, no translations needed.
 
@@ -87,9 +86,9 @@ executes the skill.
 
    > No translation languages are configured yet (`docs/config.yml` has
    > `translation_languages: []`). Would you like to add one now?
-   > Mirroring keeps a full translation of `specifications/`, `issue/`, and
-   > `policy/` in sync with the source language — for example `ko` for a
-   > Korean mirror.
+   > Mirroring keeps a full translation of `specifications/` and `issue/`
+   > in sync with the source language — for example `ko` for a Korean
+   > mirror.
 
    - If the user **declines**, stop — the project stays source-only.
    - If the user **names one or more languages**, then for each chosen
@@ -100,8 +99,8 @@ executes the skill.
      2. Create the mirror directories with `.gitkeep` files:
 
         ```bash
-        mkdir -p docs/<target>/specifications docs/<target>/issue docs/<target>/policy
-        touch docs/<target>/specifications/.gitkeep docs/<target>/issue/.gitkeep docs/<target>/policy/.gitkeep
+        mkdir -p docs/<target>/specifications docs/<target>/issue
+        touch docs/<target>/specifications/.gitkeep docs/<target>/issue/.gitkeep
         ```
 
      3. Continue to Step 1 — the audit will list every source document as
@@ -112,10 +111,10 @@ show the default `en` → `ko` pairing; substitute the actual language codes.
 
 ### Step 1: Audit — Find Missing Translations
 
-List all source files in the three directories:
+List all source files in the directories in scope:
 
 ```bash
-find docs/en/specifications docs/en/issue docs/en/policy \
+find docs/en/specifications docs/en/issue \
   -name "*.md" ! -name ".gitkeep" 2>/dev/null | sort
 ```
 
@@ -147,7 +146,7 @@ Tell the user:
 > - docs/en/specifications/architecture.md
 >
 > **Potentially stale** (<N> files):
-> - docs/en/policy/policy.md (English updated 2025-11-01, Korean updated 2025-10-15)
+> - docs/en/specifications/config.md (English updated 2025-11-01, Korean updated 2025-10-15)
 >
 > Shall I create/update all of them?
 
@@ -165,7 +164,6 @@ For each file in the Missing or Stale lists:
 filename), e.g. for `en` → `ko`:
 - `docs/en/issue/issue003.md` → `docs/ko/issue/issue003.md`
 - `docs/en/specifications/requirements.md` → `docs/ko/specifications/requirements.md`
-- `docs/en/policy/commit-message-rule.md` → `docs/ko/policy/commit-message-rule.md`
 
 ### Step 5: Report Results
 
