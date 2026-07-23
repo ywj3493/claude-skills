@@ -3,6 +3,13 @@
 All notable changes to skills and plugins in this project are documented here.
 Entries are ordered newest first. Format follows [Keep a Changelog](https://keepachangelog.com/).
 
+## [domain-overview/v0.0.1] - 2026-07-23
+
+### Added
+- Initial `domain-overview` skill: generates a diagram-first DDD domain overview at `docs/<source>/specifications/domain-overview.md` — one large Mermaid context map (subgraph = bounded context, node = aggregate root) with edges labeled by DDD context-map patterns (P, SK, C/S, CF, ACL, OHS, PL, SW, BBoM) and upstream→downstream direction, a Context Relationships evidence table, per-domain aggregate summaries as stereotype `classDiagram` blocks, and a fixed pattern legend (Refs: #34)
+- Per-domain source auto-detection: docs-covered domains derive from existing specification documents (data-model.md is the strongest signal), uncovered domains fall back to a cited code scan (`[REF: path:line]`), mixed runs are hybrid; generated output is checked by the existing `doc-verifier` agent with the standard fix-mismatches loop (Refs: #34)
+- Skill-local template `references/domain-overview-template.md` — a cross-cutting top-level document outside the spec → design → test-spec pipeline (no NAV NOTE, prev/next, Domain tag, or All Documents index), with hard diagram-first caps (intro ≤ 5 sentences, ≤ 3 sentences per domain section, no attribute-level detail) (Refs: #34)
+
 ## [init-docs/v0.4.0] - 2026-07-22
 
 ### Added
