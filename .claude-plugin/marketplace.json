@@ -11,7 +11,7 @@
     {
       "name": "dev-docs",
       "source": "./dev-docs-plugin",
-      "description": "Docs-driven development skills: docs/ scaffolding, forward feature planning, citation-grounded reverse-engineering docs with a doc-verifier subagent, and opt-in translation mirror sync."
+      "description": "Docs-driven development skills: docs/ scaffolding, forward feature planning and citation-grounded reverse-engineering docs (both with lite/full output tiers and a doc-verifier subagent), a diagram-first DDD domain overview (context map) generator, and opt-in translation mirror sync."
     }
   ]
 }
