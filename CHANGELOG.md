@@ -3,6 +3,15 @@
 All notable changes to skills and plugins in this project are documented here.
 Entries are ordered newest first. Format follows [Keep a Changelog](https://keepachangelog.com/).
 
+## [dev-docs/v0.5.0] - 2026-07-23
+
+### Added
+- `domain-overview` skill bundled into the plugin (packaging change; the skill's own changes are recorded under `[domain-overview/v0.0.1]`) (Refs: #34)
+
+### Changed
+- `plugin.json` description mentions the diagram-first DDD domain overview (context map) generator; keywords gain `ddd` and `context-map`; `marketplace.json`'s dev-docs description synced back to `plugin.json`'s (Refs: #34)
+- Plugin README (Contents table, Workflow tree, Templates note, Host-project expectations) and root README.md / README.ko.md list the new skill (Refs: #34)
+
 ## [domain-overview/v0.0.1] - 2026-07-23
 
 ### Added

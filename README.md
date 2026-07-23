@@ -28,6 +28,7 @@ other plugins:
 | init-docs | `/dev-docs:init-docs` | Create the standard `docs/` structure, source-language configuration, working rules in `.claude/rules/` (chosen via setup questions), and CLAUDE.md |
 | dev-planning | `/dev-docs:dev-planning` | Forward planning pipeline for a new feature: requirements → user stories → use case → design documents → test spec, with ID-based test traceability |
 | dev-reverse-docs | `/dev-docs:dev-reverse-docs` | Grounded, citation-verified documentation of existing code (`[REF: path:line]` on every claim) |
+| domain-overview | `/dev-docs:domain-overview` | Diagram-first DDD domain overview: a Mermaid context map of bounded contexts, aggregate roots, and pattern-labeled relationships |
 | sync-translations | `/dev-docs:sync-translations` | Opt in to translation mirroring and keep mirrors in sync with source docs |
 | doc-verifier | `doc-verifier` (agent) | Read-only subagent that checks every `dev-reverse-docs` citation against the actual source |
 
@@ -86,6 +87,7 @@ New project
       └─ create an issue            GitHub Issue (or docs/<lang>/issue/issue001.md)
           └─ /dev-docs:dev-planning      planning documents for a new feature (structured design)
           └─ /dev-docs:dev-reverse-docs  grounded docs for code that already exists
+          └─ /dev-docs:domain-overview   diagram-first DDD context map across all domains
           └─ implementation...
               └─ /dev-docs:sync-translations  opt in to a translation mirror / resync when docs drift
 ```
@@ -99,6 +101,7 @@ dev-docs-plugin/          # dev-docs plugin (.claude-plugin/plugin.json)
   skills/init-docs/            # /dev-docs:init-docs (+ scripts/, references/ incl. CLAUDE.md template)
   skills/dev-planning/         # /dev-docs:dev-planning
   skills/dev-reverse-docs/     # /dev-docs:dev-reverse-docs
+  skills/domain-overview/      # /dev-docs:domain-overview (+ references/ incl. its template)
   skills/sync-translations/    # /dev-docs:sync-translations
   agents/doc-verifier.md       # read-only citation-vs-code verifier
   templates/              # shared by the planning skills: planning/, design/, verification/
