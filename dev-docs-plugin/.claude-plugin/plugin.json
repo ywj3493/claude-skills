@@ -1,7 +1,7 @@
 {
   "name": "dev-docs",
-  "version": "0.4.0",
-  "description": "Docs-driven development skills: docs/ scaffolding, forward feature planning and citation-grounded reverse-engineering docs (both with lite/full output tiers and a doc-verifier subagent), and opt-in translation mirror sync.",
+  "version": "0.5.0",
+  "description": "Docs-driven development skills: docs/ scaffolding, forward feature planning and citation-grounded reverse-engineering docs (both with lite/full output tiers and a doc-verifier subagent), a lightweight explainable skill that diagrams a change just made, and opt-in translation mirror sync.",
   "author": {
     "name": "ywj3493"
   },
