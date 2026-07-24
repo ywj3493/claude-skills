@@ -3,6 +3,16 @@
 All notable changes to skills and plugins in this project are documented here.
 Entries are ordered newest first. Format follows [Keep a Changelog](https://keepachangelog.com/).
 
+## [dev-docs/v0.6.0] - 2026-07-24
+
+### Added
+- `explainable` skill bundled in the plugin — a lightweight complement to the two full pipelines, surfaced in the README Contents table, Workflow diagram, and Templates note; plugin description updated to mention it (Refs: #35)
+
+## [explainable/v0.0.1] - 2026-07-24
+
+### Added
+- New single-artifact skill: after implementation work, writes or merges ONE Source-Linked sequence diagram for the flow just built or changed into the domain's `design/sequence-diagram.md` (Lite-tier domains: the `## Core Flows` section of `design.md`). Reuses `templates/design/sequence-diagram.md` in Source-Linked Mode (participant `link` lines, per-message `path:line` `Note`s, `[ASSUMED: ...]` fallback, hidden `CALLGRAPH` block) but drops the tier system, the review gates, and the `doc-verifier` loop. Scope is derived from the actual change set (named files → git diff vs. merge base → working tree), and the skill points at `dev-planning`/`dev-reverse-docs` for the full document set (Refs: #35)
+
 ## [dev-docs/v0.5.0] - 2026-07-23
 
 ### Added
