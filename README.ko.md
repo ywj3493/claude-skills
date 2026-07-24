@@ -29,6 +29,7 @@ Requirements)** 이 포함되어 있어, 어떤 모델이 실행하든 결과 �
 | init-docs | `/dev-docs:init-docs` | 표준 `docs/` 구조, 원본 언어 설정, 설정 질문으로 선택하는 `.claude/rules/` 작업 규칙, CLAUDE.md를 생성한다 |
 | dev-planning | `/dev-docs:dev-planning` | 새 기능의 사전 기획 파이프라인: 요구사항 → 유저 스토리 → 유스케이스 → 설계 문서 → 테스트 명세, ID 기반 테스트 추적성 포함 |
 | dev-reverse-docs | `/dev-docs:dev-reverse-docs` | 기존 코드에 대한 근거 기반·검증된 문서화 (모든 주장에 `[REF: path:line]` 인용) |
+| domain-overview | `/dev-docs:domain-overview` | 도표 중심의 DDD 도메인 개요: 바운디드 컨텍스트, 애그리거트 루트, 패턴 라벨이 붙은 관계를 담은 Mermaid 컨텍스트 맵 |
 | sync-translations | `/dev-docs:sync-translations` | 번역 미러링을 옵트인하고 원본 문서와 미러를 동기화한다 |
 | doc-verifier | `doc-verifier` (에이전트) | `dev-reverse-docs`의 모든 인용을 실제 소스와 대조하는 읽기 전용 서브에이전트 |
 
@@ -87,6 +88,7 @@ translation_languages: []
       └─ 이슈 생성                   GitHub Issue (또는 docs/<lang>/issue/issue001.md)
           └─ /dev-docs:dev-planning      새 기능의 기획 문서 (구조화된 설계)
           └─ /dev-docs:dev-reverse-docs  이미 존재하는 코드의 근거 기반 문서화
+          └─ /dev-docs:domain-overview   전체 도메인을 담는 도표 중심 DDD 컨텍스트 맵
           └─ 구현 작업...
               └─ /dev-docs:sync-translations  번역 미러 옵트인 / 미러가 어긋났을 때 재동기화
 ```
@@ -100,6 +102,7 @@ dev-docs-plugin/          # dev-docs 플러그인 (.claude-plugin/plugin.json)
   skills/init-docs/            # /dev-docs:init-docs (+ scripts/, references/ — CLAUDE.md 템플릿 포함)
   skills/dev-planning/         # /dev-docs:dev-planning
   skills/dev-reverse-docs/     # /dev-docs:dev-reverse-docs
+  skills/domain-overview/      # /dev-docs:domain-overview (+ references/ — 전용 템플릿 포함)
   skills/sync-translations/    # /dev-docs:sync-translations
   agents/doc-verifier.md       # 읽기 전용 근거-코드 대조 검증기
   templates/              # 기획 스킬들이 공유: planning/, design/, verification/

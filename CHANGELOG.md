@@ -3,7 +3,7 @@
 All notable changes to skills and plugins in this project are documented here.
 Entries are ordered newest first. Format follows [Keep a Changelog](https://keepachangelog.com/).
 
-## [dev-docs/v0.5.0] - 2026-07-24
+## [dev-docs/v0.6.0] - 2026-07-24
 
 ### Added
 - `explainable` skill bundled in the plugin — a lightweight complement to the two full pipelines, surfaced in the README Contents table, Workflow diagram, and Templates note; plugin description updated to mention it (Refs: #35)
@@ -12,6 +12,22 @@ Entries are ordered newest first. Format follows [Keep a Changelog](https://keep
 
 ### Added
 - New single-artifact skill: after implementation work, writes or merges ONE Source-Linked sequence diagram for the flow just built or changed into the domain's `design/sequence-diagram.md` (Lite-tier domains: the `## Core Flows` section of `design.md`). Reuses `templates/design/sequence-diagram.md` in Source-Linked Mode (participant `link` lines, per-message `path:line` `Note`s, `[ASSUMED: ...]` fallback, hidden `CALLGRAPH` block) but drops the tier system, the review gates, and the `doc-verifier` loop. Scope is derived from the actual change set (named files → git diff vs. merge base → working tree), and the skill points at `dev-planning`/`dev-reverse-docs` for the full document set (Refs: #35)
+
+## [dev-docs/v0.5.0] - 2026-07-23
+
+### Added
+- `domain-overview` skill bundled into the plugin (packaging change; the skill's own changes are recorded under `[domain-overview/v0.0.1]`) (Refs: #34)
+
+### Changed
+- `plugin.json` description mentions the diagram-first DDD domain overview (context map) generator; keywords gain `ddd` and `context-map`; `marketplace.json`'s dev-docs description synced back to `plugin.json`'s (Refs: #34)
+- Plugin README (Contents table, Workflow tree, Templates note, Host-project expectations) and root README.md / README.ko.md list the new skill (Refs: #34)
+
+## [domain-overview/v0.0.1] - 2026-07-23
+
+### Added
+- Initial `domain-overview` skill: generates a diagram-first DDD domain overview at `docs/<source>/specifications/domain-overview.md` — one large Mermaid context map (subgraph = bounded context, node = aggregate root) with edges labeled by DDD context-map patterns (P, SK, C/S, CF, ACL, OHS, PL, SW, BBoM) and upstream→downstream direction, a Context Relationships evidence table, per-domain aggregate summaries as stereotype `classDiagram` blocks, and a fixed pattern legend (Refs: #34)
+- Per-domain source auto-detection: docs-covered domains derive from existing specification documents (data-model.md is the strongest signal), uncovered domains fall back to a cited code scan (`[REF: path:line]`), mixed runs are hybrid; generated output is checked by the existing `doc-verifier` agent with the standard fix-mismatches loop (Refs: #34)
+- Skill-local template `references/domain-overview-template.md` — a cross-cutting top-level document outside the spec → design → test-spec pipeline (no NAV NOTE, prev/next, Domain tag, or All Documents index), with hard diagram-first caps (intro ≤ 5 sentences, ≤ 3 sentences per domain section, no attribute-level detail) (Refs: #34)
 
 ## [init-docs/v0.4.0] - 2026-07-22
 
