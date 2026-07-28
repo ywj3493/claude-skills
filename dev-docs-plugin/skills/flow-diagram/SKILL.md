@@ -1,11 +1,11 @@
 ---
-name: explainable
-version: 0.0.1
+name: flow-diagram
+version: 0.1.0
 description: Make an implementation change explainable by writing or updating ONE Source-Linked sequence diagram for the flow that was just built or changed, merged into the domain's design/sequence-diagram.md. Triggers on "explain what you just built", "diagram this change", "시퀀스 다이어그램으로 설명해줘", "방금 작업 다이어그램으로 남겨줘", or a request to document the call flow of a finished feature/fix. Do NOT use this to produce a full planning/design/verification document set — use dev-planning (new feature) or dev-reverse-docs (existing codebase) for that.
 argument-hint: "[domain]"
 ---
 
-# explainable
+# flow-diagram
 
 Produces exactly one artifact: a **sequence diagram of the flow you just
 implemented**, grounded in the code that was actually written.

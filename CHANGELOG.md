@@ -3,6 +3,17 @@
 All notable changes to skills and plugins in this project are documented here.
 Entries are ordered newest first. Format follows [Keep a Changelog](https://keepachangelog.com/).
 
+## [dev-docs/v0.7.0] - 2026-07-28
+
+### Changed
+- Bundled skill `explainable` renamed to `flow-diagram`; `plugin.json` description and `marketplace.json`'s dev-docs description updated to match, and the plugin README (intro, Contents table, Workflow tree, Templates note) re-pointed at the new command (Refs: #38)
+- Root `README.md` / `README.ko.md` skill tables, workflow trees, and repository-structure listings now include the skill, which had been missing since it was added in v0.6.0 (Refs: #38)
+
+## [flow-diagram/v0.1.0] - 2026-07-28
+
+### Changed
+- Renamed from `explainable` (`skills/explainable/` → `skills/flow-diagram/`, `name:` frontmatter, `# flow-diagram` heading), freeing the `explainable` name for the new sibling plugin. Behavior is unchanged — the command is now `/dev-docs:flow-diagram` (Refs: #38)
+
 ## [dev-docs/v0.6.0] - 2026-07-24
 
 ### Added

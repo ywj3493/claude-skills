@@ -29,6 +29,7 @@ other plugins:
 | dev-planning | `/dev-docs:dev-planning` | Forward planning pipeline for a new feature: requirements → user stories → use case → design documents → test spec, with ID-based test traceability |
 | dev-reverse-docs | `/dev-docs:dev-reverse-docs` | Grounded, citation-verified documentation of existing code (`[REF: path:line]` on every claim) |
 | domain-overview | `/dev-docs:domain-overview` | Diagram-first DDD domain overview: a Mermaid context map of bounded contexts, aggregate roots, and pattern-labeled relationships |
+| flow-diagram | `/dev-docs:flow-diagram` | After implementation: writes or merges ONE Source-Linked sequence diagram for the flow just built or changed |
 | sync-translations | `/dev-docs:sync-translations` | Opt in to translation mirroring and keep mirrors in sync with source docs |
 | doc-verifier | `doc-verifier` (agent) | Read-only subagent that checks every `dev-reverse-docs` citation against the actual source |
 
@@ -89,6 +90,7 @@ New project
           └─ /dev-docs:dev-reverse-docs  grounded docs for code that already exists
           └─ /dev-docs:domain-overview   diagram-first DDD context map across all domains
           └─ implementation...
+              └─ /dev-docs:flow-diagram       one Source-Linked sequence diagram for the change just made
               └─ /dev-docs:sync-translations  opt in to a translation mirror / resync when docs drift
 ```
 
@@ -102,6 +104,7 @@ dev-docs-plugin/          # dev-docs plugin (.claude-plugin/plugin.json)
   skills/dev-planning/         # /dev-docs:dev-planning
   skills/dev-reverse-docs/     # /dev-docs:dev-reverse-docs
   skills/domain-overview/      # /dev-docs:domain-overview (+ references/ incl. its template)
+  skills/flow-diagram/         # /dev-docs:flow-diagram
   skills/sync-translations/    # /dev-docs:sync-translations
   agents/doc-verifier.md       # read-only citation-vs-code verifier
   templates/              # shared by the planning skills: planning/, design/, verification/
