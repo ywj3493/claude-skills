@@ -117,6 +117,17 @@ fsd_slice: <레이어>/<슬라이스> 또는 미분류
 render_mode: 서버 | 클라이언트 | 사전 생성 | 혼합 | 불명
 status: COMPLETE | PARTIAL(<사유>)
 
+participants:
+  - alias: <짧은 별칭> | name: <표시 이름> | fsd: <레이어>/<슬라이스> 또는 미분류 | path: <경로>
+
+edges:
+  1. <출발 별칭> -> <도착 별칭> | <호출·전이 표현> | from: <호출 위치 경로:줄번호> | [REF: <도착 위치 경로:줄번호>] | kind: call
+  2. <출발 별칭> --> <도착 별칭> | <반환·응답> | from: <위치 경로:줄번호> | [REF: <위치 경로:줄번호>] | kind: return
+  3. <출발 별칭> -x <도착 별칭> | <오류> | from: <위치 경로:줄번호> | [REF: <위치 경로:줄번호>] | kind: error
+
+branches:
+  - at: edge <번호> | condition: <조건식 그대로> | [REF: 경로:줄번호]
+
 ui_tree:
   - unit: <UI 단위 이름> | parent: <부모 이름 또는 "루트"> | path: <정의 경로> | fsd: <레이어>/<슬라이스> | condition: <조건 또는 —> | repeated: 예|아니오 | [REF: 경로:줄번호]
 
@@ -147,8 +158,16 @@ unresolved:
 
 ### 형식 규칙
 
-- **`shell` 모드에서는** `ui_tree`에 전역 프로바이더 계층을, `guards`에
-  라우트 가드를, `state`에 전역 상태를 채운다. `route`, `data_sources`,
+- **`participants`와 `edges`가 렌더 시퀀스 다이어그램의 원료다.** 호출한
+  스킬이 이 간선 목록 하나에서 다이어그램과 메시지별 `Note`와 숨김
+  `CALLGRAPH` 블록을 함께 렌더링한다. `ui_tree`는 구조를 나타내는 별개의
+  데이터이며 다이어그램의 원료가 아니다 — 둘을 섞지 않는다.
+- **`from:`과 `[REF:]`는 서로 다른 위치다.** `from:`은 호출·전이가 일어난
+  쪽의 줄, `[REF:]`는 도착한 쪽의 줄이다. `from:`이 없으면 호출 그래프를
+  만들 수 없으므로, 확정할 수 없으면 그 간선을 `unresolved`로 내린다.
+- **`shell` 모드에서는** `edges`에 진입점 → 전역 프로바이더 → 라우터 해석
+  까지의 흐름을 담고, `ui_tree`에 전역 프로바이더 계층을, `guards`에 라우트
+  가드를, `state`에 전역 상태를 채운다. `route`, `data_sources`,
   `rerender_triggers`는 대개 비어 있다.
 - **`route` 모드에서는** `guards`를 채우지 않는다. 셸이 이미 소유한다.
 - **모든 항목은 `[REF:]` 또는 `[ASSUMED: <추론>; basis: <근거>]`를 가진다.**
