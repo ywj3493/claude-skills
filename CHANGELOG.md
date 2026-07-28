@@ -3,6 +3,84 @@
 All notable changes to skills and plugins in this project are documented here.
 Entries are ordered newest first. Format follows [Keep a Changelog](https://keepachangelog.com/).
 
+## [explainable/v0.1.0] - 2026-07-28
+
+### Added
+- New plugin `explainable`, registered in `.claude-plugin/marketplace.json` — a Korean-language planning and design documentation pipeline that splits frontend and backend design into separate skills and runs its reverse pipeline design-first (Refs: #38)
+- 20 Korean templates: 5 cross-cutting (`architecture.md`, `infrastructure.md`, `glossary.md`, `domain-map.md`, `README.md`), 4 planning, 4 backend design (4-Layered DDD), 6 frontend design (FSD), 1 verification. The `## 문서 정보` block gains a `분석 기준 커밋` field so a citation-bearing document records which commit it was true of (Refs: #38)
+- `domain-map.md` — the inter-domain document the design set previously lacked: DDD context map, FSD slice dependency graph, integration contracts, and `FLOW-CROSS-` cross-domain flows that link to each domain's own flow keys instead of duplicating their diagrams (Refs: #38)
+- `references/document-order.md` holds the canonical navigation order once, instead of repeating a NAV NOTE in every template (Refs: #38)
+- `scripts/check-docs.sh` — deterministic checks that need no model judgment: leftover placeholders, mermaid fence balance, relative-link targets, `[REF:]` file and line existence, ID duplication and coverage, and the `T-1NN`/`T-2NN`/`T-3NN` band split (Refs: #38)
+
+### Changed
+- Protocol neutrality: `api-interface.md` keeps a fixed document structure while the contract block format follows the detected API style (REST → OpenAPI 3.1, GraphQL → SDL, gRPC → `.proto`, message-based → AsyncAPI). Skills and templates never hardcode a framework or protocol — those enter only as detected facts or user decisions recorded in `architecture.md` (Refs: #38)
+
+## [translate-docs/v0.0.1] - 2026-07-28
+
+### Added
+- Initial skill, structurally a copy of `dev-docs`'s `sync-translations` with the body translated to Korean. Scope drops `issue/` (this plugin does not manage issues) and recurses through `specifications/` for the nested design tree (Refs: #38)
+- Do-not-translate list covering mermaid block interiors, hidden `CALLGRAPH` blocks, contract blocks, `[REF:]`/`[ASSUMED:]` markers, verifier verdict vocabulary, ID prefixes, and `OWNER`/`GENERATED-BY` markers — translating any of them breaks the verification loop in the mirror (Refs: #38)
+
+## [reverse-planning/v0.0.1] - 2026-07-28
+
+### Added
+- Initial skill: derives requirements, user stories, the interface contract, and the traceability matrix from already-generated design documents plus code evidence. A binding derivation table maps evidence class to output (validation/guard code → FR, timeout/retry/rate-limit settings → NFR, entry point + auth role → US, error branches → AC) (Refs: #38)
+- Three rules against restating the design docs: citations point at source code and never at a `.md` file, user stories are per (actor, capability) rather than per operation, and the tech-neutrality swap test applies sentence by sentence (Refs: #38)
+- Forward planning documents are never overwritten — detected by the absence of a `## 읽은 소스` ledger, they get a `reverse-diff.md` report of plan-versus-implementation drift instead (Refs: #38)
+
+## [reverse-design-frontend/v0.0.1] - 2026-07-28
+
+### Added
+- Initial skill: infra → framework detection → FSD fit assessment → one app-shell trace → per-route traces. FSD is a comparison baseline in reverse mode, not a target — code that does not follow it is recorded as it is, without a refactoring proposal (Refs: #38)
+- The app shell is traced once rather than per route, and its summary is passed into every route invocation so N identical shell traces never drift apart (Refs: #38)
+
+## [reverse-design-backend/v0.0.1] - 2026-07-28
+
+### Added
+- Initial skill: infra → codebase structure → domain identification → per-operation Source-Linked sequence diagrams → domain model and ERD, with a `citation-verifier` fix loop that blocks completion while any `MISMATCHED` or `UNSUPPORTED` claim remains (Refs: #38)
+- An operation selection gate replaces the lite/full tier system: trivial pass-through operations become a table row and only those with 3+ participants or a branch get an agent invocation, so a 60-operation service does not produce 60 near-identical CRUD diagrams (Refs: #38)
+- Re-running discards that domain's reverse output and rebuilds it against the current commit, after showing the deletion list and checking the working tree is clean. Cross-cutting documents and the glossary are never discarded — only their sections for that domain are updated (Refs: #38)
+
+## [init-design-frontend/v0.0.1] - 2026-07-28
+
+### Added
+- Initial skill: FSD layer/slice structure, routing, UI composition, render flow, state flow, and user flows, plus the frontend and E2E sections of the test spec (Refs: #38)
+- Framework-neutral vocabulary throughout — "UI 단위", "라우트", "렌더링 모드", "상태 저장소" — so the same templates describe React, Vue, Svelte, or Angular projects. Concrete library names appear only where a detected value is filled in (Refs: #38)
+- Document boundaries are pinned so `render-flow.md` and `state-flow.md` cannot repeat each other: local state and re-render triggers belong to render flow, shared and server state to state flow, split on whether the state outlives the route (Refs: #38)
+
+## [init-design-backend/v0.0.1] - 2026-07-28
+
+### Added
+- Initial skill: 4-Layered DDD layer mapping, domain model, conditional ERD, user-story-based sequence diagrams with `FLOW-` keys, and the backend section of the test spec (Refs: #38)
+- Layer roles and dependency rules live once in `architecture.md`; the per-domain document carries only what is true of that domain, so the generic four-layer diagram is not pasted into every domain (Refs: #38)
+
+## [init-planning/v0.0.1] - 2026-07-28
+
+### Added
+- Initial skill: infrastructure and project setup first, then glossary, requirements (FR/NFR), user stories with acceptance criteria, the interface contract, inter-domain integration, and the traceability matrix (Refs: #38)
+- The interface contract sits in planning rather than design because both design skills consume it — generating it downstream would let the two skills invent conflicting contracts (Refs: #38)
+
+## [citation-verifier/v0.0.1] - 2026-07-28
+
+### Added
+- Initial agent, ported from `dev-docs`'s `doc-verifier` with an identical verification contract and a Korean body. Renamed so two same-named agents cannot diverge across the two plugins. Adds structured-table checks for `architecture.md`, `glossary.md`, and `traceability.md` (Refs: #38)
+
+## [render-flow-tracer/v0.0.1] - 2026-07-28
+
+### Added
+- Initial read-only agent: traces the app shell or one route — entry point, UI tree, data sources, state scope, render boundaries, and re-render triggers — and returns a fixed schema. Receives the detected framework as input so it never guesses one (Refs: #38)
+
+## [operation-tracer/v0.0.1] - 2026-07-28
+
+### Added
+- Initial read-only agent: traces one backend operation from entry point to repository or external adapter. "Operation" is protocol-neutral — a REST endpoint, GraphQL resolver, gRPC method, message consumer, or scheduled job — and the API style arrives as input (Refs: #38)
+- Returns a structured edge list rather than rendered markdown, with `from:` (call site) alongside `[REF:]` (call target), so the calling skill renders the diagram, the per-message `Note`s, and the hidden `CALLGRAPH` block from one source and the verifier's bidirectional check passes by construction (Refs: #38)
+
+## [infra-explorer/v0.0.1] - 2026-07-28
+
+### Added
+- Initial read-only agent: collects runtime, container, deployment, environment, CI/CD, datastore, external-service, and observability facts with a citation on every item. Environment variable values are never emitted — only names, purpose, and whether a value exists. Numeric operational parameters are gathered into a `tunables` section that the reverse planning skill uses as NFR evidence (Refs: #38)
+
 ## [dev-docs/v0.7.0] - 2026-07-28
 
 ### Changed
