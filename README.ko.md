@@ -190,7 +190,8 @@ explainable-plugin/       # explainable 플러그인 (한국어; .claude-plugin/
   skills/translate-docs/           # /explainable:translate-docs
   agents/                 # infra-explorer, operation-tracer, render-flow-tracer, citation-verifier
   templates/              # overview/, planning/, design/{backend,frontend}/, verification/
-  references/             # document-order.md — 문서 정규 순서
+  references/             # 스킬이 로드하는 공유 규약: common-, reverse-,
+                          # frontend-, planning-rules.md + document-order.md
   scripts/check-docs.sh   # ID·링크·자리표시자·펜스 결정적 검사
 templates/
   CLAUDE.md               # 새 프로젝트용 표준 CLAUDE.md (init-docs 번들 템플릿과 동일)

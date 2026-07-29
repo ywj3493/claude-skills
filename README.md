@@ -192,7 +192,8 @@ explainable-plugin/       # explainable plugin (Korean; .claude-plugin/plugin.js
   skills/translate-docs/           # /explainable:translate-docs
   agents/                 # infra-explorer, operation-tracer, render-flow-tracer, citation-verifier
   templates/              # overview/, planning/, design/{backend,frontend}/, verification/
-  references/             # document-order.md — canonical navigation order
+  references/             # shared rules the skills load: common-, reverse-,
+                          # frontend-, planning-rules.md + document-order.md
   scripts/check-docs.sh   # deterministic ID, link, placeholder, and fence checks
 templates/
   CLAUDE.md               # Standard CLAUDE.md for new projects (same as init-docs' bundled template)

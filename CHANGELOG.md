@@ -3,6 +3,64 @@
 All notable changes to skills and plugins in this project are documented here.
 Entries are ordered newest first. Format follows [Keep a Changelog](https://keepachangelog.com/).
 
+## [explainable/v0.2.0] - 2026-07-29
+
+### Added
+- Four shared reference files under `references/`, named by audience rather than topic so a skill loads one to three of them instead of five or six: `common-rules.md` (all seven skills — docs-environment detection, the nine-item execution contract, the verification loop, the completion report, and the document conventions), `reverse-rules.md` (the three reverse skills — citation contract, Source-Linked sequence spec, re-run policy, agent-tracing and `PARTIAL` handling), `frontend-rules.md` (the two frontend skills — FSD baseline and the inter-document responsibility boundary), and `planning-rules.md` (the two planning skills — ID formats, swap test, contract-block selection) (Refs: #38)
+
+### Changed
+- The seven skills drop from 2,380 to 1,633 lines (−31%) with no semantic loss. Duplication across skills was 585 lines, in-file restatement another ~120, and the `**산출**:` / `템플릿:` header pairs 90 more. Rationale clauses were kept only where a model could otherwise rationalize its way around the rule; the other explanations were cut (Refs: #38)
+
+### Fixed
+- `reverse-planning` cited "단계 0의 재실행 정책", which that file's step 0 did not contain — the policy now lives in `reverse-rules.md` and the reference resolves (Refs: #38)
+- Four cross-skill pointers named another skill's `SKILL.md` ("절차는 init-planning 단계 0과 같다", and one that named no file at all) rather than a loadable path; all now point at `references/common-rules.md` (Refs: #38)
+- `reverse-design-frontend` pointed at `templates/design/backend/sequence-diagram.md` as the source of the Source-Linked spec, making a frontend skill read a backend template; the spec now lives in `reverse-rules.md` (Refs: #38)
+- `init-planning` step 1 named `infrastructure.md` as an output but never instructed filling it (Refs: #38)
+
+## [translate-docs/v0.1.0] - 2026-07-29
+
+### Changed
+- Compacted 219 → 188 lines: step 0 defers to `common-rules.md`, the two audit steps drop their redundant worked path examples, and the structural-equivalence checklist — previously stated once in the execution contract and again at the end of the translation rules — is now one list that the contract points at. The do-not-translate list is untouched; every entry names a different downstream tool that breaks without it (Refs: #38)
+
+## [reverse-planning/v0.1.0] - 2026-07-29
+
+### Changed
+- Compacted 375 → 285 lines. The three failure-mode rules stay as the file's thesis, but their four in-step restatements become `규칙 N` pointers (Refs: #38)
+
+### Fixed
+- Step 1 no longer cites a re-run policy that step 0 never contained (Refs: #38)
+
+## [reverse-design-frontend/v0.1.0] - 2026-07-29
+
+### Changed
+- Compacted 376 → 255 lines. The abbreviated citation contract, the responsibility table, and the FSD baseline all defer to reference files that hold the full version (Refs: #38)
+
+### Fixed
+- The Source-Linked spec is no longer sourced from a backend template (Refs: #38)
+
+## [reverse-design-backend/v0.1.0] - 2026-07-29
+
+### Changed
+- Compacted 465 → 281 lines, the largest drop. "Do not re-read the code to redraw the diagram" was stated three times in three sections; only the field-mapping table and one warning line remain. The 37-line citation contract and the 40-line re-run policy move to `reverse-rules.md` (Refs: #38)
+
+## [init-design-frontend/v0.1.0] - 2026-07-29
+
+### Changed
+- Compacted 336 → 218 lines. The responsibility-boundary table was re-asserted as prose in five separate steps; the table now lives in `frontend-rules.md` and only the two restatements carrying extra information survive (Refs: #38)
+
+## [init-design-backend/v0.1.0] - 2026-07-29
+
+### Changed
+- Compacted 275 → 198 lines (Refs: #38)
+
+## [init-planning/v0.1.0] - 2026-07-29
+
+### Changed
+- Compacted 334 → 208 lines. The swap test was stated three times in one file; it now lives in `planning-rules.md` and is cited once (Refs: #38)
+
+### Fixed
+- Step 1 now instructs filling `infrastructure.md`, which it listed as an output but never told the model to write (Refs: #38)
+
 ## [explainable/v0.1.0] - 2026-07-28
 
 ### Added
