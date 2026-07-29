@@ -1,0 +1,208 @@
+---
+name: init-planning
+version: 0.1.0
+description: 코드가 아직 없는 새 프로젝트나 새 기능의 기획 문서를 한국어로 작성한다. 인프라·프로젝트 설정을 먼저 확정한 뒤 요구사항(FR/NFR), 유저 스토리와 인수 기준, 인터페이스 계약, 도메인 간 통합, 추적성 매트릭스를 순서대로 만든다. "기획 문서 만들어줘", "새 프로젝트 시작", "요구사항 정리해줘", "유저 스토리 뽑아줘"에 반응한다. 이미 있는 코드베이스에서 문서를 뽑아내는 데는 쓰지 않는다 — 그건 reverse-design-backend / reverse-design-frontend / reverse-planning의 일이다.
+---
+
+# init-planning
+
+코드가 없는 상태에서 **무엇을 만들 것인지** 정한다. 인프라와 프로젝트 설정을
+먼저 확정하고 그 위에 기획 문서를 쌓는다. 설계는 이 스킬이 하지 않는다 —
+기획이 끝나면 `init-design-backend`와 `init-design-frontend`가 이어받는다.
+
+**시작 전에 로드한다**:
+`${CLAUDE_PLUGIN_ROOT}/references/common-rules.md` ·
+`${CLAUDE_PLUGIN_ROOT}/references/planning-rules.md`
+
+## 사용 시점
+
+- 빈 저장소나 새 기능에서 시작할 때
+- "기획 문서 만들어줘", "요구사항 정리해줘", "유저 스토리 뽑아줘"
+- 프론트엔드와 백엔드가 합의할 인터페이스 계약이 필요할 때
+
+## 사용하지 않는 경우
+
+- **이미 코드가 있는 경우** — `reverse-design-*`로 설계를 먼저 뽑고
+  `reverse-planning`으로 기획을 역산한다.
+- **설계 문서가 필요한 경우** — `init-design-backend` / `init-design-frontend`
+- **문서 구조 전체 초기화** — 이 플러그인은 출력 경로만 최소로 만든다.
+  전체 스캐폴딩이 필요하면 `/dev-docs:init-docs`를 안내한다.
+
+## 실행 규약
+
+`common-rules.md`의 실행 규약 1~9를 따른다. 이 스킬 고유 항목:
+
+1. **기획 문서는 기술 중립이다.** `planning-rules.md` §2의 스왑 테스트를
+   문장 단위로 적용한다. `api-interface.md`만 예외다.
+2. **`## 읽은 소스` 섹션을 생성하지 않는다** (계약 7). 순방향이므로
+   `분석 기준 커밋`은 "해당 없음"이다.
+
+## 산출물
+
+```text
+docs/<원본 언어>/specifications/
+├── architecture.md          # 아키텍처 규약 (스택·레이어 매핑·의존성)
+├── infrastructure.md        # 런타임, 배포, 환경, CI/CD
+├── glossary.md              # 한국어 용어 ↔ 영문 식별자
+├── domain-map.md            # 도메인 2개 이상일 때만
+├── README.md                # 도메인 인덱스
+└── <도메인>/planning/
+    ├── requirements.md
+    ├── user-stories.md
+    ├── api-interface.md
+    └── traceability.md
+```
+
+`verification/`은 이 스킬이 만들지 않는다 (설계 스킬의 일).
+
+## 단계별 지침
+
+### 단계 0: 환경 감지와 범위 확인
+
+1. `common-rules.md` §1의 문서 환경 감지와 리뷰 모드 확인을 수행한다.
+2. **기존 문서를 확인한다.** 대상 도메인에 이미 기획 문서가 있으면
+   **덮어쓰지 않는다.** 사람이 결정한 기획을 스킬이 지울 수는 없다.
+
+   > `<도메인>/planning/`에 이미 문서가 있습니다:
+   > `<파일 목록>`
+   >
+   > 1. 기존 문서에 이어서 추가 (기본)
+   > 2. 특정 문서만 다시 작성
+   > 3. 중단
+
+3. **도메인을 정한다.** 기능 영역을 묻고 도메인 구획을 제안한 뒤 확인받는다.
+   최소 하나는 있어야 한다.
+
+### 단계 1: 프로젝트·인프라 설정
+
+**산출** `specifications/infrastructure.md`, `specifications/architecture.md` ·
+**템플릿** `templates/overview/{infrastructure,architecture}.md`
+
+기획보다 이것이 먼저다 — 스택이 정해지지 않으면 인터페이스 계약의 형식조차
+정할 수 없다.
+
+1. **사용자에게 묻는다.** 정해지지 않은 항목을 추측해서 채우지 않는다.
+   백엔드(언어·런타임, 프레임워크, **API 스타일**, 영속성), 프론트엔드
+   (언어·런타임, 프레임워크, 라우터, 상태 관리, 렌더링 모드), 인프라(배포
+   대상, 환경 구분, CI/CD). 한쪽만 있는 프로젝트면 그쪽만 묻는다.
+
+2. **아키텍처 기준선을 제안한다.**
+
+   > 아키텍처 기준선으로 백엔드는 4-Layered DDD(Presentation / Application /
+   > Domain / Infrastructure), 프론트엔드는 FSD(app / pages / widgets /
+   > features / entities / shared)를 제안합니다. 이대로 갈까요, 아니면 다른
+   > 구조를 쓸까요?
+
+3. **`architecture.md`의 아키텍처 규약 표 세 개를 채운다** — 스택 / 레이어·
+   슬라이스 ↔ 디렉터리 매핑 / 허용 의존성 방향. 향후 구현 단계가 파일 위치와
+   import 방향을 결정하는 근거이므로 **산문으로 대체하지 않는다.** 근거 열은
+   전부 "사용자 결정".
+
+4. **`infrastructure.md`를 채운다** — 런타임, 배포 토폴로지, 환경 구분,
+   설정·환경 변수(이름만), CI/CD 계획, 데이터 저장소, 외부 서비스.
+
+5. `<!-- GENERATED-BY: init-planning; commit: <sha>; root: <경로>;
+   date: <오늘> -->` 마커를 두 파일 상단에 넣는다.
+
+> **단계 1 완료**: 인프라와 아키텍처 규약을 작성했습니다. 검토 후 요구사항
+> 단계로 진행할까요?
+
+### 단계 2: 용어집 초기화
+
+**산출** `specifications/glossary.md` ·
+**템플릿** `templates/overview/glossary.md`
+
+여기서 정한 영문 식별자가 코드 심볼 이름의 단일 출처가 된다.
+
+1. 사용자와 대화하며 핵심 도메인 개념을 추린다.
+2. 한 개념에 영문 식별자는 하나만 배정한다.
+3. 정의는 한 문장으로 쓴다. 두 문장이 필요하면 개념이 둘로 쪼개져야 한다는
+   신호다.
+4. `근거` 열은 전부 "기획 결정", `상태` 열은 "사용 중".
+
+### 단계 3: 요구사항
+
+**산출** `<도메인>/planning/requirements.md` ·
+**템플릿** `templates/planning/requirements.md`
+
+`planning-rules.md` §3의 작성 규칙을 따른다.
+
+1. 이해관계자(액터)를 먼저 확정한다. 사람이 아닌 주체도 액터가 될 수 있다.
+2. `FR-<영역>-NN`, `NFR-<분류>-NN`을 부여한다.
+3. 제약 사항과 범위 밖을 채운다.
+4. 스왑 테스트를 통과하지 못하는 문장을 고친다.
+
+> **단계 3 완료**: 요구사항을 작성했습니다. 검토 후 유저 스토리로 진행할까요?
+
+### 단계 4: 유저 스토리와 인수 기준
+
+**산출** `<도메인>/planning/user-stories.md` ·
+**템플릿** `templates/planning/user-stories.md`
+
+`planning-rules.md` §4의 규칙을 따른다.
+
+1. `requirements.md`를 디스크에서 다시 읽는다.
+2. `US-NN`, `AC-USNN-NN`을 부여한다.
+3. 모든 FR이 최소 하나의 US로 커버되는지 확인한다.
+4. `흐름 키` 항목은 설계 전이므로 비워 둔다.
+
+> **단계 4 완료**: 유저 스토리를 작성했습니다. 검토 후 인터페이스 계약으로
+> 진행할까요?
+
+### 단계 5: 인터페이스 계약
+
+**산출** `<도메인>/planning/api-interface.md` ·
+**템플릿** `templates/planning/api-interface.md`
+
+`planning-rules.md` §5를 따른다 — `architecture.md`에서 확정된 API 스타일을
+읽고, 해당하는 계약 블록만 남기고 나머지는 삭제한다.
+
+> **단계 5 완료**: 인터페이스 계약을 작성했습니다. 검토 후 다음으로
+> 진행할까요?
+
+### 단계 6: 도메인 간 통합
+
+**산출** `specifications/domain-map.md` ·
+**템플릿** `templates/overview/domain-map.md`
+
+**도메인이 2개 이상일 때만 수행한다** (`common-rules.md` §6.6).
+
+1. `## 도메인 목록`을 채운다.
+2. `## 도메인 간 통합 계약` — `계약 위치`는 실제 문서 앵커를 가리켜야 한다.
+   "API를 통해" 같은 말은 계약이 아니다.
+3. `## 도메인 횡단 흐름` — 두 도메인 이상을 지나는 흐름에 `FLOW-CROSS-<슬러그>`
+   키를 부여한다. 도메인을 참여자로 삼아 한 단계 위에서 그리고, 각 구간은
+   설계 단계에서 부여될 `FLOW-` 키를 **참조만** 한다.
+4. `## 백엔드 컨텍스트 맵`과 `## 프론트엔드 슬라이스 의존 맵`은 **설계
+   스킬이 소유**하므로 자리표시자 주석만 남긴다.
+
+### 단계 7: 추적성과 자체 점검
+
+**산출** `<도메인>/planning/traceability.md` ·
+**템플릿** `templates/planning/traceability.md`
+
+1. `요구사항 → 스토리` 표를 채운다. 설계 전이므로 `스토리 → 흐름`의 흐름 키
+   열과 테스트 ID는 비워 두고, 설계 스킬이 채운다고 명시한다.
+2. `## 미연결 항목`을 정직하게 채운다.
+3. `common-rules.md` §3의 결정적 검사를 실행한다.
+4. **자체 점검** — 스크립트가 잡을 수 없는 것: 스왑 테스트 통과 여부, 모든
+   인수 기준이 테스트로 옮길 수 있는 형태인지, 모든 문서에 오늘 날짜와 참고
+   문서가 채워졌는지.
+
+### 단계 8: 문서 인덱스와 완료 리포트
+
+1. `specifications/README.md`를 만들거나, 이미 있으면 **이 도메인의 행만**
+   갱신한다. 템플릿 `templates/overview/README.md`.
+2. `common-rules.md` §4의 완료 리포트에 다음을 더한다:
+
+   > 기획이 끝났습니다. 설계로 넘어가려면:
+   >
+   > - `/explainable:init-design-backend` — 4-Layered DDD 설계
+   > - `/explainable:init-design-frontend` — FSD 설계
+   >
+   > 번역 미러가 필요하면 `/explainable:translate-docs`를 실행하세요.
+
+## 문서 규칙
+
+`common-rules.md` §5를 따른다. 이 스킬 고유 사항: 순방향이므로
+`## 읽은 소스`를 생성하지 않고 `분석 기준 커밋`은 "해당 없음"이다.

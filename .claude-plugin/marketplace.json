@@ -11,7 +11,12 @@
     {
       "name": "dev-docs",
       "source": "./dev-docs-plugin",
-      "description": "Docs-driven development skills: docs/ scaffolding, forward feature planning and citation-grounded reverse-engineering docs (both with lite/full output tiers and a doc-verifier subagent), a diagram-first DDD domain overview (context map) generator, a lightweight explainable skill that diagrams a change just made, and opt-in translation mirror sync."
+      "description": "Docs-driven development skills: docs/ scaffolding, forward feature planning and citation-grounded reverse-engineering docs (both with lite/full output tiers and a doc-verifier subagent), a diagram-first DDD domain overview (context map) generator, a lightweight flow-diagram skill that diagrams a change just made, and opt-in translation mirror sync."
+    },
+    {
+      "name": "explainable",
+      "source": "./explainable-plugin",
+      "description": "한국어 기획·개발설계 문서 플러그인. 새 프로젝트는 인프라·프로젝트 설정 → 요구사항 → 유저 스토리 → 인터페이스 계약 순으로 기획하고, 기존 코드베이스는 인프라 → 코드베이스 → 도메인별 설계를 먼저 뽑은 뒤 그 결과로부터 요구사항과 유저 스토리를 역산한다. 백엔드는 4-Layered DDD, 프론트엔드는 FSD를 기준선으로 삼되 프레임워크에는 중립이다. 인용 검증기와 목적별 탐색 서브에이전트(인프라·오퍼레이션·렌더링 흐름), 번역 미러 동기화를 포함한다."
     }
   ]
 }
