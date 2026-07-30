@@ -3,6 +3,59 @@
 All notable changes to skills and plugins in this project are documented here.
 Entries are ordered newest first. Format follows [Keep a Changelog](https://keepachangelog.com/).
 
+## [explainable/v0.3.0] - 2026-07-30
+
+### Added
+- `templates/planning/information-architecture.md` — a screen inventory (`SCR-<영역>-NN`), a containment sitemap, the navigation structure, per-screen information elements, and cross-domain entry links. Planning previously had no document describing what screens exist, so the first place a screen was ever named was `design/frontend/routing.md` — an implementation document. The decision of how many screens to split a story into, and what to gather onto one of them, was recorded nowhere (Refs: #40)
+- Two ID formats in `references/planning-rules.md` §1: `SCR-<영역>-NN` for screens and `UF-<도메인>-NN` for user flows. `UF-` is deliberately not folded into the existing `FLOW-` namespace — `FLOW-` keys are assigned during design and `UF-` keys during planning, and one grep must be able to tell the two layers apart (Refs: #40)
+- `references/planning-rules.md` §5 "정보 구조와 유저 플로우" — the generation condition (UI only, and the two documents are a pair), the responsibility boundary that keeps layout and route paths out of planning, and the writing rules (Refs: #40)
+- Two checks in `scripts/check-docs.sh`: a `SCR-` referenced by `user-flows.md` but not defined in the sibling `information-architecture.md` is reported as an orphan reference, and a `user-flows.md` with no sibling `information-architecture.md` is reported as a broken pair. Screen IDs are defined in a table rather than a heading, so they are collected from the `## 화면 목록` section directly (Refs: #40)
+- `## 스토리 → 화면·플로우` in `templates/planning/traceability.md`, plus `### 플로우에 등장하지 않는 화면` under 미연결 항목. Added as a new section rather than as columns on an existing table — the template header warns that `check-docs.sh` parses those tables (Refs: #40)
+
+### Changed
+- `templates/design/frontend/user-flows.md` moves to `templates/planning/user-flows.md`. It already declared itself framework-neutral and "사용자가 보는 것만 다룬다" — it was a planning document sitting in the design chain, and adding a second user-flow document to planning would have produced exactly the drift its own header warns about. Flow nodes now reference `SCR-` screens instead of routes, flows carry `UF-` keys, and the `서버 흐름` column holds `설계 대기` until a design skill fills in the `FLOW-` key (Refs: #40)
+- The domain chain in `references/document-order.md` becomes requirements → user stories → information architecture → user flows → interface contract → design → traceability → test spec. The two new documents sit ahead of `api-interface.md` because what one screen must show at once determines one operation's response scope — they are inputs to the contract, not outputs of it (Refs: #40)
+- The frontend design chain ends at `state-flow.md`. Per domain, planning goes from four documents to six and frontend design from six to five — a net increase of one (Refs: #40)
+- `templates/design/frontend/routing.md` gains a `대응 화면` column mapping `SCR-` keys to real routes. That column is the only contact point between the two layers (Refs: #40)
+- `templates/planning/api-interface.md` gains a `관련 화면` column on the operation catalog, recording the screen that drove each operation's granularity (Refs: #40)
+- `references/frontend-rules.md` §3 marks user flows and information architecture as planning-owned and read-only for the design skills; the user-flow writing rule in §4.1 is replaced by a screen/route coverage rule and defers to `planning-rules.md` §5 (Refs: #40)
+- `references/common-rules.md` §5 adds `SCR-` and `UF-` to the machine tokens that stay in English through translation (Refs: #40)
+
+## [init-planning/v0.2.0] - 2026-07-30
+
+### Added
+- Conditional steps 5 and 6 produce `information-architecture.md` and `user-flows.md`. The condition is whether step 1 settled on a frontend stack; when it did not, both steps are skipped and the reason goes in the completion report. Later steps renumber accordingly (Refs: #40)
+
+### Changed
+- Step 7 (interface contract) reads the two screen documents as input to decide operation granularity and fills the catalog's `관련 화면` column (Refs: #40)
+- Step 9 fills `스토리 → 화면·플로우` in full during planning — `SCR-` and `UF-` are assigned before design, so that table needs no design pass (Refs: #40)
+
+## [reverse-planning/v0.2.0] - 2026-07-30
+
+### Added
+- Steps 4 and 5 reverse-derive `information-architecture.md` and `user-flows.md` from the frontend design docs, conditional on those docs existing. Two rows join the derivation contract: route definitions and navigation components yield `SCR-`, and route transitions, post-submit navigation, and guard redirects yield `UF-`. Citations still point at source code, never at the design docs (Refs: #40)
+
+### Changed
+- Step 4 warns against copying routes into screens one-for-one — redirect-only and layout-only nested routes are not screens a user perceives (Refs: #40)
+- Step 10 verification adds two checks: every `SCR-` a flow references must be defined, and no layout or route path may leak into the screen documents (Refs: #40)
+
+## [init-design-frontend/v0.2.0] - 2026-07-30
+
+### Changed
+- No longer produces `user-flows.md`. Step 6 now writes back into the planning document instead: `설계 대기` cells in the `서버 흐름` column become real `FLOW-` links, and everything else is preserved byte-for-byte. A flow the design needs but planning does not have is reported, not silently added (Refs: #40)
+- The routing step starts from the planning screen list when it exists, fills the `대응 화면` column, and reports screens left without a route (Refs: #40)
+- `state-flow.md` is now the last document in the chain and links forward to `traceability.md` (Refs: #40)
+
+## [reverse-design-frontend/v0.2.0] - 2026-07-30
+
+### Changed
+- No longer produces `user-flows.md`; that responsibility moves to `reverse-planning`, which already treats design docs as a map and reads the code for evidence. Steps renumber from 10 to 9 (Refs: #40)
+
+## [translate-docs/v0.1.1] - 2026-07-30
+
+### Changed
+- `SCR-` and `UF-` join the do-not-translate ID prefixes (Refs: #40)
+
 ## [explainable/v0.2.0] - 2026-07-29
 
 ### Added

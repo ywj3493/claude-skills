@@ -214,6 +214,8 @@
 > **전체 문서**
 > [요구사항](../planning/requirements.md) |
 > [유저 스토리](../planning/user-stories.md) |
+> [정보 구조](../planning/information-architecture.md) |
+> [유저 플로우](../planning/user-flows.md) |
 > [인터페이스 계약](../planning/api-interface.md) |
 > [백엔드 설계](../design/backend/layered-architecture.md) |
 > [프론트엔드 설계](../design/frontend/fsd-structure.md) |

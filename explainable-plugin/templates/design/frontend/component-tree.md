@@ -50,6 +50,11 @@
 라우트 하나당 한 소절. 라우트 목록은 routing.md가 소유하므로 여기서
 반복하지 않고 링크만 한다.
 
+**이 문서가 화면 안의 배치를 소유한다.** 기획의
+`../../planning/information-architecture.md`는 화면이 무엇을 보여주는지까지만
+정하고, 그것을 어떤 UI 단위로 쪼개 어떻게 품는지는 여기서 정한다. `대응 화면`
+열로 두 문서를 잇는다.
+
 트리는 **소유 관계**를 보인다. 조건부로 나타나는 것은 이름 뒤에 `(조건부)`,
 반복되는 것은 `(반복)`을 붙인다. 조건의 내용은 render-flow.md가 소유한다.
 
@@ -57,6 +62,9 @@
 -->
 
 ### <라우트 또는 화면 이름>
+
+**대응 화면**: [SCR-<영역>-NN](../../planning/information-architecture.md#화면-목록)
+<!-- 기획 문서가 없는 프로젝트에서는 이 줄을 삭제한다. -->
 
 **라우트**: [`/orders/:orderId`](routing.md#라우트-목록)
 
@@ -146,6 +154,7 @@ UI 단위가 받는 입력과 내보내는 출력. 프레임워크에 따라 pro
 
 ### 참고 문서
 
+- [정보 구조](../../planning/information-architecture.md) — 이 구성이 실현하는 화면
 - [용어집](../../../glossary.md)
 
 ---
@@ -168,12 +177,13 @@ UI 단위가 받는 입력과 내보내는 출력. 프레임워크에 따라 pro
 > **전체 문서**
 > [요구사항](../../planning/requirements.md) |
 > [유저 스토리](../../planning/user-stories.md) |
+> [정보 구조](../../planning/information-architecture.md) |
+> [유저 플로우](../../planning/user-flows.md) |
 > [인터페이스 계약](../../planning/api-interface.md) |
 > [FSD 구조](fsd-structure.md) |
 > [라우팅](routing.md) |
 > **UI 구성** |
 > [렌더링 흐름](render-flow.md) |
 > [상태 흐름](state-flow.md) |
-> [유저 플로우](user-flows.md) |
 > [추적성](../../planning/traceability.md) |
 > [테스트 명세](../../verification/test-spec.md)

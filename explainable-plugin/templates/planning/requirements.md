@@ -157,6 +157,7 @@ SCALE(확장성), OPS(운영), A11Y(접근성), I18N(국제화).
 ## 관련 문서
 
 - [유저 스토리](user-stories.md) — 이 요구사항을 사용자 관점으로 푼 것
+- [정보 구조](information-architecture.md) — 요구사항이 드러나는 화면
 - [추적성 매트릭스](traceability.md) — 요구사항 ↔ 스토리 ↔ 흐름 ↔ 테스트
 
 ### 참고 문서
@@ -187,6 +188,8 @@ SCALE(확장성), OPS(운영), A11Y(접근성), I18N(국제화).
 > <!-- 실제 생성된 문서만 남긴다. 현재 문서는 굵게, 링크하지 않는다. -->
 > **요구사항** |
 > [유저 스토리](user-stories.md) |
+> [정보 구조](information-architecture.md) |
+> [유저 플로우](user-flows.md) |
 > [인터페이스 계약](api-interface.md) |
 > [백엔드 설계](../design/backend/layered-architecture.md) |
 > [프론트엔드 설계](../design/frontend/fsd-structure.md) |

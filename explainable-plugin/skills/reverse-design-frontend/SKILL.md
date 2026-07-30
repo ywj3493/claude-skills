@@ -1,7 +1,7 @@
 ---
 name: reverse-design-frontend
-version: 0.1.0
-description: 이미 있는 프론트엔드 코드베이스에서 설계 문서를 한국어로 역추출한다. 인프라 탐색 → 프레임워크 감지 → FSD 적합도 판정 → 앱 셸 1회 추적 → 라우트별 코드·렌더링 흐름 추적 순서로 진행하며, 모든 주장에 [REF: 경로:줄번호] 인용을 붙이고 citation-verifier로 검증한다. "프론트엔드 분석해줘", "화면 구조 파악해줘", "렌더링 흐름 문서화"에 반응한다. React를 가정하지 않는다. 코드가 없는 새 화면 설계에는 쓰지 않는다 — 그건 init-design-frontend의 일이다.
+version: 0.2.0
+description: 이미 있는 프론트엔드 코드베이스에서 설계 문서를 한국어로 역추출한다. 인프라 탐색 → 프레임워크 감지 → FSD 적합도 판정 → 앱 셸 1회 추적 → 라우트별 코드·렌더링 흐름 추적 순서로 진행하며, 모든 주장에 [REF: 경로:줄번호] 인용을 붙이고 citation-verifier로 검증한다. "프론트엔드 분석해줘", "렌더링 흐름 문서화", "라우팅 파악해줘"에 반응한다. 화면 목록과 유저 플로우는 만들지 않는다 — 그건 기획 문서이며 reverse-planning이 역산한다. React를 가정하지 않는다. 코드가 없는 새 화면 설계에는 쓰지 않는다 — 그건 init-design-frontend의 일이다.
 ---
 
 # reverse-design-frontend
@@ -58,9 +58,12 @@ docs/<원본 언어>/specifications/
     ├── routing.md
     ├── component-tree.md
     ├── render-flow.md
-    ├── state-flow.md
-    └── user-flows.md
+    └── state-flow.md
 ```
+
+유저 플로우와 정보 구조는 기획 문서이므로 이 스킬이 만들지 않는다
+(`frontend-rules.md` §3). `reverse-planning`이 이 문서들을 지도로 삼아
+역산한다.
 
 ## 단계별 지침
 
@@ -208,22 +211,7 @@ docs/<원본 언어>/specifications/
    `frontend-rules.md` §4.4~4.5를 따른다. 코드에서 무효화 계기를 찾지 못하면
    `[ASSUMED: ...]`로 표시한다.
 
-### 단계 7: 유저 플로우 역추출
-
-**산출** `<도메인>/design/frontend/user-flows.md` ·
-**템플릿** `templates/design/frontend/user-flows.md`
-
-1. `routing.md`의 라우트 전환 표와 각 라우트의 UI 단위에서 사용자 여정을
-   조립한다.
-2. `flowchart TD`로 그린다. **노드는 사용자가 보는 것**, **간선은 사용자
-   행동**이다.
-3. **서버 처리는 노드 하나로 뭉뚱그리고 `FLOW-` 키를 링크만 한다**
-   (`frontend-rules.md` §4.1).
-4. 예외 경로를 반드시 채우고 `render-flow.md`의 오류 경계와 대응시킨다.
-5. **의도를 추론한 부분에는 배너를 넣는다** (`reverse-rules.md` §1.4) —
-   사용자 여정의 "왜"는 코드에 없다.
-
-### 단계 8: 슬라이스 의존 맵
+### 단계 7: 슬라이스 의존 맵
 
 **산출** `specifications/domain-map.md`의 `## 프론트엔드 슬라이스 의존 맵`
 
@@ -232,20 +220,21 @@ docs/<원본 언어>/specifications/
    위반 스타일 (`reverse-rules.md` §5).
 3. 다른 스킬이 쓴 섹션은 바이트 단위로 보존한다 (계약 6).
 
-### 단계 9: 검증과 수정 루프
+### 단계 8: 검증과 수정 루프
 
 `common-rules.md` §3의 인용 검증과 결정적 검사를 실행한다.
 `render-flow.md`는 시퀀스 다이어그램을 담으므로 `Note` ↔ `CALLGRAPH` 양방향
 교차 검증까지 받는다.
 
-### 단계 10: 완료 리포트 — 리뷰 게이트 ③
+### 단계 9: 완료 리포트 — 리뷰 게이트 ③
 
 `common-rules.md` §4에 다음을 더한다: 추적하지 않은 라우트와 그 이유,
 FSD 준수 판정 결과와 발견한 규칙 위반 개수.
 
 > 프론트엔드 설계 문서화가 끝났습니다.
 >
-> - 요구사항과 유저 스토리를 역산하려면 `/explainable:reverse-planning`
+> - 요구사항·유저 스토리와 **화면 목록·유저 플로우**를 역산하려면
+>   `/explainable:reverse-planning`
 > - 백엔드가 아직이면 `/explainable:reverse-design-backend`
 > - 번역 미러가 필요하면 `/explainable:translate-docs`
 

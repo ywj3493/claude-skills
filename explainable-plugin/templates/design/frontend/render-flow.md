@@ -231,6 +231,7 @@ get-order.ts:25 -> http.get | src/entities/order/api/get-order.ts:25
 ### 참고 문서
 
 - [인터페이스 계약](../../planning/api-interface.md) — 조회 대상 오퍼레이션과 오류 코드
+- [유저 플로우](../../planning/user-flows.md) — 이 화면들을 지나가는 여정
 - [아키텍처](../../../architecture.md) — 감지된 프레임워크 환경
 - [추적성](../../planning/traceability.md)
 
@@ -254,12 +255,13 @@ get-order.ts:25 -> http.get | src/entities/order/api/get-order.ts:25
 > **전체 문서**
 > [요구사항](../../planning/requirements.md) |
 > [유저 스토리](../../planning/user-stories.md) |
+> [정보 구조](../../planning/information-architecture.md) |
+> [유저 플로우](../../planning/user-flows.md) |
 > [인터페이스 계약](../../planning/api-interface.md) |
 > [FSD 구조](fsd-structure.md) |
 > [라우팅](routing.md) |
 > [UI 구성](component-tree.md) |
 > **렌더링 흐름** |
 > [상태 흐름](state-flow.md) |
-> [유저 플로우](user-flows.md) |
 > [추적성](../../planning/traceability.md) |
 > [테스트 명세](../../verification/test-spec.md)

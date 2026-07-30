@@ -35,16 +35,27 @@ docs/<source>/specifications/domain-map.md
 ```text
 planning/requirements.md
   → planning/user-stories.md
+  → planning/information-architecture.md   (조건부)
+  → planning/user-flows.md                 (조건부)
   → planning/api-interface.md
   → [ design/backend/*  또는  design/frontend/*  — 아래 3절 ]
   → planning/traceability.md
   → verification/test-spec.md
 ```
 
+`information-architecture.md`와 `user-flows.md`는 **사용자 인터페이스가 있는
+프로젝트에서만** 만든다. 둘은 짝이다 — 유저 플로우의 노드가 정보 구조의
+`SCR-` 키를 참조하므로 한쪽만 만들지 않는다.
+
+두 문서가 `api-interface.md` **앞에** 오는 이유: 한 화면이 한 번에 보여줘야
+하는 범위가 오퍼레이션의 응답 범위를 결정한다. 두 문서는 인터페이스 계약의
+**입력**이지 출력이 아니다.
+
 `traceability.md`가 설계 문서 **뒤에** 오는 이유: FR ↔ US/AC ↔ FLOW ↔ T를
 조인하려면 설계 단계에서 부여한 `FLOW-` 키가 이미 있어야 하기 때문이다.
 기획 단계에서 먼저 만들어 두고 설계 단계에서 갱신하되, **읽는 순서는 설계
-뒤**다.
+뒤**다. `## 스토리 → 화면·플로우` 표만은 예외로 기획 단계에서 전부 채운다 —
+`SCR-`과 `UF-`는 설계 전에 부여되기 때문이다.
 
 ---
 
@@ -72,8 +83,11 @@ design/frontend/fsd-structure.md
   → design/frontend/component-tree.md
   → design/frontend/render-flow.md
   → design/frontend/state-flow.md
-  → design/frontend/user-flows.md
 ```
+
+유저 플로우는 이 체인에 없다 — 기획 문서(`planning/user-flows.md`)다. 설계
+문서는 그것을 **입력으로 읽을 뿐 다시 그리지 않는다.** `routing.md`가 `SCR-`
+키에 라우트를 대응시키는 것이 두 계층의 유일한 접점이다.
 
 ---
 
@@ -97,13 +111,16 @@ design/frontend/fsd-structure.md
 
 | 출발 | 목적지 | 상대 경로 |
 | --- | --- | --- |
-| `<domain>/planning/*.md` | 같은 폴더 | `user-stories.md` |
+| `<domain>/planning/*.md` | 같은 폴더 | `user-stories.md` · `information-architecture.md` · `user-flows.md` |
 | `<domain>/planning/*.md` | 백엔드 설계 | `../design/backend/layered-architecture.md` |
+| `<domain>/planning/*.md` | 프론트엔드 설계 | `../design/frontend/routing.md` |
 | `<domain>/planning/*.md` | 검증 | `../verification/test-spec.md` |
 | `<domain>/planning/*.md` | 횡단 문서 | `../../architecture.md` |
 | `<domain>/design/backend/*.md` | 기획 | `../../planning/api-interface.md` |
 | `<domain>/design/backend/*.md` | 프론트엔드 설계 | `../frontend/routing.md` |
 | `<domain>/design/backend/*.md` | 횡단 문서 | `../../../architecture.md` |
+| `<domain>/design/frontend/*.md` | 기획 | `../../planning/information-architecture.md` · `../../planning/user-flows.md` |
 | `<domain>/verification/test-spec.md` | 기획 | `../planning/traceability.md` |
 | `<domain>/verification/test-spec.md` | 백엔드 설계 | `../design/backend/sequence-diagram.md` |
+| `<domain>/verification/test-spec.md` | 프론트엔드 설계 | `../design/frontend/state-flow.md` |
 | 횡단 문서 | 도메인 문서 | `<domain>/planning/requirements.md` |
