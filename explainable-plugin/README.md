@@ -61,12 +61,18 @@ docs/<source>/specifications/
 ├── glossary.md              # 한국어 용어 ↔ 영문 식별자
 ├── domain-map.md            # 도메인 간 관계 (컨텍스트 맵, 슬라이스 의존, 횡단 흐름)
 └── <domain>/
-    ├── planning/            requirements, user-stories, api-interface, traceability
+    ├── planning/            requirements, user-stories, information-architecture,
+    │                        user-flows, api-interface, traceability
     ├── design/backend/      layered-architecture, domain-model, erd, sequence-diagram
     ├── design/frontend/     fsd-structure, routing, component-tree, render-flow,
-    │                        state-flow, user-flows
+    │                        state-flow
     └── verification/        test-spec
 ```
+
+`information-architecture.md`와 `user-flows.md`는 **UI가 있는 프로젝트에서만**
+만들어집니다. 둘은 짝이며, 화면이 무엇이고 사용자가 그 사이를 어떻게 지나가는지를
+기획 계층에서 정합니다 — 화면 안의 배치는 `component-tree.md`, 화면에 대응하는
+주소는 `routing.md`가 소유합니다. 설계 스킬은 두 문서를 **읽기만** 합니다.
 
 `README.md`, `architecture.md`, `infrastructure.md`, `glossary.md`,
 `domain-map.md`, `test-spec.md`는 여러 스킬이 공유하는 **병합 전용** 문서입니다.

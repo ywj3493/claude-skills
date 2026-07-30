@@ -64,14 +64,19 @@
 `pages 슬라이스` 열이 FSD 구조와의 연결점이다. FSD를 따르지 않는
 코드베이스에서는 실제 화면 모듈 경로를 적는다.
 
+`대응 화면` 열이 기획과의 연결점이다. `../../planning/information-architecture.md`의
+`SCR-` 키를 적는다. **기획의 모든 화면이 최소 하나의 라우트를 가져야 한다** —
+라우트가 없는 화면은 구현되지 않은 것이거나 화면 목록이 낡은 것이다. 기획
+문서가 없는 프로젝트에서는 이 열을 `—`로 둔다.
+
 `관련 스토리` 열은 이 라우트가 어떤 유저 스토리를 실현하는지를 나타낸다.
 어느 스토리와도 연결되지 않는 라우트가 있으면 traceability.md의 미연결
 항목으로 내린다.
 -->
 
-| 라우트 | pages 슬라이스 | 관련 스토리 | 렌더링 모드 | 흐름 키 | 근거 |
-|---|---|---|---|---|---|
-| | | US-NN | | `FLOW-<도메인>-<라우트 슬러그>` | |
+| 라우트 | 대응 화면 | pages 슬라이스 | 관련 스토리 | 렌더링 모드 | 흐름 키 | 근거 |
+|---|---|---|---|---|---|---|
+| | SCR-<영역>-NN | | US-NN | | `FLOW-<도메인>-<라우트 슬러그>` | |
 
 ---
 
@@ -96,8 +101,8 @@
 화면 사이의 이동. 사용자 행동으로 일어나는 전환과 시스템이 일으키는
 전환(리다이렉트)을 구분한다.
 
-전체 사용자 여정은 user-flows.md가 소유한다. 여기서는 **라우트 사이의
-간선**만 적고 여정을 서술하지 않는다.
+전체 사용자 여정은 `../../planning/user-flows.md`가 소유한다. 여기서는
+**라우트 사이의 간선**만 적고 여정을 서술하지 않는다.
 -->
 
 | 출발 라우트 | 도착 라우트 | 계기 | 전달 상태 | 근거 |
@@ -117,10 +122,11 @@
 - [FSD 구조](fsd-structure.md) — pages 슬라이스의 위치
 - [UI 구성](component-tree.md) — 각 라우트가 조립하는 UI 단위
 - [렌더링 흐름](render-flow.md) — 라우트별 렌더 시점과 데이터 조회
-- [유저 플로우](user-flows.md) — 라우트를 지나가는 사용자 여정
 
 ### 참고 문서
 
+- [정보 구조](../../planning/information-architecture.md) — 라우트에 대응하는 화면
+- [유저 플로우](../../planning/user-flows.md) — 라우트를 지나가는 사용자 여정
 - [유저 스토리](../../planning/user-stories.md)
 - [인터페이스 계약](../../planning/api-interface.md) — 인증 방식
 
@@ -144,12 +150,13 @@
 > **전체 문서**
 > [요구사항](../../planning/requirements.md) |
 > [유저 스토리](../../planning/user-stories.md) |
+> [정보 구조](../../planning/information-architecture.md) |
+> [유저 플로우](../../planning/user-flows.md) |
 > [인터페이스 계약](../../planning/api-interface.md) |
 > [FSD 구조](fsd-structure.md) |
 > **라우팅** |
 > [UI 구성](component-tree.md) |
 > [렌더링 흐름](render-flow.md) |
 > [상태 흐름](state-flow.md) |
-> [유저 플로우](user-flows.md) |
 > [추적성](../../planning/traceability.md) |
 > [테스트 명세](../../verification/test-spec.md)

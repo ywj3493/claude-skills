@@ -1,6 +1,6 @@
 ---
 name: translate-docs
-version: 0.1.0
+version: 0.1.1
 description: docs/config.yml에 설정된 원본 언어 문서 디렉터리를 감사해 번역이 없는 문서나 원본보다 오래된 번역을 찾아 생성·갱신한다. 번역 언어가 아직 설정되지 않았으면 미러링을 켤지 제안하고, 선택한 언어를 docs/config.yml에 기록한 뒤 미러 디렉터리를 만들고 동기화한다. "번역 동기화", "문서 번역해줘", "미러 맞춰줘", "번역 언어 추가"에 반응한다.
 ---
 
@@ -167,8 +167,8 @@ git log --follow -1 --format="%ai" -- <번역 경로>
 - **근거 표시**: `[REF: 경로:줄번호]`,
   `[ASSUMED: <추론>; basis: <근거>]`
 - **검증 판정 어휘**: `MATCHED`, `MISMATCHED`, `UNSUPPORTED`, `EXCLUDED`
-- **모든 ID**: `FR-`, `NFR-`, `US-`, `AC-`, `UC-`, `T-`, `FLOW-` 접두사와
-  그 뒤의 식별자 전체
+- **모든 ID**: `FR-`, `NFR-`, `US-`, `AC-`, `UC-`, `SCR-`, `UF-`, `T-`,
+  `FLOW-` 접두사와 그 뒤의 식별자 전체
 - **구조 마커**: `<!-- OWNER: ... -->`, `<!-- GENERATED-BY: ... -->`
 - 파일 경로 (`docs/ko/specifications/architecture.md`)
 - 함수명, 변수명, 클래스명

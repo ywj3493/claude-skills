@@ -138,7 +138,7 @@ bash "${CLAUDE_PLUGIN_ROOT}/scripts/check-docs.sh" docs/<원본 언어>/specific
   그대로 둔다.
 - 기계용 토큰은 영문 고정이다: `[REF: ...]`, `[ASSUMED: ...; basis: ...]`,
   `MATCHED`/`MISMATCHED`/`UNSUPPORTED`/`EXCLUDED`, 그리고
-  `FR-`/`NFR-`/`US-`/`AC-`/`UC-`/`T-`/`FLOW-` 접두사.
+  `FR-`/`NFR-`/`US-`/`AC-`/`UC-`/`SCR-`/`UF-`/`T-`/`FLOW-` 접두사.
 - `## 문서 정보` 표는 문서 **하단**에 둔다. 상단에 메타데이터 블록을 만들지
   않는다. `분석 기준 커밋` 필드는 역방향이면 단계 0의 SHA, 순방향이면
   "해당 없음"이다.

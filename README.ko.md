@@ -44,12 +44,12 @@ Requirements)** 이 포함되어 있어, 어떤 모델이 실행하든 결과 �
 
 | 스킬 / 에이전트 | 명령어 / 이름 | 용도 |
 | --- | --- | --- |
-| init-planning | `/explainable:init-planning` | 새 프로젝트: 인프라·프로젝트 설정을 먼저 확정한 뒤 용어집 → 요구사항 → 유저 스토리 → 인터페이스 계약 → 추적성 |
+| init-planning | `/explainable:init-planning` | 새 프로젝트: 인프라·프로젝트 설정을 먼저 확정한 뒤 용어집 → 요구사항 → 유저 스토리 → 정보 구조 → 유저 플로우 → 인터페이스 계약 → 추적성 |
 | init-design-backend | `/explainable:init-design-backend` | 4-Layered DDD: 레이어 매핑 → 도메인 모델 → ERD → 유저 스토리 기반 시퀀스 다이어그램 |
-| init-design-frontend | `/explainable:init-design-frontend` | FSD: 레이어·슬라이스 구조 → 라우팅 → UI 구성 → 렌더링 흐름 → 상태 흐름 → 유저 플로우 |
+| init-design-frontend | `/explainable:init-design-frontend` | FSD: 레이어·슬라이스 구조 → 라우팅 → UI 구성 → 렌더링 흐름 → 상태 흐름. 기획의 화면 목록을 읽고 유저 플로우에 흐름 키를 되먹임 |
 | reverse-design-backend | `/explainable:reverse-design-backend` | 기존 백엔드: 인프라 → 코드베이스 → 도메인 → 오퍼레이션별 Source-Linked 시퀀스 다이어그램 → 도메인 모델·ERD |
 | reverse-design-frontend | `/explainable:reverse-design-frontend` | 기존 프론트엔드: 인프라 → 프레임워크 감지 → FSD 적합도 → 앱 셸 → 라우트별 코드·렌더링 흐름 |
-| reverse-planning | `/explainable:reverse-planning` | 설계 문서와 코드 근거로 요구사항·유저 스토리를 역산. 순방향으로 쓴 기획 문서는 덮어쓰지 않음 |
+| reverse-planning | `/explainable:reverse-planning` | 설계 문서와 코드 근거로 요구사항·유저 스토리·화면 목록·유저 플로우를 역산. 순방향으로 쓴 기획 문서는 덮어쓰지 않음 |
 | translate-docs | `/explainable:translate-docs` | 번역 미러 감사·동기화, 또는 미러링 옵트인 |
 | infra-explorer | `infra-explorer` (에이전트) | 읽기 전용: 배포·CI/CD·환경·외부 서비스 사실을 근거와 함께 수집 |
 | operation-tracer | `operation-tracer` (에이전트) | 읽기 전용: 백엔드 오퍼레이션 하나의 호출 체인 추적, 프로토콜 중립 |

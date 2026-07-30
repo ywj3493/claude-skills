@@ -2,6 +2,8 @@
 템플릿: 프론트엔드 설계 문서 (state-flow.md)
 
 내비게이션 규칙은 `${CLAUDE_PLUGIN_ROOT}/references/document-order.md` 참조.
+프론트엔드 체인의 마지막 문서이므로 다음 링크는
+`../../planning/traceability.md`다.
 
 **책임 경계 — 이 문서는 공유·전역 상태만 다룬다.**
 경계 기준은 "그 라우트를 벗어나도 살아 있는가"다.
@@ -17,7 +19,7 @@
 결과를 인용할 때만 등장한다.
 -->
 
-> [← 렌더링 흐름](render-flow.md) | [다음: 유저 플로우 →](user-flows.md)
+> [← 렌더링 흐름](render-flow.md) | [다음: 추적성 →](../../planning/traceability.md)
 
 # 상태 흐름
 
@@ -167,6 +169,7 @@ flowchart LR
 ### 참고 문서
 
 - [인터페이스 계약](../../planning/api-interface.md) — 조회·변경 오퍼레이션
+- [유저 플로우](../../planning/user-flows.md) — 플로우 중 유지되는 상태
 - [도메인 지도](../../../domain-map.md) — 슬라이스 간 의존
 
 ---
@@ -189,12 +192,13 @@ flowchart LR
 > **전체 문서**
 > [요구사항](../../planning/requirements.md) |
 > [유저 스토리](../../planning/user-stories.md) |
+> [정보 구조](../../planning/information-architecture.md) |
+> [유저 플로우](../../planning/user-flows.md) |
 > [인터페이스 계약](../../planning/api-interface.md) |
 > [FSD 구조](fsd-structure.md) |
 > [라우팅](routing.md) |
 > [UI 구성](component-tree.md) |
 > [렌더링 흐름](render-flow.md) |
 > **상태 흐름** |
-> [유저 플로우](user-flows.md) |
 > [추적성](../../planning/traceability.md) |
 > [테스트 명세](../../verification/test-spec.md)

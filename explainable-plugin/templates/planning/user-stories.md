@@ -11,7 +11,13 @@
 액터에게 의미 없는 CRUD 스캐폴딩은 묶거나 버린다.
 -->
 
-> [← 요구사항](requirements.md) | [다음: 인터페이스 계약 →](api-interface.md)
+<!--
+다음 링크는 조건부다. UI가 있어 `information-architecture.md`를 만들면
+아래 그대로 두고, 만들지 않으면 `[다음: 인터페이스 계약 →](api-interface.md)`로
+바꾼다. 존재하지 않는 파일을 가리키는 링크는 만들지 않는다.
+-->
+
+> [← 요구사항](requirements.md) | [다음: 정보 구조 →](information-architecture.md)
 
 # 유저 스토리
 
@@ -121,6 +127,8 @@ Given / When / Then 형식. 각 항목은 테스트로 옮길 수 있어야 한�
 ## 관련 문서
 
 - [요구사항](requirements.md) — 이 스토리가 구현하는 요구사항
+- [정보 구조](information-architecture.md) — 스토리가 드러나는 화면
+- [유저 플로우](user-flows.md) — 스토리를 수행하는 여정
 - [인터페이스 계약](api-interface.md) — 스토리를 실현하는 오퍼레이션
 - [추적성 매트릭스](traceability.md)
 
@@ -149,6 +157,8 @@ Given / When / Then 형식. 각 항목은 테스트로 옮길 수 있어야 한�
 > **전체 문서**
 > [요구사항](requirements.md) |
 > **유저 스토리** |
+> [정보 구조](information-architecture.md) |
+> [유저 플로우](user-flows.md) |
 > [인터페이스 계약](api-interface.md) |
 > [백엔드 설계](../design/backend/layered-architecture.md) |
 > [프론트엔드 설계](../design/frontend/fsd-structure.md) |

@@ -22,9 +22,12 @@
 
 이 문서는 백엔드와 프론트엔드 설계 스킬 **양쪽의 공통 입력**이다. 설계
 단계에서 만들면 두 스킬이 서로 다른 계약을 만들어 버리므로 기획 단계에 둔다.
+
+이전 링크는 조건부다. UI가 있어 `user-flows.md`를 만들면 아래 그대로 두고,
+만들지 않으면 `[← 유저 스토리](user-stories.md)`로 바꾼다.
 -->
 
-> [← 유저 스토리](user-stories.md) | [다음: 백엔드 설계 →](../design/backend/layered-architecture.md)
+> [← 유저 플로우](user-flows.md) | [다음: 백엔드 설계 →](../design/backend/layered-architecture.md)
 
 # 인터페이스 계약
 
@@ -52,11 +55,17 @@ GraphQL 리졸버, gRPC 서비스 메서드, 메시지 컨슈머, 스케줄러 �
 
 `오퍼레이션 ID`는 프로토콜과 무관한 안정적인 식별자다. 계약 블록과 시퀀스
 다이어그램이 이 ID로 서로를 참조한다.
+
+`관련 화면` 열은 `information-architecture.md`의 `SCR-` 키다. **오퍼레이션의
+입도를 정하는 근거가 이 열이다** — 한 화면이 한 번에 보여줘야 하는 범위가 한
+오퍼레이션의 응답 범위를 결정한다. 화면과 무관한 오퍼레이션(스케줄러 잡,
+메시지 컨슈머)은 `—`로 둔다. 기획에 화면 문서가 없는 프로젝트에서는 이 열을
+통째로 삭제한다.
 -->
 
-| 오퍼레이션 ID | 호출 주체 | 관련 스토리 | 한 줄 설명 | 흐름 키 |
-|---|---|---|---|---|
-| <!-- placeOrder --> | | US-NN | | <!-- FLOW-... 설계 후 채움 --> |
+| 오퍼레이션 ID | 호출 주체 | 관련 스토리 | 관련 화면 | 한 줄 설명 | 흐름 키 |
+|---|---|---|---|---|---|
+| <!-- placeOrder --> | | US-NN | SCR-<영역>-NN | | <!-- FLOW-... 설계 후 채움 --> |
 
 ---
 
@@ -238,6 +247,8 @@ message PlaceOrderResponse {
 > **전체 문서**
 > [요구사항](requirements.md) |
 > [유저 스토리](user-stories.md) |
+> [정보 구조](information-architecture.md) |
+> [유저 플로우](user-flows.md) |
 > **인터페이스 계약** |
 > [백엔드 설계](../design/backend/layered-architecture.md) |
 > [프론트엔드 설계](../design/frontend/fsd-structure.md) |

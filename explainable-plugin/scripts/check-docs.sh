@@ -8,7 +8,7 @@
 #   2. mermaid 펜스 균형 — ``` 개수와 mermaid 블록 짝
 #   3. 링크 무결성       — 상대 링크가 실존 파일을 가리키는지
 #   4. REF 존재성        — [REF: 경로:줄]의 파일이 있고 그 줄이 존재하는지
-#   5. ID 추적성         — FR/US/AC/T ID의 중복, 미커버, 고아 참조
+#   5. ID 추적성         — FR/US/AC/SCR/UF/T ID의 중복, 미커버, 고아 참조
 #
 # 사용법:
 #   check-docs.sh <명세 디렉터리>
@@ -168,7 +168,7 @@ collect_ids() { # <파일 글롭 패턴> <ID 정규식>
 
 # ID 중복 정의 — 제목(### ID: ...) 기준
 for doc in "${DOCS[@]}"; do
-  dupes=$(grep -oE '^#{2,4} (FR|NFR|US|UC)-[A-Z0-9-]+' "$doc" 2>/dev/null \
+  dupes=$(grep -oE '^#{2,4} (FR|NFR|US|UC|SCR|UF)-[A-Za-z0-9-]+' "$doc" 2>/dev/null \
           | sed -E 's/^#+ //' | sort | uniq -d)
   if [[ -n "$dupes" ]]; then
     while IFS= read -r d; do
@@ -201,6 +201,49 @@ $DEFINED_US"; then
 else
   note "요구사항·스토리 ID가 아직 없습니다 — 추적성 검사를 건너뜁니다"
 fi
+
+# 화면(SCR-)과 유저 플로우(UF-)의 짝·중복·고아 참조.
+#
+# SCR-은 제목이 아니라 `## 화면 목록` 표의 행으로 정의되므로 위의 제목 기반
+# 중복 검사가 잡지 못한다. 여기서 표를 직접 읽는다. `## 화면별 정보 요소`
+# 표도 같은 ID로 시작하는 행을 가지므로 섹션을 잘라내고 센다.
+collect_screens() { # <information-architecture.md 경로>
+  awk '/^## 화면 목록/{f=1; next} /^## /{f=0} f' "$1" 2>/dev/null \
+    | grep -oE '^\| *SCR-[A-Za-z0-9-]+' | sed -E 's/^\| *//'
+}
+
+while IFS= read -r flows; do
+  [[ -z "$flows" ]] && continue
+  ia="$(dirname "$flows")/information-architecture.md"
+  if [[ ! -f "$ia" ]]; then
+    fail "$flows: 짝이 되는 information-architecture.md가 없습니다 — 플로우의 화면 참조를 확인할 수 없습니다"
+  fi
+done < <(find "$SPEC_DIR" -path '*/planning/user-flows.md' -type f)
+
+while IFS= read -r ia; do
+  [[ -z "$ia" ]] && continue
+  mapfile -t SCREENS < <(collect_screens "$ia")
+  if [[ ${#SCREENS[@]} -eq 0 ]]; then
+    fail "$ia: '## 화면 목록' 표에서 SCR- ID를 찾지 못했습니다"
+    continue
+  fi
+
+  dupes=$(printf '%s\n' "${SCREENS[@]}" | sort | uniq -d)
+  if [[ -n "$dupes" ]]; then
+    while IFS= read -r d; do
+      fail "$ia: 화면 ID가 중복 정의되었습니다 -> $d"
+    done <<< "$dupes"
+  fi
+
+  flows="$(dirname "$ia")/user-flows.md"
+  [[ -f "$flows" ]] || continue
+  while IFS= read -r id; do
+    [[ -z "$id" ]] && continue
+    if ! printf '%s\n' "${SCREENS[@]}" | grep -qxF "$id"; then
+      fail "$flows: 정의되지 않은 화면을 참조합니다 -> $id"
+    fi
+  done < <(grep -oE '\bSCR-[A-Za-z0-9-]+' "$flows" 2>/dev/null | sort -u)
+done < <(find "$SPEC_DIR" -name 'information-architecture.md' -type f)
 
 # T-ID 대역 규칙: 백엔드 T-1NN, 프론트엔드 T-2NN, E2E T-3NN
 while IFS= read -r spec; do

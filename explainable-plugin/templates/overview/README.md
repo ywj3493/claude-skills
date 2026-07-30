@@ -52,11 +52,13 @@
 ├── planning/
 │   ├── requirements.md      요구사항 (FR/NFR/제약)
 │   ├── user-stories.md      유저 스토리와 인수 기준
+│   ├── information-architecture.md  화면 목록·계층·내비게이션 (UI가 있을 때만)
+│   ├── user-flows.md        화면 사이를 지나가는 과업 흐름 (UI가 있을 때만)
 │   ├── api-interface.md     인터페이스 계약
-│   └── traceability.md      FR ↔ US/AC ↔ FLOW ↔ T 매트릭스
+│   └── traceability.md      FR ↔ US/AC ↔ SCR/UF ↔ FLOW ↔ T 매트릭스
 ├── design/
 │   ├── backend/             레이어 매핑, 도메인 모델, ERD, 시퀀스 다이어그램
-│   └── frontend/            FSD 구조, 라우팅, UI 구성, 렌더링·상태 흐름, 유저 플로우
+│   └── frontend/            FSD 구조, 라우팅, UI 구성, 렌더링·상태 흐름
 └── verification/
     └── test-spec.md         테스트 매트릭스와 추적성
 ```
@@ -66,7 +68,7 @@
 ## 문서를 읽는 순서
 
 **기획 의도를 알고 싶다면**: 도메인의 `requirements.md` → `user-stories.md` →
-`api-interface.md`
+`information-architecture.md` → `user-flows.md` → `api-interface.md`
 
 **구현 구조를 알고 싶다면**: `architecture.md` → 도메인의
 `design/backend/layered-architecture.md` 또는

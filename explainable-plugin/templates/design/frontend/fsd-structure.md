@@ -196,12 +196,13 @@ app → pages → widgets → features → entities → shared
 > **전체 문서**
 > [요구사항](../../planning/requirements.md) |
 > [유저 스토리](../../planning/user-stories.md) |
+> [정보 구조](../../planning/information-architecture.md) |
+> [유저 플로우](../../planning/user-flows.md) |
 > [인터페이스 계약](../../planning/api-interface.md) |
 > **FSD 구조** |
 > [라우팅](routing.md) |
 > [UI 구성](component-tree.md) |
 > [렌더링 흐름](render-flow.md) |
 > [상태 흐름](state-flow.md) |
-> [유저 플로우](user-flows.md) |
 > [추적성](../../planning/traceability.md) |
 > [테스트 명세](../../verification/test-spec.md)
