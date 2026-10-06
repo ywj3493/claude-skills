@@ -33,11 +33,13 @@ docs/<source>/specifications/domain-map.md
 `docs/<source>/specifications/<domain>/` 아래 문서들의 순서다.
 
 ```text
-planning/requirements.md
+planning/service-brief.md                 (순방향)
+  → planning/requirements.md
   → planning/user-stories.md
   → planning/information-architecture.md   (조건부)
   → planning/user-flows.md                 (조건부)
-  → planning/api-interface.md
+  → planning/screen-spec.md                (UI·순방향, 역방향은 근거가 있을 때)
+  → planning/api-interface.md              (개발 설계 준비 시)
   → [ design/backend/*  또는  design/frontend/*  — 아래 3절 ]
   → planning/traceability.md
   → verification/test-spec.md
@@ -47,8 +49,8 @@ planning/requirements.md
 프로젝트에서만** 만든다. 둘은 짝이다 — 유저 플로우의 노드가 정보 구조의
 `SCR-` 키를 참조하므로 한쪽만 만들지 않는다.
 
-두 문서가 `api-interface.md` **앞에** 오는 이유: 한 화면이 한 번에 보여줘야
-하는 범위가 오퍼레이션의 응답 범위를 결정한다. 두 문서는 인터페이스 계약의
+화면 문서가 `api-interface.md` **앞에** 오는 이유: 사용자가 필요한 정보와 동작이
+오퍼레이션 입도 검토의 입력이 된다. 화면 하나에 API 하나를 강제하지 않는다. 두 문서는 인터페이스 계약의
 **입력**이지 출력이 아니다.
 
 `traceability.md`가 설계 문서 **뒤에** 오는 이유: FR ↔ US/AC ↔ FLOW ↔ T를
@@ -87,7 +89,9 @@ design/frontend/fsd-structure.md
 
 유저 플로우는 이 체인에 없다 — 기획 문서(`planning/user-flows.md`)다. 설계
 문서는 그것을 **입력으로 읽을 뿐 다시 그리지 않는다.** `routing.md`가 `SCR-`
-키에 라우트를 대응시키는 것이 두 계층의 유일한 접점이다.
+키에 라우트를 대응시키고 component-tree가 SEC/CMP/ELM에 구현 단위를 연결한다.
+참고자료·결정·state·annotations·목업·디자인 교환 파일은 보조 산출물이며 내비게이션
+체인에 넣지 않는다. 기술 설정/API 미정이면 존재하는 기획 문서만 연결한다.
 
 ---
 

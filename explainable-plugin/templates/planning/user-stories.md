@@ -155,10 +155,12 @@ Given / When / Then 형식. 각 항목은 테스트로 옮길 수 있어야 한�
 
 ---
 > **전체 문서**
+> [서비스 개요](service-brief.md) |
 > [요구사항](requirements.md) |
 > **유저 스토리** |
 > [정보 구조](information-architecture.md) |
 > [유저 플로우](user-flows.md) |
+> [화면 기능정의](screen-spec.md) |
 > [인터페이스 계약](api-interface.md) |
 > [백엔드 설계](../design/backend/layered-architecture.md) |
 > [프론트엔드 설계](../design/frontend/fsd-structure.md) |

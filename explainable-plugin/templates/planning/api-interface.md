@@ -27,7 +27,7 @@
 만들지 않으면 `[← 유저 스토리](user-stories.md)`로 바꾼다.
 -->
 
-> [← 유저 플로우](user-flows.md) | [다음: 백엔드 설계 →](../design/backend/layered-architecture.md)
+> [← 화면 기능정의](screen-spec.md) | [다음: 백엔드 설계 →](../design/backend/layered-architecture.md)
 
 # 인터페이스 계약
 
@@ -245,10 +245,12 @@ message PlaceOrderResponse {
 
 ---
 > **전체 문서**
+> [서비스 개요](service-brief.md) |
 > [요구사항](requirements.md) |
 > [유저 스토리](user-stories.md) |
 > [정보 구조](information-architecture.md) |
 > [유저 플로우](user-flows.md) |
+> [화면 기능정의](screen-spec.md) |
 > **인터페이스 계약** |
 > [백엔드 설계](../design/backend/layered-architecture.md) |
 > [프론트엔드 설계](../design/frontend/fsd-structure.md) |

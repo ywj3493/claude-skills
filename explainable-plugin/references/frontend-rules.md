@@ -54,7 +54,8 @@ app → pages → widgets → features → entities → shared
 
 | 무엇 | 어느 문서 |
 |---|---|
-| 무엇이 무엇을 담는가 (구조) | `component-tree.md` |
+| 구현 컴포넌트가 무엇을 담는가 | `component-tree.md` |
+| 사용자 관점 섹션·요소·동작·상태·배치 요구 | `../../planning/screen-spec.md` — **기획 소유** |
 | 언제 그려지고 무엇을 조회하는가 | `render-flow.md` |
 | **지역 상태와 재렌더 유발 요인** | `render-flow.md` |
 | **공유·전역 상태, 서버 캐시** | `state-flow.md` |
@@ -62,9 +63,10 @@ app → pages → widgets → features → entities → shared
 | 사용자가 화면 사이를 어떻게 지나가는가 (여정) | `../../planning/user-flows.md` — **기획 소유** |
 | 어떤 화면이 있고 어떻게 묶이는가 | `../../planning/information-architecture.md` — **기획 소유** |
 
-마지막 두 문서는 **읽기만 한다.** 설계 스킬은 유저 플로우와 정보 구조를
-만들지도 고치지도 않는다. 두 계층의 접점은 `routing.md`의 `대응 화면` 열
-하나다 — 기획의 `SCR-` 키에 실제 라우트를 대응시킨다.
+화면 기능정의·정보 구조·유저 플로우의 의미는 **읽기만 한다.** 설계 스킬은 화면과
+사용자 과업을 새로 만들거나 바꾸지 않는다. 기존 계약의 예외로 서버 흐름 열의
+설계 대기만 FLOW 링크로 채우며 나머지를 보존한다. 두 계층의 접점은 routing의 대응 화면 열
+와 component-tree의 SCR/SEC/CMP/ELM 매핑이다. 기획 의미는 복사하지 않고 ID로 연결한다.
 
 지역/공유의 경계는 **"그 라우트를 벗어나도 살아 있는가"**다. 역방향에서는
 `render-flow-tracer`가 반환한 `state` 항목의 `scope` 값이 이 배분을
@@ -76,10 +78,10 @@ app → pages → widgets → features → entities → shared
 
 ## 4. 프론트엔드 고유 규칙
 
-1. **기획의 모든 화면이 라우트를 가져야 한다.** `routing.md`의 `대응 화면`
-   열을 채우고, `information-architecture.md`에 있는데 라우트가 없는 `SCR-`은
-   `traceability.md`의 미연결 항목으로 내린다. 유저 플로우 자체의 작성 규칙은
-   `planning-rules.md` §5가 소유한다.
+1. **page 화면은 라우트에 연결하고 overlay/state는 부모 화면의 라우트에 연결한다.**
+   독립 주소를 가지지 않는 오버레이에 새 라우트를 강제하지 않는다. 유형·부모 SCR은
+   screen-spec을 따른다. 연결이 없는 page와 부모가 없는 overlay/state만 미연결로 보고한다.
+   유저 플로우 작성 규칙은 planning-rules §5가 소유한다.
 2. **앱 셸은 한 번만 기술한다.** 라우트마다 다시 추적하면 N개의 동일한
    추적이 생기고 곧 서로 어긋난다. 다른 도메인 문서에 이미 앱 셸이 있으면
    링크만 하고 반복하지 않는다.

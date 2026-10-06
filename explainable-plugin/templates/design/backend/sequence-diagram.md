@@ -253,10 +253,12 @@ sequenceDiagram
 
 ---
 > **전체 문서**
+> [서비스 개요](../../planning/service-brief.md) |
 > [요구사항](../../planning/requirements.md) |
 > [유저 스토리](../../planning/user-stories.md) |
 > [정보 구조](../../planning/information-architecture.md) |
 > [유저 플로우](../../planning/user-flows.md) |
+> [화면 기능정의](../../planning/screen-spec.md) |
 > [인터페이스 계약](../../planning/api-interface.md) |
 > [레이어 구조](layered-architecture.md) |
 > [도메인 모델](domain-model.md) |

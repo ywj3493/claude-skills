@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "mode": "forward",
+  "planningVersion": "1.0.0",
+  "snapshotId": null,
+  "status": "draft",
+  "approvedVersion": null,
+  "reviewer": null,
+  "designReadyVersion": null,
+  "designInputs": {},
+  "decisions": [],
+  "unresolved": [],
+  "retiredIds": [],
+  "replacements": {},
+  "artifacts": []
+}

@@ -1,11 +1,24 @@
 {
   "name": "explainable",
-  "version": "0.3.0",
-  "description": "한국어 기획·개발설계 문서 플러그인. 새 프로젝트는 인프라·프로젝트 설정 → 요구사항 → 유저 스토리 → 정보 구조 → 유저 플로우 → 인터페이스 계약 순으로 기획하고, 기존 코드베이스는 인프라 → 코드베이스 → 도메인별 설계를 먼저 뽑은 뒤 그 결과로부터 요구사항·유저 스토리·화면 구조를 역산한다. 백엔드는 4-Layered DDD, 프론트엔드는 FSD를 기준선으로 삼되 프레임워크에는 중립이다. 인용 검증기와 목적별 탐색 서브에이전트(인프라·오퍼레이션·렌더링 흐름), 번역 미러 동기화를 포함한다.",
+  "version": "0.4.0",
+  "description": "한국어 자료 기반 기획·화면 기능정의·반복 검토·정적 HTML 스토리보드·디자인 교환과 개발 설계 플러그인. 기술 스택 미정 상태에서 기획하고 승인 후 API 계약과 백엔드 4-Layered DDD·프론트엔드 FSD 설계로 이어간다. 자료 스냅샷·사람의 결정·안정적인 ID·파생물 버전을 보존하며 기존 코드의 인용 검증과 번역 미러를 지원한다.",
   "author": {
     "name": "ywj3493"
   },
   "homepage": "https://github.com/ywj3493/claude-skills",
   "repository": "https://github.com/ywj3493/claude-skills",
-  "keywords": ["korean", "planning", "design", "ddd", "fsd", "reverse-engineering", "frontend", "backend", "translation"]
+  "keywords": [
+    "korean",
+    "planning",
+    "design",
+    "ddd",
+    "fsd",
+    "reverse-engineering",
+    "frontend",
+    "backend",
+    "translation",
+    "storyboard",
+    "references",
+    "figma"
+  ]
 }

@@ -37,7 +37,10 @@ PROBLEMS=0
 note() { printf '  %s\n' "$1"; }
 fail() { printf '  [문제] %s\n' "$1"; PROBLEMS=$((PROBLEMS + 1)); }
 
-mapfile -t DOCS < <(find "$SPEC_DIR" -name '*.md' -type f | sort)
+DOCS=()
+while IFS= read -r document; do
+  DOCS+=("$document")
+done < <(find "$SPEC_DIR" -not -path '*/revisions/*' -not -path '*/snapshots/*' -name '*.md' -type f | sort)
 
 if [[ ${#DOCS[@]} -eq 0 ]]; then
   echo "오류: $SPEC_DIR 아래에 마크다운 문서가 없습니다." >&2
@@ -120,7 +123,9 @@ BROKEN=$(
       | sort -u \
       | while IFS= read -r target; do
           [[ -z "$target" ]] && continue
-          case "$target" in http*|/*) continue ;; esac
+          if [[ "$target" == http* || "$target" == /* ]]; then
+            continue
+          fi
           [[ -f "$dir/$target" ]] || echo x
         done
   done | wc -l
@@ -163,7 +168,7 @@ echo "5. ID 추적성"
 BEFORE=$PROBLEMS
 
 collect_ids() { # <파일 글롭 패턴> <ID 정규식>
-  find "$SPEC_DIR" -name "$1" -type f -exec grep -ohE "$2" {} + 2>/dev/null | sort -u
+  find "$SPEC_DIR" -not -path '*/revisions/*' -not -path '*/snapshots/*' -name "$1" -type f -exec grep -ohE "$2" {} + 2>/dev/null | sort -u
 }
 
 # ID 중복 정의 — 제목(### ID: ...) 기준
@@ -178,11 +183,11 @@ for doc in "${DOCS[@]}"; do
 done
 
 # 정의되지 않은 ID를 참조하는 경우
-DEFINED_FR=$(find "$SPEC_DIR" -name 'requirements.md' -exec grep -ohE '^#{2,4} (FR|NFR)-[A-Z0-9-]+' {} + 2>/dev/null | sed -E 's/^#+ //' | sort -u)
-DEFINED_US=$(find "$SPEC_DIR" -name 'user-stories.md' -exec grep -ohE '^#{2,4} US-[0-9]+' {} + 2>/dev/null | sed -E 's/^#+ //' | sort -u)
+DEFINED_FR=$(find "$SPEC_DIR" -not -path '*/revisions/*' -not -path '*/snapshots/*' -name 'requirements.md' -exec grep -ohE '^#{2,4} (FR|NFR)-[A-Z0-9-]+' {} + 2>/dev/null | sed -E 's/^#+ //' | sort -u)
+DEFINED_US=$(find "$SPEC_DIR" -not -path '*/revisions/*' -not -path '*/snapshots/*' -name 'user-stories.md' -exec grep -ohE '^#{2,4} US-[0-9]+' {} + 2>/dev/null | sed -E 's/^#+ //' | sort -u)
 
 if [[ -n "$DEFINED_FR$DEFINED_US" ]]; then
-  REFERENCED=$(find "$SPEC_DIR" -name 'traceability.md' -exec grep -ohE '\b(FR|NFR|US)-[A-Z0-9-]+' {} + 2>/dev/null | sort -u)
+  REFERENCED=$(find "$SPEC_DIR" -not -path '*/revisions/*' -not -path '*/snapshots/*' -name 'traceability.md' -exec grep -ohE '\b(FR|NFR|US)-[A-Z0-9-]+' {} + 2>/dev/null | sort -u)
   while IFS= read -r id; do
     [[ -z "$id" ]] && continue
     if ! grep -qxF "$id" <<< "$DEFINED_FR
@@ -194,7 +199,7 @@ $DEFINED_US"; then
   # 추적성 매트릭스에서 빠진 요구사항
   while IFS= read -r id; do
     [[ -z "$id" ]] && continue
-    if ! find "$SPEC_DIR" -name 'traceability.md' -exec grep -qF "$id" {} + 2>/dev/null; then
+    if ! find "$SPEC_DIR" -not -path '*/revisions/*' -not -path '*/snapshots/*' -name 'traceability.md' -exec grep -qF "$id" {} + 2>/dev/null; then
       fail "추적성 매트릭스에 없는 요구사항입니다 -> $id"
     fi
   done <<< "$DEFINED_FR"
@@ -218,11 +223,14 @@ while IFS= read -r flows; do
   if [[ ! -f "$ia" ]]; then
     fail "$flows: 짝이 되는 information-architecture.md가 없습니다 — 플로우의 화면 참조를 확인할 수 없습니다"
   fi
-done < <(find "$SPEC_DIR" -path '*/planning/user-flows.md' -type f)
+done < <(find "$SPEC_DIR" -not -path '*/revisions/*' -not -path '*/snapshots/*' -path '*/planning/user-flows.md' -type f)
 
 while IFS= read -r ia; do
   [[ -z "$ia" ]] && continue
-  mapfile -t SCREENS < <(collect_screens "$ia")
+  SCREENS=()
+  while IFS= read -r screen; do
+    SCREENS+=("$screen")
+  done < <(collect_screens "$ia")
   if [[ ${#SCREENS[@]} -eq 0 ]]; then
     fail "$ia: '## 화면 목록' 표에서 SCR- ID를 찾지 못했습니다"
     continue
@@ -243,7 +251,7 @@ while IFS= read -r ia; do
       fail "$flows: 정의되지 않은 화면을 참조합니다 -> $id"
     fi
   done < <(grep -oE '\bSCR-[A-Za-z0-9-]+' "$flows" 2>/dev/null | sort -u)
-done < <(find "$SPEC_DIR" -name 'information-architecture.md' -type f)
+done < <(find "$SPEC_DIR" -not -path '*/revisions/*' -not -path '*/snapshots/*' -name 'information-architecture.md' -type f)
 
 # T-ID 대역 규칙: 백엔드 T-1NN, 프론트엔드 T-2NN, E2E T-3NN
 while IFS= read -r spec; do
@@ -255,11 +263,16 @@ while IFS= read -r spec; do
       fail "$spec: T-ID가 대역을 벗어납니다 -> T-$b (백엔드 1NN / 프론트 2NN / E2E 3NN)"
     done <<< "$bad"
   fi
-done < <(find "$SPEC_DIR" -name 'test-spec.md' -type f)
+done < <(find "$SPEC_DIR" -not -path '*/revisions/*' -not -path '*/snapshots/*' -name 'test-spec.md' -type f)
 
 [[ $PROBLEMS -eq $BEFORE ]] && note "문제 없음"
 
 # ---------------------------------------------------------------------------
+echo
+echo "6. 기획 자료·화면·목업 계약"
+if ! python3 "$(dirname "$0")/planning-tools.py" check-tree "$SPEC_DIR"; then
+  fail "자료·기획 버전·화면·목업 대응 검사 실패"
+fi
 echo
 if [[ $PROBLEMS -eq 0 ]]; then
   echo "결과: 문제 없음 (${#DOCS[@]}개 문서)"

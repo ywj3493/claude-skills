@@ -65,8 +65,8 @@
 코드베이스에서는 실제 화면 모듈 경로를 적는다.
 
 `대응 화면` 열이 기획과의 연결점이다. `../../planning/information-architecture.md`의
-`SCR-` 키를 적는다. **기획의 모든 화면이 최소 하나의 라우트를 가져야 한다** —
-라우트가 없는 화면은 구현되지 않은 것이거나 화면 목록이 낡은 것이다. 기획
+`SCR-` 키를 적는다. **page는 실제 라우트에, overlay/state는 부모 page 라우트에 연결한다.**
+화면 유형과 부모 화면은 screen-spec이 정한다. 독립 주소 없는 모달에 라우트를 강제하지 않는다. 기획
 문서가 없는 프로젝트에서는 이 열을 `—`로 둔다.
 
 `관련 스토리` 열은 이 라우트가 어떤 유저 스토리를 실현하는지를 나타낸다.
@@ -148,10 +148,12 @@
 
 ---
 > **전체 문서**
+> [서비스 개요](../../planning/service-brief.md) |
 > [요구사항](../../planning/requirements.md) |
 > [유저 스토리](../../planning/user-stories.md) |
 > [정보 구조](../../planning/information-architecture.md) |
 > [유저 플로우](../../planning/user-flows.md) |
+> [화면 기능정의](../../planning/screen-spec.md) |
 > [인터페이스 계약](../../planning/api-interface.md) |
 > [FSD 구조](fsd-structure.md) |
 > **라우팅** |
