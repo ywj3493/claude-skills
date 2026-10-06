@@ -43,7 +43,12 @@ design-first, and exploration subagents each have one narrow job.
 
 | Skill / Agent | Command / Name | Purpose |
 | --- | --- | --- |
-| init-planning | `/explainable:init-planning` | New project: infrastructure and project setup first, then glossary → requirements → user stories → information architecture → user flows → interface contract → traceability |
+| init-planning | `/explainable:init-planning` | Service brief and references → requirements and stories → IA, flows, screen specifications → review; works before stack selection |
+| prepare-planning | `/explainable:prepare-planning` | Reference selection, immutable snapshots, and three HTML pattern proposals |
+| revise-planning | `/explainable:revise-planning` | Four revision modes, stable IDs, human decisions, and stale artifact tracking |
+| build-storyboard | `/explainable:build-storyboard` | Approved screens as static HTML with badges and generated descriptions |
+| sync-design | `/explainable:sync-design` | Design exchange packages, Figma mappings, loss reports, and three-way comparison |
+| prepare-design | `/explainable:prepare-design` | Approved planning into stack decisions and interface contracts |
 | init-design-backend | `/explainable:init-design-backend` | 4-Layered DDD: layer mapping → domain model → ERD → user-story-based sequence diagrams |
 | init-design-frontend | `/explainable:init-design-frontend` | FSD: layer/slice structure → routing → UI composition → render flow → state flow; reads the planning screen list and writes flow keys back into it |
 | reverse-design-backend | `/explainable:reverse-design-backend` | Existing backend: infra → codebase → domain → per-operation Source-Linked sequence diagrams → domain model and ERD |
@@ -151,7 +156,12 @@ depending on whether the code exists yet:
 
 ```text
 New project (planning first)
-  └─ /explainable:init-planning            infra + project setup, then planning docs
+  └─ /explainable:prepare-planning         reference snapshots and three UI pattern proposals
+      └─ /explainable:init-planning        service and screen planning, review
+      └─ /explainable:build-storyboard     static HTML and badge descriptions
+      ↔ /explainable:revise-planning       scoped revisions and dependency tracking
+      ↔ /explainable:sync-design           external design exchange and conflict review
+      └─ /explainable:prepare-design       stack, infrastructure, interface contract
       └─ /explainable:init-design-backend      4-Layered DDD
       └─ /explainable:init-design-frontend     FSD
           └─ /explainable:translate-docs       translation mirror

@@ -10,8 +10,8 @@
 
 **책임 경계 — 이 문서는 화면이 무엇이고 어떻게 묶이는지까지만 다룬다.**
 
-- **화면 안의 배치를 여기 적지 않는다.** 레이아웃, 반응형 규칙, 인터랙션
-  패턴은 `../design/frontend/component-tree.md`가 소유한다. 이 경계를 어기면
+- **화면 안의 배치를 여기 적지 않는다.** 사용자 관점 레이아웃·반응형·인터랙션은
+  `screen-spec.md`가, 구현 UI 구조는 `../design/frontend/component-tree.md`가 소유한다. 이 경계를 어기면
   기획 문서가 화면 정의서로 자라나고, 구현이 바뀔 때마다 기획이 낡는다.
 - **라우트 경로를 여기 적지 않는다.** `/orders/:id` 같은 주소는
   `../design/frontend/routing.md`가 소유한다. 여기서는 화면에 `SCR-` 키만
@@ -108,8 +108,7 @@ flowchart TD
 
 <!--
 화면 하나가 **무엇을 보여주고 무엇을 받는가**. 이 표가 `api-interface.md`의
-오퍼레이션 입도를 정하는 근거다 — 한 화면이 한 번에 보여줘야 하는 것이
-한 오퍼레이션의 응답 범위를 결정한다.
+오퍼레이션 입도를 검토하는 근거다. 한 화면에 API 하나를 강제하지 않는다.
 
 `대응 개념` 열은 `glossary.md`의 영문 식별자를 쓴다. 용어집에 없는 개념이
 나오면 용어집에 먼저 추가한다.
@@ -176,10 +175,12 @@ flowchart TD
 ---
 > **전체 문서**
 > <!-- 실제 생성된 문서만 남긴다. 현재 문서는 굵게, 링크하지 않는다. -->
+> [서비스 개요](service-brief.md) |
 > [요구사항](requirements.md) |
 > [유저 스토리](user-stories.md) |
 > **정보 구조** |
 > [유저 플로우](user-flows.md) |
+> [화면 기능정의](screen-spec.md) |
 > [인터페이스 계약](api-interface.md) |
 > [백엔드 설계](../design/backend/layered-architecture.md) |
 > [프론트엔드 설계](../design/frontend/fsd-structure.md) |

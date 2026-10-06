@@ -4,8 +4,9 @@
 [Claude Code 플러그인](https://docs.claude.com/en/docs/claude-code/plugins)입니다.
 두 방향을 모두 지원합니다.
 
-- **새 프로젝트에서 시작** — 인프라·프로젝트 설정을 먼저 확정하고, 요구사항 →
-  유저 스토리 → 인터페이스 계약 순으로 기획한 뒤 설계로 넘어갑니다.
+- **새 프로젝트에서 시작** — 참고자료·서비스 목적 → 요구사항·유저 스토리 →
+  화면 기능정의·검토·HTML 목업을 만들고, 승인 후 기술 설정·API 계약과 개발 설계로 넘어갑니다.
+  스택이 미정이어도 기획을 시작할 수 있습니다.
 - **기존 코드베이스 분석** — 인프라 → 코드베이스 구조 → 도메인별 설계를 먼저
   뽑고, **그 결과물로부터** 요구사항과 유저 스토리를 역산합니다.
 
@@ -18,9 +19,14 @@
 
 | 종류 | 명령어 / 이름 | 용도 |
 | --- | --- | --- |
-| 스킬 | `/explainable:init-planning` | 새 프로젝트 기획: 인프라·프로젝트 설정 → 용어집 → 요구사항(FR/NFR) → 유저 스토리(US/AC) → 인터페이스 계약 → 도메인 간 통합 → 추적성 매트릭스 |
+| 스킬 | `/explainable:prepare-planning` | 자료 등록·선택·불변 스냅샷·UI 패턴 HTML 3안 |
+| 스킬 | `/explainable:init-planning` | 서비스 목적 → 요구사항·스토리 → IA·UF·화면 기능정의 → 검토·승인 |
+| 스킬 | `/explainable:revise-planning` | 단일 화면·화면 유지·전체 재구성·자료 재선택과 영향 추적 |
+| 스킬 | `/explainable:build-storyboard` | 승인된 화면의 배지·기능 설명 패널이 있는 정적 HTML |
+| 스킬 | `/explainable:sync-design` | 디자인 교환·Figma 매핑·손실 기록·3방향 변경 비교 |
+| 스킬 | `/explainable:prepare-design` | 승인된 기획의 기술 설정·인프라·API 계약 확정 |
 | 스킬 | `/explainable:init-design-backend` | 4-Layered DDD 설계: 레이어 매핑 → 도메인 모델 → ERD(조건부) → 유저 스토리 기반 시퀀스 다이어그램 |
-| 스킬 | `/explainable:init-design-frontend` | FSD 설계: 레이어/슬라이스 구조 → 라우팅 → UI 구성 → 렌더링 흐름 → 상태 흐름 → 유저 플로우 |
+| 스킬 | `/explainable:init-design-frontend` | FSD 설계: 레이어/슬라이스 구조 → 라우팅 → UI 구성 → 렌더링 흐름 → 상태 흐름. 기획의 화면·요소를 구현 단위에 연결 |
 | 스킬 | `/explainable:reverse-design-backend` | 기존 백엔드 분석: 인프라 → 코드베이스 → 도메인 식별 → 오퍼레이션별 Source-Linked 시퀀스 다이어그램 → 도메인 모델·ERD 역추출 |
 | 스킬 | `/explainable:reverse-design-frontend` | 기존 프론트엔드 분석: 인프라 → 프레임워크 감지 → FSD 적합도 판정 → 앱 셸 + 라우트별 코드·렌더링 흐름 추적 |
 | 스킬 | `/explainable:reverse-planning` | 설계 문서와 코드 근거로부터 요구사항·유저 스토리를 역산. 순방향 기획 문서는 덮어쓰지 않고 차이 리포트를 만든다 |
@@ -34,7 +40,12 @@
 
 ```text
 새 프로젝트
-  /explainable:init-planning              인프라·설정 + 기획 문서
+  /explainable:prepare-planning           자료·스냅샷·패턴 선택
+    └─ /explainable:init-planning          서비스·화면 기획·승인
+        └─ /explainable:build-storyboard   정적 목업·설명 패널
+        ↔ /explainable:revise-planning     반복 수정·자료 재선택
+        ↔ /explainable:sync-design         외부 디자인 변경 검토
+    └─ /explainable:prepare-design         기술 설정·API 계약
     └─ /explainable:init-design-backend       4-Layered DDD 설계
     └─ /explainable:init-design-frontend      FSD 설계
         └─ /explainable:translate-docs        번역 미러
@@ -61,8 +72,10 @@ docs/<source>/specifications/
 ├── glossary.md              # 한국어 용어 ↔ 영문 식별자
 ├── domain-map.md            # 도메인 간 관계 (컨텍스트 맵, 슬라이스 의존, 횡단 흐름)
 └── <domain>/
-    ├── planning/            requirements, user-stories, information-architecture,
-    │                        user-flows, api-interface, traceability
+    ├── planning/            service-brief, reference-materials, decisions, requirements,
+    │                        user-stories, information-architecture, user-flows, screen-spec,
+    │                        state.json, snapshots/, revisions/, api-interface, traceability
+    ├── storyboard/          annotations.json, <SCR>.html, sync/
     ├── design/backend/      layered-architecture, domain-model, erd, sequence-diagram
     ├── design/frontend/     fsd-structure, routing, component-tree, render-flow,
     │                        state-flow
@@ -71,8 +84,9 @@ docs/<source>/specifications/
 
 `information-architecture.md`와 `user-flows.md`는 **UI가 있는 프로젝트에서만**
 만들어집니다. 둘은 짝이며, 화면이 무엇이고 사용자가 그 사이를 어떻게 지나가는지를
-기획 계층에서 정합니다 — 화면 안의 배치는 `component-tree.md`, 화면에 대응하는
-주소는 `routing.md`가 소유합니다. 설계 스킬은 두 문서를 **읽기만** 합니다.
+기획 계층에서 정합니다. 화면 내부 기능·상태·배치 요구는 `screen-spec.md`,
+구현 UI/FSD 구조는 `component-tree.md`, 실제 주소는 `routing.md`가 소유합니다.
+page는 라우트에, overlay/state는 부모 page 라우트에 연결합니다. 설계 스킬은 두 문서를 **읽기만** 합니다.
 
 `README.md`, `architecture.md`, `infrastructure.md`, `glossary.md`,
 `domain-map.md`, `test-spec.md`는 여러 스킬이 공유하는 **병합 전용** 문서입니다.
@@ -88,10 +102,11 @@ docs/<source>/specifications/
 
 | 파일 | 담는 것 | 읽는 스킬 |
 | --- | --- | --- |
-| `common-rules.md` | 문서 환경 감지, 실행 규약 9항목, 검증 루프, 완료 리포트, 문서 규칙, 공통 경계 규칙 | 7종 전부 |
+| `common-rules.md` | 문서 환경 감지, 실행 규약 9항목, 검증 루프, 완료 리포트, 문서 규칙, 공통 경계 규칙 | 12종 전부 |
 | `reverse-rules.md` | 인용 계약, Source-Linked 시퀀스 규약, 재실행·폐기 정책, 탐색 에이전트 호출 규약 | `reverse-*` 3종 |
 | `frontend-rules.md` | 프레임워크 중립 어휘, FSD 기준선, 문서 간 책임 경계 | `*-design-frontend` 2종 |
-| `planning-rules.md` | ID 체계, 스왑 테스트, 인수 기준 형식, 계약 블록 선택 | `*-planning` 2종 |
+| `planning-rules.md` | ID 체계, 스왑 테스트, 인수 기준 형식, 계약 블록 선택 | 기획·개발 설계 준비 |
+| `storyboard-rules.md` | 자료·결정·버전·화면/요소·수정 모드·목업·디자인 교환 계약 | 자료 기반 순방향 체인 |
 | `document-order.md` | 문서 정규 순서와 내비게이션 링크 규칙 | `common-rules.md`가 참조 |
 
 ## 프레임워크 중립성
@@ -118,9 +133,10 @@ GraphQL이면 SDL, gRPC면 `.proto`, 이벤트 기반이면 AsyncAPI.
   보이는 `Note`와 숨김 `CALLGRAPH` 블록을 양방향으로 교차 검증
 - 미해결 `MISMATCHED`/`UNSUPPORTED`가 남아 있으면 완료를 보고하지 않음
 
-순방향 문서는 코드가 없어 인용할 대상이 없으므로 `## 읽은 소스`를 넣지 않고,
-대신 `scripts/check-docs.sh`가 ID 추적성·링크 무결성·자리표시자 잔존·mermaid
-펜스 균형을 결정적으로 검사합니다.
+순방향 문서는 코드 인용 대신 자료 원장·SHA-256 스냅샷·판단/결정 기록을 사용합니다.
+생성 모드는 state와 GENERATED-BY로 판별하고 기존 문서의 모호한 출처는 검토합니다.
+`scripts/check-docs.sh`는 기존 문서 검사와 새 자료/화면/목업 검사를 함께 실행합니다.
+보관본과 자료 복사본은 현재 문서 검사에서 제외합니다.
 
 ## 재실행
 
@@ -129,8 +145,9 @@ GraphQL이면 SDL, gRPC면 `.proto`, 이벤트 기반이면 AsyncAPI.
 **폐기하고 다시 만듭니다**. 삭제 전에 대상 목록을 보여주고 확인을 받으며,
 횡단 문서와 용어집은 폐기하지 않고 해당 도메인 섹션만 갱신합니다.
 
-순방향 문서는 **절대 폐기하지 않습니다.** 사람이 결정한 기획을 스킬이 지울 수는
-없습니다.
+순방향 문서는 **절대 폐기하지 않습니다.** 수정 전 버전을 보관하고 사람의 결정과
+기존 ID를 보존합니다. 폐기 ID는 재사용하지 않으며 목업·Figma·개발 설계의 기준
+버전과 갱신 필요 상태를 추적합니다.
 
 ## 설치
 
@@ -185,3 +202,26 @@ claude --plugin-dir ./explainable-plugin
 `explainable/v<x.y.z>`), 번들된 각 스킬과 에이전트는 자체 `version` 필드를
 독립적으로 유지합니다. 변경 사항은 저장소 루트의
 [CHANGELOG.md](../CHANGELOG.md)에 기록됩니다.
+
+## 실행 도구와 지원 범위
+
+Python 3.9 이상과 Bash가 필요합니다. 설치할 Python 패키지는 없습니다.
+
+```bash
+python3 explainable-plugin/scripts/planning-tools.py snapshot <domain> <materials.json> --id <snapshot-id>
+python3 explainable-plugin/scripts/planning-tools.py check <domain>
+python3 explainable-plugin/scripts/planning-tools.py approve <domain> --version <version> --reviewer <name>
+python3 explainable-plugin/scripts/planning-tools.py build <domain>
+python3 explainable-plugin/scripts/planning-tools.py restore <domain> --from-version <old-version> --version <new-version> --reason <reason>
+python3 explainable-plugin/scripts/planning-tools.py ready-design <domain> --version <version>
+python3 explainable-plugin/scripts/planning-tools.py export-sync <domain> --figma-file <file-id> --output <baseline.json>
+python3 explainable-plugin/scripts/planning-tools.py compare-sync <domain> <baseline.json> <incoming.json> --output <report.json>
+```
+
+승인은 사람이 정확한 버전을 확인한 뒤 실행합니다. JSON 형식과 수정 명령은
+[storyboard-rules.md](references/storyboard-rules.md)를 따릅니다.
+목업은 로컬 CSS로 제공하는 Tailwind 유틸리티 부분집합이며 JS/CDN을 사용하지 않습니다.
+임베딩 검색, 자체 Figma 플러그인, 범용 HTML/CSS↔Figma 변환기는 포함하지 않습니다.
+Figma는 실제 연결 도구 또는 수동 교환으로 진행하며 텍스트·스타일·배치·아이콘·배지·
+어노테이션의 손실과 미지원 항목을 기록합니다. 파일 교환 검사를 실제 왕복 성공으로
+보고하지 않습니다. 최종 완료는 사람의 승인 버전에 연결합니다.

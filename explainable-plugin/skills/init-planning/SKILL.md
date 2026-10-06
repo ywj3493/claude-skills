@@ -1,266 +1,111 @@
 ---
 name: init-planning
-version: 0.2.0
-description: 코드가 아직 없는 새 프로젝트나 새 기능의 기획 문서를 한국어로 작성한다. 인프라·프로젝트 설정을 먼저 확정한 뒤 요구사항(FR/NFR), 유저 스토리와 인수 기준, 정보 구조(화면 목록·계층·내비게이션), 유저 플로우, 인터페이스 계약, 도메인 간 통합, 추적성 매트릭스를 순서대로 만든다. "기획 문서 만들어줘", "새 프로젝트 시작", "요구사항 정리해줘", "유저 스토리 뽑아줘", "화면 구조 잡아줘", "유저 플로우 그려줘"에 반응한다. 이미 있는 코드베이스에서 문서를 뽑아내는 데는 쓰지 않는다 — 그건 reverse-design-backend / reverse-design-frontend / reverse-planning의 일이다.
+version: 0.3.0
+description: 기술 스택 미정인 새 서비스나 기능의 기획을 한국어로 작성한다. 서비스 목적·참고자료에서 요구사항, 유저 스토리, IA, 유저 플로우, 화면 기능정의와 추적성을 만들고 검토 버전을 관리한다. 기존 기획 수정은 revise-planning, 기술 설정과 API 계약은 prepare-design, 기존 코드의 사실 역산은 reverse-planning이 담당한다.
 ---
 
 # init-planning
 
-코드가 없는 상태에서 **무엇을 만들 것인지** 정한다. 인프라와 프로젝트 설정을
-먼저 확정하고 그 위에 기획 문서를 쌓는다. 설계는 이 스킬이 하지 않는다 —
-기획이 끝나면 `init-design-backend`와 `init-design-frontend`가 이어받는다.
+코드가 없는 기능의 목적·사용자 과업·화면 의미를 정한다. 기술 선택은 기획 진입
+조건이 아니다. 스택 미정이어도 UI가 필요하면 화면 문서를 만든다.
 
 **시작 전에 로드한다**:
-`${CLAUDE_PLUGIN_ROOT}/references/common-rules.md` ·
-`${CLAUDE_PLUGIN_ROOT}/references/planning-rules.md`
-
-## 사용 시점
-
-- 빈 저장소나 새 기능에서 시작할 때
-- "기획 문서 만들어줘", "요구사항 정리해줘", "유저 스토리 뽑아줘"
-- 화면 구성을 시작하기 전에 화면 목록과 과업 흐름을 정해야 할 때
-- 프론트엔드와 백엔드가 합의할 인터페이스 계약이 필요할 때
-
-## 사용하지 않는 경우
-
-- **이미 코드가 있는 경우** — `reverse-design-*`로 설계를 먼저 뽑고
-  `reverse-planning`으로 기획을 역산한다.
-- **설계 문서가 필요한 경우** — `init-design-backend` / `init-design-frontend`
-- **문서 구조 전체 초기화** — 이 플러그인은 출력 경로만 최소로 만든다.
-  전체 스캐폴딩이 필요하면 `/dev-docs:init-docs`를 안내한다.
-
-## 실행 규약
-
-`common-rules.md`의 실행 규약 1~9를 따른다. 이 스킬 고유 항목:
-
-1. **기획 문서는 기술 중립이다.** `planning-rules.md` §2의 스왑 테스트를
-   문장 단위로 적용한다. `api-interface.md`만 예외다.
-2. **`## 읽은 소스` 섹션을 생성하지 않는다** (계약 7). 순방향이므로
-   `분석 기준 커밋`은 "해당 없음"이다.
+${CLAUDE_PLUGIN_ROOT}/references/common-rules.md ·
+${CLAUDE_PLUGIN_ROOT}/references/planning-rules.md ·
+${CLAUDE_PLUGIN_ROOT}/references/storyboard-rules.md
 
 ## 산출물
 
-```text
-docs/<원본 언어>/specifications/
-├── architecture.md          # 아키텍처 규약 (스택·레이어 매핑·의존성)
-├── infrastructure.md        # 런타임, 배포, 환경, CI/CD
-├── glossary.md              # 한국어 용어 ↔ 영문 식별자
-├── domain-map.md            # 도메인 2개 이상일 때만
-├── README.md                # 도메인 인덱스
-└── <도메인>/planning/
-    ├── requirements.md
-    ├── user-stories.md
-    ├── information-architecture.md   # UI가 있을 때만
-    ├── user-flows.md                 # UI가 있을 때만
-    ├── api-interface.md
-    └── traceability.md
-```
+`planning/service-brief.md`, `decisions.md`, `requirements.md`,
+`user-stories.md`, `traceability.md`, `state.json`,
+`storyboard/annotations.json`, 공유 `glossary.md`, `README.md`,
+도메인이 여러 개면 `domain-map.md`를 만든다.
+UI가 있으면 `information-architecture.md`, `user-flows.md`,
+`screen-spec.md`를 함께 만든다. UI가 없으면 annotations의 screens는 빈 배열이다.
+참고자료는 prepare-planning의 스냅샷을 읽는다. 자료가 없으면 snapshotId는 null이며
+대화에서 확정한 근거를 decisions에 기록한다.
+architecture/infrastructure/api-interface는 prepare-design이 작성한다.
+verification은 개발 설계 스킬의 소유다.
 
-`verification/`은 이 스킬이 만들지 않는다 (설계 스킬의 일).
-화면 문서 둘은 짝이며 조건은 `planning-rules.md` §5다.
+## 단계 0: 환경과 입력
 
-## 단계별 지침
+common-rules의 문서 환경·리뷰 모드를 적용한다. 기존 기획은 덮어쓰지 않고
+revise-planning으로 이어간다. 기존 코드의 사실 문서화는 reverse-design-* →
+reverse-planning으로 안내한다. 기존 코드가 있어도 새 기능의 기획은 이 스킬로 가능하다.
+서비스 이름·설명·대상 사용자·핵심 문제·UI 필요 여부·화면 수(고정/목표)·범위를 확인한다.
+도메인을 구획하고 필요 자료가 있으면 prepare-planning을 실행한다. 자료 등록은
+별도 재진입 가능 작업이며 기술 스택을 먼저 묻지 않는다.
 
-### 단계 0: 환경 감지와 범위 확인
+## 단계 1: 서비스 개요·결정·상태
 
-1. `common-rules.md` §1의 문서 환경 감지와 리뷰 모드 확인을 수행한다.
-2. **기존 문서를 확인한다.** 대상 도메인에 이미 기획 문서가 있으면
-   **덮어쓰지 않는다.** 사람이 결정한 기획을 스킬이 지울 수는 없다.
+templates/planning/{service-brief,decisions}.md와 state.json,
+templates/storyboard/annotations.json을 읽는다. 목적·성공 기준·포함/범위 밖·제약을
+작성하고 사용자 결정과 AI 가정을 분리한다. state의 mode는 forward, status는 draft,
+approvedVersion은 null이다. 실제 snapshotId와 같은 planningVersion을 annotations에 넣는다.
+기획 문서에 GENERATED-BY의 mode: forward와 기획 버전을 표시한다.
+사람의 결정은 DEC ID로 연결하고 충돌·미결은 unresolved에 기록한다.
+화면 수 제약을 충족할 수 없으면 기능을 누락하지 않고 충돌을 보고한다.
 
-   > `<도메인>/planning/`에 이미 문서가 있습니다:
-   > `<파일 목록>`
-   >
-   > 1. 기존 문서에 이어서 추가 (기본)
-   > 2. 특정 문서만 다시 작성
-   > 3. 중단
+## 단계 2: 용어집
 
-3. **도메인을 정한다.** 기능 영역을 묻고 도메인 구획을 제안한 뒤 확인받는다.
-   최소 하나는 있어야 한다.
+templates/overview/glossary.md를 읽고 핵심 개념의 한국어 정의와 영문 식별자를
+정한다. 한 개념의 영문 식별자는 하나다. 공유 OWNER 섹션만 병합한다.
+처음부터 구현 심볼이나 테이블 이름을 기획 요구에 강제하지 않는다.
 
-### 단계 1: 프로젝트·인프라 설정
+## 단계 3: 요구사항
 
-**산출** `specifications/infrastructure.md`, `specifications/architecture.md` ·
-**템플릿** `templates/overview/{infrastructure,architecture}.md`
+templates/planning/requirements.md와 planning-rules §3을 적용한다. 액터·FR·측정
+가능한 NFR·제약·범위 밖을 작성한다. 자료와 결정 ID를 근거로 연결한다.
+목표값이 미정인 성능 요구는 임의 수치로 확정하지 않고 미결 사항으로 기록한다.
+기술 중립 스왑 테스트를 수행한다.
 
-기획보다 이것이 먼저다 — 스택이 정해지지 않으면 인터페이스 계약의 형식조차
-정할 수 없다.
+## 단계 4: 유저 스토리·인수 기준
 
-1. **사용자에게 묻는다.** 정해지지 않은 항목을 추측해서 채우지 않는다.
-   백엔드(언어·런타임, 프레임워크, **API 스타일**, 영속성), 프론트엔드
-   (언어·런타임, 프레임워크, 라우터, 상태 관리, 렌더링 모드), 인프라(배포
-   대상, 환경 구분, CI/CD). 한쪽만 있는 프로젝트면 그쪽만 묻는다.
+templates/planning/user-stories.md를 읽고 액터·능력 단위 US와 Given/When/Then AC를
+작성한다. 정상·실패·경계 경로를 포함하고 모든 FR의 US 커버리지를 확인한다.
+다중 액터 UC는 필요할 때만 만든다. 구현 FLOW와 테스트 연결은 설계 대기다.
 
-2. **아키텍처 기준선을 제안한다.**
+## 단계 5: 정보 구조 (UI 조건부)
 
-   > 아키텍처 기준선으로 백엔드는 4-Layered DDD(Presentation / Application /
-   > Domain / Infrastructure), 프론트엔드는 FSD(app / pages / widgets /
-   > features / entities / shared)를 제안합니다. 이대로 갈까요, 아니면 다른
-   > 구조를 쓸까요?
+templates/planning/information-architecture.md를 읽는다. 사용자 과업을 화면으로
+묶고 SCR을 부여한다. 화면 유형 page/overlay/state와 부모 화면은 screen-spec에서
+정의하고 IA에서 참조한다. 주소·FSD 구조는 쓰지 않는다.
+UI 없는 US는 사유를 기록하고 불필요한 화면을 만들지 않는다.
 
-3. **`architecture.md`의 아키텍처 규약 표 세 개를 채운다** — 스택 / 레이어·
-   슬라이스 ↔ 디렉터리 매핑 / 허용 의존성 방향. 향후 구현 단계가 파일 위치와
-   import 방향을 결정하는 근거이므로 **산문으로 대체하지 않는다.** 근거 열은
-   전부 "사용자 결정".
+## 단계 6: 유저 플로우 (UI 조건부)
 
-4. **`infrastructure.md`를 채운다** — 런타임, 배포 토폴로지, 환경 구분,
-   설정·환경 변수(이름만), CI/CD 계획, 데이터 저장소, 외부 서비스.
+templates/planning/user-flows.md를 읽고 과업별 UF를 만든다. 노드는 SCR과 사용자
+결정, 간선은 사용자 행동이다. 서버 처리는 노드로 요약하며 FLOW는 설계 대기로 둔다.
+모든 SCR의 도달 경로를 확인한다. 화면 내부 동작 상세는 screen-spec이 소유한다.
 
-5. `<!-- GENERATED-BY: init-planning; commit: <sha>; root: <경로>;
-   date: <오늘> -->` 마커를 두 파일 상단에 넣는다.
+## 단계 7: 화면 기능정의 (UI 조건부)
 
-> **단계 1 완료**: 인프라와 아키텍처 규약을 작성했습니다. 검토 후 요구사항
-> 단계로 진행할까요?
+templates/planning/screen-spec.md와 templates/storyboard/annotations.json을 읽는다.
+화면 → 섹션 → 사용자 관점 컴포넌트 → 요소 → 동작으로 구체화한다.
+정상·로딩·빈 결과·오류·권한 부족과 미적용 사유, 검증·권한·입력·출력·반응형
+요구를 정의한다. SEC/CMP/ELM과 FR/US/AC/SCR/UF를 연결한다.
+장식은 기능 배지 대상에서 제외하고 기능 요소마다 고유 ELM과 화면 내 배지를 부여한다.
+동일 단계에서 annotations를 갱신하고 선택 패턴·자료 출처를 sourceIds로 연결한다.
+사용자 관점 구성과 구현 컴포넌트를 혼합하지 않는다.
 
-### 단계 2: 용어집 초기화
+## 단계 8: 도메인 통합·추적성
 
-**산출** `specifications/glossary.md` ·
-**템플릿** `templates/overview/glossary.md`
+templates/overview/domain-map.md는 도메인이 여러 개일 때만 작성한다. 도메인 목록과
+과업 연결·통합 필요를 기록한다. 구체 통합 계약은 prepare-design이 채운다.
+templates/planning/traceability.md의 요구사항→스토리, 스토리→화면·플로우를 채우고
+화면→요소→목업 대응을 별도 표로 추가한다. 기존 파싱 대상 표 열은 바꾸지 않는다.
+FLOW/테스트는 설계 대기로 명시하고 가짜 ID를 만들지 않는다.
 
-여기서 정한 영문 식별자가 코드 심볼 이름의 단일 출처가 된다.
+## 단계 9: 검토·승인과 다음 단계
 
-1. 사용자와 대화하며 핵심 도메인 개념을 추린다.
-2. 한 개념에 영문 식별자는 하나만 배정한다.
-3. 정의는 한 문장으로 쓴다. 두 문장이 필요하면 개념이 둘로 쪼개져야 한다는
-   신호다.
-4. `근거` 열은 전부 "기획 결정", `상태` 열은 "사용 중".
+공유 README의 해당 도메인 OWNER 영역과 실제 생성 문서의 내비게이션을 갱신한다.
+planning-tools.py check <domain>과 check-docs.sh <specifications>를 실행한다.
+스왑 테스트, 상태 누락, 사람 결정 보존, 자료 근거와 화면 의미를 검토한다.
+state를 in-review로 두고 사람이 정확한 버전을 승인하면
+`python3 "${CLAUDE_PLUGIN_ROOT}/scripts/planning-tools.py" approve <domain> --version <version> --reviewer <name>`
+을 실행한다. 미결 사항이 있으면 승인하지 않는다.
 
-### 단계 3: 요구사항
-
-**산출** `<도메인>/planning/requirements.md` ·
-**템플릿** `templates/planning/requirements.md`
-
-`planning-rules.md` §3의 작성 규칙을 따른다.
-
-1. 이해관계자(액터)를 먼저 확정한다. 사람이 아닌 주체도 액터가 될 수 있다.
-2. `FR-<영역>-NN`, `NFR-<분류>-NN`을 부여한다.
-3. 제약 사항과 범위 밖을 채운다.
-4. 스왑 테스트를 통과하지 못하는 문장을 고친다.
-
-> **단계 3 완료**: 요구사항을 작성했습니다. 검토 후 유저 스토리로 진행할까요?
-
-### 단계 4: 유저 스토리와 인수 기준
-
-**산출** `<도메인>/planning/user-stories.md` ·
-**템플릿** `templates/planning/user-stories.md`
-
-`planning-rules.md` §4의 규칙을 따른다.
-
-1. `requirements.md`를 디스크에서 다시 읽는다.
-2. `US-NN`, `AC-USNN-NN`을 부여한다.
-3. 모든 FR이 최소 하나의 US로 커버되는지 확인한다.
-4. `흐름 키` 항목은 설계 전이므로 비워 둔다.
-
-> **단계 4 완료**: 유저 스토리를 작성했습니다. 검토 후 정보 구조로 진행할까요?
-
-프론트엔드 스택이 없어 단계 5·6을 건너뛸 때는 "인터페이스 계약으로
-진행할까요?"로 바꿔 묻는다.
-
-### 단계 5: 정보 구조
-
-**산출** `<도메인>/planning/information-architecture.md` ·
-**템플릿** `templates/planning/information-architecture.md`
-
-**조건부 단계다.** 단계 1에서 프론트엔드 스택이 확정되지 않았으면 이 단계와
-단계 6을 건너뛰고 사유를 완료 리포트에 남긴다. `planning-rules.md` §5를
-따른다.
-
-1. `user-stories.md`를 디스크에서 다시 읽는다.
-2. 스토리를 사용자가 실제로 마주하는 **화면 단위로 묶고** `SCR-<영역>-NN`을
-   부여한다. 오퍼레이션 하나에 화면 하나를 기계적으로 대응시키지 않는다 —
-   한 화면이 여러 스토리를 담는 것이 보통이다.
-3. `## 화면 계층`은 **포함 관계**만 그린다. 화면이 평면적이면 섹션과 목차
-   항목을 통째로 삭제한다.
-4. **모든 US가 최소 하나의 화면에 대응하는지 확인한다.** 대응하지 않는
-   스토리는 화면이 빠졌거나 UI 없이 처리되는 스토리다.
-5. 레이아웃·배치·라우트 경로를 적지 않는다 (§5 책임 경계).
-
-> **단계 5 완료**: 정보 구조를 작성했습니다. 검토 후 유저 플로우로 진행할까요?
-
-### 단계 6: 유저 플로우
-
-**산출** `<도메인>/planning/user-flows.md` ·
-**템플릿** `templates/planning/user-flows.md`
-
-**단계 5를 수행했을 때만 수행한다.** 둘은 짝이다.
-
-1. `information-architecture.md`를 디스크에서 다시 읽는다.
-2. 과업 단위로 `UF-<도메인>-NN`을 부여한다. 보통 유저 스토리 하나에 플로우
-   하나가 대응한다.
-3. 다이어그램의 노드는 `SCR-` 화면과 사용자 결정이고, 간선은 사용자 행동이다.
-   **서버 처리는 노드 하나로 뭉뚱그린다.**
-4. `서버 흐름` 열은 설계 전이므로 서버 호출이 필요한 단계에 `설계 대기`,
-   필요 없는 단계에 `—`를 적는다.
-5. **모든 `SCR-`이 최소 하나의 플로우에 등장하는지 확인한다.** 등장하지 않는
-   화면은 단계 9에서 미연결 항목으로 내린다.
-
-> **단계 6 완료**: 유저 플로우를 작성했습니다. 검토 후 인터페이스 계약으로
-> 진행할까요?
-
-### 단계 7: 인터페이스 계약
-
-**산출** `<도메인>/planning/api-interface.md` ·
-**템플릿** `templates/planning/api-interface.md`
-
-`planning-rules.md` §6을 따른다 — `architecture.md`에서 확정된 API 스타일을
-읽고, 해당하는 계약 블록만 남기고 나머지는 삭제한다.
-
-화면 문서를 만들었으면 **그것을 입력으로 읽어 오퍼레이션 입도를 정한다.**
-한 화면이 한 번에 보여줘야 하는 범위가 한 오퍼레이션의 응답 범위다.
-카탈로그의 `관련 화면` 열을 `SCR-` 키로 채우고, 화면과 무관한
-오퍼레이션은 `—`로 둔다. 화면 문서가 없으면 그 열을 통째로 삭제한다.
-
-> **단계 7 완료**: 인터페이스 계약을 작성했습니다. 검토 후 다음으로
-> 진행할까요?
-
-### 단계 8: 도메인 간 통합
-
-**산출** `specifications/domain-map.md` ·
-**템플릿** `templates/overview/domain-map.md`
-
-**도메인이 2개 이상일 때만 수행한다** (`common-rules.md` §6.6).
-
-1. `## 도메인 목록`을 채운다.
-2. `## 도메인 간 통합 계약` — `계약 위치`는 실제 문서 앵커를 가리켜야 한다.
-   "API를 통해" 같은 말은 계약이 아니다.
-3. `## 도메인 횡단 흐름` — 두 도메인 이상을 지나는 흐름에 `FLOW-CROSS-<슬러그>`
-   키를 부여한다. 도메인을 참여자로 삼아 한 단계 위에서 그리고, 각 구간은
-   설계 단계에서 부여될 `FLOW-` 키를 **참조만** 한다.
-4. `## 백엔드 컨텍스트 맵`과 `## 프론트엔드 슬라이스 의존 맵`은 **설계
-   스킬이 소유**하므로 자리표시자 주석만 남긴다.
-
-### 단계 9: 추적성과 자체 점검
-
-**산출** `<도메인>/planning/traceability.md` ·
-**템플릿** `templates/planning/traceability.md`
-
-1. `요구사항 → 스토리` 표를 채운다. 설계 전이므로 `스토리 → 흐름`의 흐름 키
-   열과 테스트 ID는 비워 두고, 설계 스킬이 채운다고 명시한다.
-2. 화면 문서를 만들었으면 **`스토리 → 화면·플로우` 표를 전부 채운다** —
-   `SCR-`과 `UF-`는 설계 전에 부여되므로 지금 채울 수 있다. 만들지 않았으면
-   그 섹션과 목차 항목을 통째로 삭제한다.
-3. `## 미연결 항목`을 정직하게 채운다. 화면 문서가 있으면
-   `### 플로우에 등장하지 않는 화면`도 채운다.
-4. `common-rules.md` §3의 결정적 검사를 실행한다.
-5. **자체 점검** — 스크립트가 잡을 수 없는 것: 스왑 테스트 통과 여부, 모든
-   인수 기준이 테스트로 옮길 수 있는 형태인지, 화면 문서에 레이아웃이나
-   라우트 경로가 새어 들어가지 않았는지, 모든 문서에 오늘 날짜와 참고 문서가
-   채워졌는지.
-
-### 단계 10: 문서 인덱스와 완료 리포트
-
-1. `specifications/README.md`를 만들거나, 이미 있으면 **이 도메인의 행만**
-   갱신한다. 템플릿 `templates/overview/README.md`.
-2. `common-rules.md` §4의 완료 리포트에 다음을 더한다. 화면 문서를 건너뛰었으면
-   **그 사실과 사유(프론트엔드 스택 없음)를 반드시 적는다.**
-
-   > 기획이 끝났습니다. 설계로 넘어가려면:
-   >
-   > - `/explainable:init-design-backend` — 4-Layered DDD 설계
-   > - `/explainable:init-design-frontend` — FSD 설계
-   >
-   > 번역 미러가 필요하면 `/explainable:translate-docs`를 실행하세요.
-
-## 문서 규칙
-
-`common-rules.md` §5를 따른다. 이 스킬 고유 사항: 순방향이므로
-`## 읽은 소스`를 생성하지 않고 `분석 기준 커밋`은 "해당 없음"이다.
+기획 버전·근거 스냅샷·결정/미결·검사 결과·생성/생략 파일을 보고한다.
+화면 검토는 build-storyboard, 반복 수정은 revise-planning, 디자인 왕복은 sync-design,
+개발 설계 진입은 prepare-design → init-design-backend/frontend로 이어간다.
+기획 승인과 개발 설계 준비 완료를 구분한다.

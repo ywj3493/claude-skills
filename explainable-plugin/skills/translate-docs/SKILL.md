@@ -1,6 +1,6 @@
 ---
 name: translate-docs
-version: 0.1.1
+version: 0.2.0
 description: docs/config.yml에 설정된 원본 언어 문서 디렉터리를 감사해 번역이 없는 문서나 원본보다 오래된 번역을 찾아 생성·갱신한다. 번역 언어가 아직 설정되지 않았으면 미러링을 켤지 제안하고, 선택한 언어를 docs/config.yml에 기록한 뒤 미러 디렉터리를 만들고 동기화한다. "번역 동기화", "문서 번역해줘", "미러 맞춰줘", "번역 언어 추가"에 반응한다.
 ---
 
@@ -46,7 +46,14 @@ description: docs/config.yml에 설정된 원본 언어 문서 디렉터리를 �
    전부 번역한다 — "..." 나 "(이하 동일)"로 자르지 않는다.
 
 4. **구조 동등성을 검증한다.** 각 번역을 쓴 뒤 원본과 대조한다 — 아래
-   `## 번역 규칙`의 구조 보존 목록이 검사 항목이다. 어긋나면 다음 파일로
+   `## 자료 기반 기획 산출물
+
+자료 snapshots/revisions, state.json, annotations.json, HTML 목업, 디자인 교환 JSON은
+원본 버전과 연결된 기계/시각 산출물이다. 번역본을 별도로 생성하거나 다시 번호를
+매기지 않는다. 참고자료·결정·화면 기능정의 Markdown만 번역하며 원본 ID·버전·해시·
+자료 경로를 보존한다. 과거 보관본은 감사에서 제외하고 현재 문서만 번역한다.
+
+## 번역 규칙`의 구조 보존 목록이 검사 항목이다. 어긋나면 다음 파일로
    넘어가기 전에 고친다.
 
 5. **번역 디렉터리 아래에만 쓴다.** 원본 언어 문서와 `docs/reference/`는 이
@@ -106,7 +113,7 @@ description: docs/config.yml에 설정된 원본 언어 문서 디렉터리를 �
 있는지 확인한다:
 
 ```bash
-find docs/ko/specifications -name "*.md" ! -name ".gitkeep" 2>/dev/null | sort
+find docs/ko/specifications -name "*.md" ! -path '*/revisions/*' ! -path '*/snapshots/*' 2>/dev/null | sort
 ```
 
 **노후** — 번역이 있는 파일은 git 커밋 날짜를 비교해, 원본이 더 최근이면
@@ -168,7 +175,7 @@ git log --follow -1 --format="%ai" -- <번역 경로>
   `[ASSUMED: <추론>; basis: <근거>]`
 - **검증 판정 어휘**: `MATCHED`, `MISMATCHED`, `UNSUPPORTED`, `EXCLUDED`
 - **모든 ID**: `FR-`, `NFR-`, `US-`, `AC-`, `UC-`, `SCR-`, `UF-`, `T-`,
-  `FLOW-` 접두사와 그 뒤의 식별자 전체
+  `FLOW-`, `SEC-`, `CMP-`, `ELM-`, `SRC-`, `DEC-` 접두사와 그 뒤의 식별자 전체
 - **구조 마커**: `<!-- OWNER: ... -->`, `<!-- GENERATED-BY: ... -->`
 - 파일 경로 (`docs/ko/specifications/architecture.md`)
 - 함수명, 변수명, 클래스명

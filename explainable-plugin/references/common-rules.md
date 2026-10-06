@@ -65,7 +65,7 @@ git status --porcelain
 
 3. **ID는 부여하는 것이지 추측하는 것이 아니다.** 형식은
    `${CLAUDE_PLUGIN_ROOT}/references/planning-rules.md`의 ID 표를 따르고,
-   한 문서 안에서 빈 번호나 중복 없이 순차로 매긴다. 다른 문서의 ID를
+   최초 생성 시 순차로 부여하고 이후 기존 ID를 재번호하거나 폐기 ID를 재사용하지 않는다. 다른 문서의 ID를
    참조할 때는 그 문서에 실제로 있는지 확인한 뒤 쓴다.
 
 4. **리뷰 게이트를 문자 그대로 지킨다.** 단계별 모드(기본)에서는 각 단계
@@ -80,10 +80,15 @@ git status --porcelain
    `verification/test-spec.md`가 대상이다. `<!-- OWNER: -->` 마커로 표시된
    자기 섹션만 건드리고 나머지는 **바이트 단위로 보존한다**.
 
-7. **`## 읽은 소스` 원장**은 역방향 전용이다. 순방향 스킬은 코드가 없어
-   인용할 대상이 없으므로 템플릿에서 그 섹션을 제목까지 삭제한다. 순방향
-   문서에 이 섹션을 넣고 싶어진다면 기존 코드를 문서화하고 있다는 뜻이므로
-   역방향 스킬을 써야 한다.
+7. **근거 유형과 생성 모드를 구분한다.** 코드 인용 원장인 `## 읽은 소스`는
+   역방향 전용이고 순방향은 `reference-materials.md`와 불변 스냅샷을 사용한다.
+   새 GENERATED-BY 마커에는 `mode: forward|reverse`를 넣는다. 판별은
+   planning/state.json의 mode와 GENERATED-BY의 mode/스킬 이름을 먼저 확인한다.
+   서로 충돌하면 미확인으로 남기고 폐기하지 않는다. 기존 문서는 init-* 마커면
+   forward, reverse-* 마커면 reverse, 마커가 없으면 코드 REF를 포함한 읽은 소스
+   원장이 있을 때만 reverse로 후보 판별한다. 근거가 불명확하면 사람에게 확인받으며
+   자동 폐기하지 않는다. 자료 원장 존재만으로 reverse로 판별하지 않는다.
+   마이그레이션은 원본을 보관하고 검토한 mode를 명시한 뒤 수행한다.
 
 8. **프레임워크는 감지하거나 사용자가 정한다.** 기본값(백엔드 4-Layered DDD,
    프론트엔드 FSD)은 제안하되 사용자 결정이 항상 우선한다. 정해지지 않은
@@ -103,6 +108,7 @@ git status --porcelain
 bash "${CLAUDE_PLUGIN_ROOT}/scripts/check-docs.sh" docs/<원본 언어>/specifications
 ```
 
+새 기획 계약의 JSON/스냅샷/목업 검사도 이 스크립트에서 호출한다. 보관본은 현재 문서 검사에서 제외한다.
 보고된 문제를 전부 고친 뒤 다시 실행해 통과시킨다.
 
 ### 인용 검증 (역방향 스킬)
@@ -124,6 +130,7 @@ bash "${CLAUDE_PLUGIN_ROOT}/scripts/check-docs.sh" docs/<원본 언어>/specific
 - 생성하지 않은 문서와 그 이유
 - 건너뛴 단계와 그 이유
 - 다음 단계 안내
+- 자료 기반 기획은 planningVersion·snapshotId·승인 상태·미결 결정·stale 파생물 목록
 
 역방향 스킬은 추가로:
 
@@ -138,7 +145,7 @@ bash "${CLAUDE_PLUGIN_ROOT}/scripts/check-docs.sh" docs/<원본 언어>/specific
   그대로 둔다.
 - 기계용 토큰은 영문 고정이다: `[REF: ...]`, `[ASSUMED: ...; basis: ...]`,
   `MATCHED`/`MISMATCHED`/`UNSUPPORTED`/`EXCLUDED`, 그리고
-  `FR-`/`NFR-`/`US-`/`AC-`/`UC-`/`SCR-`/`UF-`/`T-`/`FLOW-` 접두사.
+  `FR-`/`NFR-`/`US-`/`AC-`/`UC-`/`SCR-`/`UF-`/`SEC-`/`CMP-`/`ELM-`/`SRC-`/`DEC-`/`T-`/`FLOW-` 접두사.
 - `## 문서 정보` 표는 문서 **하단**에 둔다. 상단에 메타데이터 블록을 만들지
   않는다. `분석 기준 커밋` 필드는 역방향이면 단계 0의 SHA, 순방향이면
   "해당 없음"이다.

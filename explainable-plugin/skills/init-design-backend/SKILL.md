@@ -1,6 +1,6 @@
 ---
 name: init-design-backend
-version: 0.1.0
+version: 0.2.0
 description: 기획 문서를 입력으로 백엔드 설계 문서를 한국어로 작성한다. 4-Layered DDD를 기준선으로 레이어 매핑, 도메인 모델(애그리거트·엔티티·값 객체), ERD, 유저 스토리 기반 시퀀스 다이어그램을 만들고 테스트 명세의 백엔드 섹션을 채운다. "백엔드 설계해줘", "도메인 모델 만들어줘", "ERD 그려줘", "시퀀스 다이어그램 그려줘"에 반응한다. 특정 프레임워크에 의존하지 않으며 스택은 architecture.md의 결정을 따른다. 이미 있는 코드를 문서화하는 데는 쓰지 않는다 — 그건 reverse-design-backend의 일이다.
 ---
 
@@ -24,6 +24,13 @@ description: 기획 문서를 입력으로 백엔드 설계 문서를 한국어�
 - **백엔드가 없는 프로젝트** — `common-rules.md` §6.1에 따라 "해당 없음"을
   보고하고 멈춘다.
 - **프론트엔드 설계** — `init-design-frontend`
+
+## 개발 설계 진입
+
+planning/state.json이 있으면 승인된 planningVersion과 미결 없음, architecture와
+api-interface의 준비 상태와 designReadyVersion 일치를 확인한다. 기술 설정/API 계약이 없으면 prepare-design을
+먼저 수행한다. 기존 JSON 없는 문서는 명시적 사용자 검토로 승인 버전을 초기화한다.
+산출물의 기준 planningVersion을 artifacts에 등록하며 기획 변경 시 stale로 추적한다.
 
 ## 실행 규약
 

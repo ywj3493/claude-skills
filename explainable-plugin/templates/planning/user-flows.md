@@ -23,7 +23,7 @@
 `../design/frontend/routing.md`가 소유한다.
 -->
 
-> [← 정보 구조](information-architecture.md) | [다음: 인터페이스 계약 →](api-interface.md)
+> [← 정보 구조](information-architecture.md) | [다음: 화면 기능정의 →](screen-spec.md)
 
 # 유저 플로우
 
@@ -182,10 +182,12 @@ domain-map.md의 횡단 흐름 양쪽과 일치해야 한다.
 ---
 > **전체 문서**
 > <!-- 실제 생성된 문서만 남긴다. 현재 문서는 굵게, 링크하지 않는다. -->
+> [서비스 개요](service-brief.md) |
 > [요구사항](requirements.md) |
 > [유저 스토리](user-stories.md) |
 > [정보 구조](information-architecture.md) |
 > **유저 플로우** |
+> [화면 기능정의](screen-spec.md) |
 > [인터페이스 계약](api-interface.md) |
 > [백엔드 설계](../design/backend/layered-architecture.md) |
 > [프론트엔드 설계](../design/frontend/fsd-structure.md) |

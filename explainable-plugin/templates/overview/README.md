@@ -50,12 +50,18 @@
 ```text
 <domain>/
 ├── planning/
+│   ├── service-brief.md     서비스 목적·사용자·성공 기준
+│   ├── reference-materials.md  자료 선택과 스냅샷
+│   ├── decisions.md         제안·가정·사용자 결정
+│   ├── state.json           기획 버전·승인·파생물 상태
 │   ├── requirements.md      요구사항 (FR/NFR/제약)
 │   ├── user-stories.md      유저 스토리와 인수 기준
 │   ├── information-architecture.md  화면 목록·계층·내비게이션 (UI가 있을 때만)
 │   ├── user-flows.md        화면 사이를 지나가는 과업 흐름 (UI가 있을 때만)
+│   ├── screen-spec.md       섹션·요소·동작·상태 (UI 조건부)
 │   ├── api-interface.md     인터페이스 계약
 │   └── traceability.md      FR ↔ US/AC ↔ SCR/UF ↔ FLOW ↔ T 매트릭스
+├── storyboard/             annotations.json, 화면 HTML, 디자인 교환
 ├── design/
 │   ├── backend/             레이어 매핑, 도메인 모델, ERD, 시퀀스 다이어그램
 │   └── frontend/            FSD 구조, 라우팅, UI 구성, 렌더링·상태 흐름
@@ -68,7 +74,7 @@
 ## 문서를 읽는 순서
 
 **기획 의도를 알고 싶다면**: 도메인의 `requirements.md` → `user-stories.md` →
-`information-architecture.md` → `user-flows.md` → `api-interface.md`
+`information-architecture.md` → `user-flows.md` → `screen-spec.md` → `api-interface.md`
 
 **구현 구조를 알고 싶다면**: `architecture.md` → 도메인의
 `design/backend/layered-architecture.md` 또는

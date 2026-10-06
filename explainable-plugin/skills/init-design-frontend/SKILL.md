@@ -1,6 +1,6 @@
 ---
 name: init-design-frontend
-version: 0.2.0
+version: 0.3.0
 description: 기획 문서를 입력으로 프론트엔드 설계 문서를 한국어로 작성한다. FSD(Feature-Sliced Design)를 기준선으로 레이어·슬라이스 구조, 라우팅, UI 구성, 렌더링 흐름, 상태 흐름을 만들고 테스트 명세의 프론트엔드·E2E 섹션을 채운다. 기획의 정보 구조와 유저 플로우는 입력으로 읽을 뿐 다시 만들지 않는다. "프론트엔드 설계해줘", "컴포넌트 설계", "라우팅 설계", "FSD 구조 잡아줘"에 반응한다. React를 가정하지 않으며 프레임워크는 architecture.md의 결정을 따른다. 이미 있는 코드를 문서화하는 데는 쓰지 않는다 — 그건 reverse-design-frontend의 일이다.
 ---
 
@@ -27,6 +27,13 @@ description: 기획 문서를 입력으로 프론트엔드 설계 문서를 한�
   보고하고 멈춘다.
 - **백엔드 설계** — `init-design-backend`
 
+## 개발 설계 진입
+
+planning/state.json이 있으면 승인 버전과 미결 없음, architecture/API 계약의 준비를
+확인하고 designReadyVersion 일치를 검사한다. 미정이면 prepare-design을 먼저 수행한다. screen-spec와 annotations는
+읽기 전용 입력이고 산출물의 기준 planningVersion을 artifacts에 등록한다.
+구현 컴포넌트에 SCR/SEC/CMP/ELM을 연결하고 오버레이·상태는 부모 page 라우트에 대응한다.
+
 ## 실행 규약
 
 `common-rules.md`의 실행 규약 1~9와 `frontend-rules.md` 전체를 따른다.
@@ -35,8 +42,8 @@ description: 기획 문서를 입력으로 프론트엔드 설계 문서를 한�
 1. **입력을 디스크에서 읽는다** (계약 2): `requirements.md`,
    `user-stories.md`, `api-interface.md`, `architecture.md`, `glossary.md`,
    그리고 있으면 `information-architecture.md`와 `user-flows.md`.
-   **뒤의 두 문서는 읽기 전용이다** — 이 스킬은 화면 목록과 유저 플로우를
-   만들지도 고치지도 않는다 (`frontend-rules.md` §3).
+   **뒤의 두 문서의 기획 의미는 읽기 전용이다** — 화면 목록과 사용자 과업은
+   변경하지 않고 단계 6에서 서버 흐름 열의 설계 대기만 FLOW 링크로 채운다 (`frontend-rules.md` §3).
 2. **`FLOW-<도메인>-<라우트 슬러그>` 키를 라우트마다 부여한다.**
 3. **`## 읽은 소스`를 생성하지 않는다** (계약 7). `분석 기준 커밋`은
    "해당 없음".
@@ -105,8 +112,8 @@ docs/<원본 언어>/specifications/<도메인>/
 **템플릿** `templates/design/frontend/routing.md`
 
 1. **`information-architecture.md`가 있으면 그 화면 목록이 라우트의
-   출발점이다.** 화면 하나에 라우트 하나가 기본이며, `대응 화면` 열에 `SCR-`
-   키를 채운다. **기획의 모든 화면이 라우트를 가져야 한다**
+   출발점이다.** page 화면에 라우트를 연결하고 overlay/state는 부모 라우트를 참조하며, `대응 화면` 열에 `SCR-`
+   키를 채운다. **page는 라우트, overlay/state는 부모 라우트에 대응해야 한다**
    (`frontend-rules.md` §4.1). 기획 문서가 없으면 `user-stories.md`의 각
    스토리가 어떤 화면을 필요로 하는지 직접 도출하고 그 열을 `—`로 둔다.
 2. 라우트 트리를 그린다. 동적 구간 표기는 `architecture.md`에 기록된 라우터의

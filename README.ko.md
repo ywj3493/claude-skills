@@ -44,7 +44,12 @@ Requirements)** 이 포함되어 있어, 어떤 모델이 실행하든 결과 �
 
 | 스킬 / 에이전트 | 명령어 / 이름 | 용도 |
 | --- | --- | --- |
-| init-planning | `/explainable:init-planning` | 새 프로젝트: 인프라·프로젝트 설정을 먼저 확정한 뒤 용어집 → 요구사항 → 유저 스토리 → 정보 구조 → 유저 플로우 → 인터페이스 계약 → 추적성 |
+| init-planning | `/explainable:init-planning` | 서비스 목적·자료 → 요구사항·스토리 → IA·플로우·화면 기능정의 → 검토. 기술 스택 미정이어도 진행 |
+| prepare-planning | `/explainable:prepare-planning` | 자료 선택·불변 스냅샷·UI 패턴 HTML 3안 |
+| revise-planning | `/explainable:revise-planning` | 수정 4모드·안정적인 ID·사람 결정 보존·파생물 상태 |
+| build-storyboard | `/explainable:build-storyboard` | 승인 화면의 정적 HTML·배지·기능 설명 |
+| sync-design | `/explainable:sync-design` | 디자인 교환·Figma 매핑·손실·3방향 비교 |
+| prepare-design | `/explainable:prepare-design` | 승인 기획의 기술 설정·인터페이스 계약 |
 | init-design-backend | `/explainable:init-design-backend` | 4-Layered DDD: 레이어 매핑 → 도메인 모델 → ERD → 유저 스토리 기반 시퀀스 다이어그램 |
 | init-design-frontend | `/explainable:init-design-frontend` | FSD: 레이어·슬라이스 구조 → 라우팅 → UI 구성 → 렌더링 흐름 → 상태 흐름. 기획의 화면 목록을 읽고 유저 플로우에 흐름 키를 되먹임 |
 | reverse-design-backend | `/explainable:reverse-design-backend` | 기존 백엔드: 인프라 → 코드베이스 → 도메인 → 오퍼레이션별 Source-Linked 시퀀스 다이어그램 → 도메인 모델·ERD |
@@ -150,7 +155,12 @@ translation_languages: []
 
 ```text
 새 프로젝트 (기획 먼저)
-  └─ /explainable:init-planning            인프라·프로젝트 설정, 그다음 기획 문서
+  └─ /explainable:prepare-planning         자료 스냅샷·UI 패턴 3안
+      └─ /explainable:init-planning        서비스·화면 기획·검토
+      └─ /explainable:build-storyboard     정적 HTML·배지 설명
+      ↔ /explainable:revise-planning       범위별 수정·파생물 영향 추적
+      ↔ /explainable:sync-design           외부 디자인 교환·충돌 검토
+      └─ /explainable:prepare-design       기술 설정·인터페이스 계약
       └─ /explainable:init-design-backend      4-Layered DDD
       └─ /explainable:init-design-frontend     FSD
           └─ /explainable:translate-docs       번역 미러

@@ -2,7 +2,7 @@
 템플릿: 도메인 기획 문서 (requirements.md)
 
 내비게이션 규칙은 `${CLAUDE_PLUGIN_ROOT}/references/document-order.md`를
-읽고 적용한다. 이 문서는 도메인 체인의 첫 문서이므로 이전 링크가 없다.
+읽고 적용한다. service-brief가 있으면 이전 링크로 연결하고, 없으면 체인의 첫 문서다.
 
 **기술 중립 문서다.** 다음 스왑 테스트를 문장 단위로 통과해야 한다:
 Python을 Java로, REST를 GraphQL로, PostgreSQL을 MongoDB로 바꿔도 문장이
@@ -12,7 +12,7 @@ Python을 Java로, REST를 GraphQL로, PostgreSQL을 MongoDB로 바꿔도 문장
 `[REF: path:line]` 인용은 예외다 — 기술 내용이 아니라 출처 표시다.
 -->
 
-> [다음: 유저 스토리 →](user-stories.md)
+> [← 서비스 개요](service-brief.md) | [다음: 유저 스토리 →](user-stories.md)
 
 # 요구사항
 
@@ -24,7 +24,7 @@ Python을 Java로, REST를 GraphQL로, PostgreSQL을 MongoDB로 바꿔도 문장
 뽑는다 — 검증 로직, 권한 체크, 비즈니스 규칙 분기, 타임아웃·재시도 설정.
 "엔드포인트가 존재한다"는 요구사항이 아니다.
 
-순방향 생성 시: 인용 없이 사용자와 합의한 내용을 기록하고 `## 읽은 소스`
+순방향 생성 시: 코드 인용 없이 사용자와 합의한 내용을 자료/결정 ID에 연결하고 `## 읽은 소스`
 섹션을 통째로 삭제한다.
 -->
 
@@ -186,10 +186,12 @@ SCALE(확장성), OPS(운영), A11Y(접근성), I18N(국제화).
 ---
 > **전체 문서**
 > <!-- 실제 생성된 문서만 남긴다. 현재 문서는 굵게, 링크하지 않는다. -->
+> [서비스 개요](service-brief.md) |
 > **요구사항** |
 > [유저 스토리](user-stories.md) |
 > [정보 구조](information-architecture.md) |
 > [유저 플로우](user-flows.md) |
+> [화면 기능정의](screen-spec.md) |
 > [인터페이스 계약](api-interface.md) |
 > [백엔드 설계](../design/backend/layered-architecture.md) |
 > [프론트엔드 설계](../design/frontend/fsd-structure.md) |

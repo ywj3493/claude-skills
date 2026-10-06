@@ -3,6 +3,72 @@
 All notable changes to skills and plugins in this project are documented here.
 Entries are ordered newest first. Format follows [Keep a Changelog](https://keepachangelog.com/).
 
+## [explainable/v0.4.0] - 2026-10-05
+
+### Added
+- Reference-based planning, immutable SHA-256 snapshots, decision records, screen specifications, stable section/component/element IDs, versioned approval, and stale artifact tracking (Refs: #43, #42).
+- Five skills: prepare-planning, revise-planning, build-storyboard, prepare-design, sync-design.
+- Standard-library planning-tools.py for snapshot validation, document mode classification, four revision modes, version archives/restoration, hashed development readiness, static HTML and badge descriptions, design exchange, and three-way conflict/loss reports.
+- Shared storyboard-rules and service/reference/decision/screen/state/annotation templates.
+
+### Changed
+- Planning starts from service needs without requiring a technology stack. Technical settings and concrete API contracts move to prepare-design.
+- Screen semantics belong to planning; implementation structure belongs to frontend design. Overlays and state variants map to their parent page route.
+- Only affected scoped artifacts become stale; unchanged HTML retains its generation version and is verified for reuse without rewriting.
+- Explicit mode/producer metadata takes priority over source-ledger presence; legacy ambiguous documents are preserved for review.
+- Document checks include structured planning/HTML invariants and exclude immutable archives and source snapshots. The checker supports macOS Bash 3.
+- Figma integration uses a documented file exchange contract with actual connector capability/loss reporting; no bundled BSS Sync, vector index, or universal Figma converter is claimed.
+
+## [prepare-planning/v0.0.1] - 2026-10-05
+
+### Added
+- Reference selection, snapshot registration, skill amendment review, and three comparable HTML UI pattern proposals.
+
+## [revise-planning/v0.0.1] - 2026-10-05
+
+### Added
+- Four scoped revision modes with retained decisions, stable IDs, replacement records, and downstream impact tracking.
+
+## [build-storyboard/v0.0.1] - 2026-10-05
+
+### Added
+- Approved annotations into local static HTML with badges and generated description panels.
+
+## [prepare-design/v0.0.1] - 2026-10-05
+
+### Added
+- Approved planning into technology settings, infrastructure, architecture, and concrete interface contracts.
+
+## [sync-design/v0.0.1] - 2026-10-05
+
+### Added
+- Design exchange packages, Figma mapping requirements, three-way change review, and explicit loss/unsupported reports.
+
+## [init-planning/v0.3.0] - 2026-10-05
+
+### Changed
+- Service-first planning with UI-dependent screen definitions, evidence/decision tracking, and exact-version approval.
+
+## [init-design-backend/v0.2.0] - 2026-10-05
+
+### Changed
+- Validate approved planning and prepare-design inputs; register the planning version of generated design artifacts.
+
+## [init-design-frontend/v0.3.0] - 2026-10-05
+
+### Changed
+- Read screen/element semantics, map implementation components to stable IDs, and route overlay/state screens through parent pages.
+
+## [reverse-planning/v0.3.0] - 2026-10-05
+
+### Changed
+- Classify document provenance explicitly and preserve forward decisions, snapshots, archives, and design exchange artifacts.
+
+## [translate-docs/v0.2.0] - 2026-10-05
+
+### Changed
+- Preserve evidence, section/component/element/decision IDs and versions; exclude archived and machine/visual artifacts from translation.
+
 ## [explainable/v0.3.0] - 2026-07-30
 
 ### Added
