@@ -3,6 +3,47 @@
 All notable changes to skills and plugins in this project are documented here.
 Entries are ordered newest first. Format follows [Keep a Changelog](https://keepachangelog.com/).
 
+## [explainable/v0.4.0] - 2026-10-07
+
+### Added
+- The `backend-implementation` skill, the first explainable skill whose output is code rather than documents. The plugin's forward pipeline used to stop at design, even though four templates (`architecture.md`, `layered-architecture.md`, `glossary.md`, plus the `FLOW-` keys assigned by `init-design-backend`) already called themselves the contract a "future implementation skill" would consume (Refs: #45)
+- `references/backend-implementation-rules.md` holds the framework-neutral rules for turning the design into 4-Layered DDD code:
+  - a decision-priority order, and a dependency-direction table meant to be enforced by a tool
+  - per-layer rules: aggregates, value objects, domain services, repository and other ports, domain exceptions, thin use cases, CQRS read paths, adapters, centralized error translation
+  - the composition root and a layer-by-layer test strategy (fakes, not mocks, at the application layer)
+  - a rule that every pragmatic compromise is recorded in `## 규약 예외`
+  - a 15-item self-review checklist
+
+  These are distilled from the user-supplied DDD reading notes. They are restated here rather than referenced, because `docs/reference/` is user-managed and may not be `@`-referenced (Refs: #45)
+- `references/stacks/python-fastapi.md` is the first stack profile. It is modelled on an in-house FastAPI + Redis 4-Layer DDD service:
+  - kept: context → layer → kind folders, ABC ports in the domain, the `Depends` provider chain, and pytest-describe tests with real fakes under `tests/doubles/`
+  - fixed, where the service departed from the rules: mutable value objects, entity-side serialization, `Settings` injected into use cases, infrastructure importing application exceptions, per-endpoint try/except, and tokens written to INFO logs
+
+  Its code samples and the import-linter contracts were assembled into a scratch project and pass `pytest`, `ruff`, and `lint-imports`. A deliberate violation was confirmed to break the contracts. That dry run is also why the Presentation contract alone sets `allow_indirect_imports` (controllers reach adapters through the composition root via `Depends`) and why tests ignore ruff `N802` (pytest-describe's `describe_<ClassName>`) (Refs: #45)
+
+### Changed
+- Stack profiles carve out the one exception to the plugin's framework neutrality. A code-writing skill cannot work without language idioms, so neutral rules and stack idioms are kept in separate files, and only the profile matching the stack in `architecture.md` is loaded. The plugin README documents this under 프레임워크 중립성 (Refs: #45)
+- The backend matrix in `templates/verification/test-spec.md` names `backend-implementation` as a co-writer of the `상태`/`근거` columns only. A row becomes `구현됨` only when a test carrying that T-ID passes (Refs: #45)
+- The "future implementation skill" comments in `architecture.md`, `layered-architecture.md`, and `glossary.md` now name `backend-implementation`. The frontend `fsd-structure.md` comment is unchanged because no frontend implementation skill exists yet (Refs: #45)
+- `plugin.json` and the marketplace description mention implementation and stack profiles, and gain the `implementation` keyword (Refs: #45)
+
+### Fixed
+- The plugin README's component table still listed user flows under `init-design-frontend` and left information architecture out of `init-planning`, both stale since v0.3.0. The shared-rules table also said `common-rules.md` is read by seven skills; it is now eight (Refs: #45)
+
+## [backend-implementation/v0.0.1] - 2026-10-07
+
+### Added
+- Initial version. It reads the `init-design-backend` outputs, `architecture.md`'s `## 아키텍처 규약`, `api-interface.md`, and `glossary.md` from disk, then works through steps 0–6 with review gates:
+  - **Step 0** picks the stack profile (or asks for idioms when none exists) and builds an implementation plan per `FLOW-` key.
+  - **Step 1** creates the skeleton and the dependency-direction contract.
+  - **Step 2** writes the domain layer test-first, one aggregate at a time.
+  - **Step 3** builds one vertical slice per FLOW (application → infrastructure → presentation → wiring), each green before the next.
+  - **Step 4** runs full verification plus the self-review checklist.
+  - **Step 5** updates test-spec status and `[REF:]` citations, verified by `check-docs.sh` and a scoped `citation-verifier` pass.
+  - **Step 6** writes the completion report.
+
+  It never invents design elements, and it never commits. The only documents it edits are the test-spec `상태`/`근거` columns and test file structure, plus approved path and rule-exception rows in `layered-architecture.md` (Refs: #45)
+
 ## [explainable/v0.3.0] - 2026-07-30
 
 ### Added

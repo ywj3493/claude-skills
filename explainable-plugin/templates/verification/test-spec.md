@@ -68,11 +68,14 @@
 ## 백엔드 테스트 매트릭스
 
 <!-- OWNER: init-design-backend / reverse-design-backend -->
+<!-- `상태`·`근거` 열은 backend-implementation도 갱신한다. 다른 열은 소유자만 쓴다. -->
 <!-- 백엔드가 없는 프로젝트에서는 이 섹션과 목차 항목을 삭제한다. -->
 
 <!--
 `근거` 열: 역방향에서 실제 테스트 코드를 찾았으면 `[REF: path:line]`,
 못 찾았으면 비워 두고 `상태`를 `미구현`으로 한다.
+`backend-implementation`은 그 T-ID를 단 테스트가 통과했을 때만 `구현됨`과
+테스트 정의 줄의 `[REF: path:line]`을 쓴다.
 -->
 
 | 테스트 ID | 대상 | 인수 기준 | 유형 | 설명 | 우선순위 | 상태 | 근거 |

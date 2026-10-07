@@ -5,7 +5,8 @@
 두 방향을 모두 지원합니다.
 
 - **새 프로젝트에서 시작** — 인프라·프로젝트 설정을 먼저 확정하고, 요구사항 →
-  유저 스토리 → 인터페이스 계약 순으로 기획한 뒤 설계로 넘어갑니다.
+  유저 스토리 → 인터페이스 계약 순으로 기획한 뒤 설계로 넘어갑니다. 백엔드는
+  설계 문서를 입력으로 4-Layered DDD 코드까지 구현할 수 있습니다.
 - **기존 코드베이스 분석** — 인프라 → 코드베이스 구조 → 도메인별 설계를 먼저
   뽑고, **그 결과물로부터** 요구사항과 유저 스토리를 역산합니다.
 
@@ -18,9 +19,10 @@
 
 | 종류 | 명령어 / 이름 | 용도 |
 | --- | --- | --- |
-| 스킬 | `/explainable:init-planning` | 새 프로젝트 기획: 인프라·프로젝트 설정 → 용어집 → 요구사항(FR/NFR) → 유저 스토리(US/AC) → 인터페이스 계약 → 도메인 간 통합 → 추적성 매트릭스 |
+| 스킬 | `/explainable:init-planning` | 새 프로젝트 기획: 인프라·프로젝트 설정 → 용어집 → 요구사항(FR/NFR) → 유저 스토리(US/AC) → 정보 구조 → 유저 플로우(UI가 있을 때) → 인터페이스 계약 → 도메인 간 통합 → 추적성 매트릭스 |
 | 스킬 | `/explainable:init-design-backend` | 4-Layered DDD 설계: 레이어 매핑 → 도메인 모델 → ERD(조건부) → 유저 스토리 기반 시퀀스 다이어그램 |
-| 스킬 | `/explainable:init-design-frontend` | FSD 설계: 레이어/슬라이스 구조 → 라우팅 → UI 구성 → 렌더링 흐름 → 상태 흐름 → 유저 플로우 |
+| 스킬 | `/explainable:backend-implementation` | 설계 문서로 4-Layered DDD 백엔드 구현: 골격·의존 방향 계약 → 도메인 계층 → FLOW별 응용·인프라·표현 수직 슬라이스(테스트 우선) → 전체 검증 → 테스트 명세 상태·근거 갱신 |
+| 스킬 | `/explainable:init-design-frontend` | FSD 설계: 레이어/슬라이스 구조 → 라우팅 → UI 구성 → 렌더링 흐름 → 상태 흐름. 기획의 화면 목록을 읽고 유저 플로우에 흐름 키를 되써 넣는다 |
 | 스킬 | `/explainable:reverse-design-backend` | 기존 백엔드 분석: 인프라 → 코드베이스 → 도메인 식별 → 오퍼레이션별 Source-Linked 시퀀스 다이어그램 → 도메인 모델·ERD 역추출 |
 | 스킬 | `/explainable:reverse-design-frontend` | 기존 프론트엔드 분석: 인프라 → 프레임워크 감지 → FSD 적합도 판정 → 앱 셸 + 라우트별 코드·렌더링 흐름 추적 |
 | 스킬 | `/explainable:reverse-planning` | 설계 문서와 코드 근거로부터 요구사항·유저 스토리를 역산. 순방향 기획 문서는 덮어쓰지 않고 차이 리포트를 만든다 |
@@ -36,6 +38,7 @@
 새 프로젝트
   /explainable:init-planning              인프라·설정 + 기획 문서
     └─ /explainable:init-design-backend       4-Layered DDD 설계
+        └─ /explainable:backend-implementation    설계대로 백엔드 코드 구현
     └─ /explainable:init-design-frontend      FSD 설계
         └─ /explainable:translate-docs        번역 미러
 
@@ -74,6 +77,11 @@ docs/<source>/specifications/
 기획 계층에서 정합니다 — 화면 안의 배치는 `component-tree.md`, 화면에 대응하는
 주소는 `routing.md`가 소유합니다. 설계 스킬은 두 문서를 **읽기만** 합니다.
 
+`backend-implementation`의 산출물은 문서가 아니라 **코드와 테스트**입니다.
+문서는 구현 결과를 반영하는 범위에서만 고칩니다 — `test-spec.md` 백엔드
+매트릭스의 `상태`·`근거` 열(통과한 테스트만 `구현됨` + `[REF:]`)과 테스트 파일
+구조, 그리고 승인받은 경우 `layered-architecture.md`의 경로와 규약 예외.
+
 `README.md`, `architecture.md`, `infrastructure.md`, `glossary.md`,
 `domain-map.md`, `test-spec.md`는 여러 스킬이 공유하는 **병합 전용** 문서입니다.
 각 스킬은 `<!-- OWNER: ... -->` 마커로 표시된 자기 섹션만 쓰고, 나머지는 바이트
@@ -88,10 +96,12 @@ docs/<source>/specifications/
 
 | 파일 | 담는 것 | 읽는 스킬 |
 | --- | --- | --- |
-| `common-rules.md` | 문서 환경 감지, 실행 규약 9항목, 검증 루프, 완료 리포트, 문서 규칙, 공통 경계 규칙 | 7종 전부 |
+| `common-rules.md` | 문서 환경 감지, 실행 규약 9항목, 검증 루프, 완료 리포트, 문서 규칙, 공통 경계 규칙 | 8종 전부 |
 | `reverse-rules.md` | 인용 계약, Source-Linked 시퀀스 규약, 재실행·폐기 정책, 탐색 에이전트 호출 규약 | `reverse-*` 3종 |
 | `frontend-rules.md` | 프레임워크 중립 어휘, FSD 기준선, 문서 간 책임 경계 | `*-design-frontend` 2종 |
 | `planning-rules.md` | ID 체계, 스왑 테스트, 인수 기준 형식, 계약 블록 선택 | `*-planning` 2종 |
+| `backend-implementation-rules.md` | 결정 우선순위, 의존 방향 표, 계층별 DDD 구현 원칙, 테스트 전략, 실용적 타협의 기록 규칙, 자체 검토 체크리스트 | `backend-implementation` |
+| `stacks/<언어>-<프레임워크>.md` | 스택 프로파일 — 디렉터리, 관용구, 의존 방향 계약 설정, 검증 명령. 현재 `python-fastapi.md` | `backend-implementation` (감지된 스택 1개만) |
 | `document-order.md` | 문서 정규 순서와 내비게이션 링크 규칙 | `common-rules.md`가 참조 |
 
 ## 프레임워크 중립성
@@ -103,6 +113,12 @@ docs/<source>/specifications/
 1. **감지된 사실** — 매니페스트·설정 파일에서 읽어 `[REF: path:line]`과 함께
    `architecture.md` / `infrastructure.md`에 기록
 2. **사용자가 정한 결정** — 인프라·프로젝트 설정 단계에서 사용자가 고른 값
+
+**예외는 스택 프로파일**(`references/stacks/`)입니다. 코드를 쓰는
+`backend-implementation`은 언어·프레임워크 관용구 없이 동작할 수 없으므로,
+프레임워크 중립 규칙(`backend-implementation-rules.md`)과 스택별 관용구를
+분리해 두고 `architecture.md`가 정한 스택의 프로파일 하나만 로드합니다.
+프로파일이 없는 스택이면 중립 규칙으로 진행하되 관용구를 사용자에게 묻습니다.
 
 `api-interface.md`도 REST/OpenAPI를 전제하지 않습니다. 문서 구조는 고정이고,
 계약 블록 형식만 확정된 API 스타일에 따라 달라집니다 — REST면 OpenAPI 3.1,
