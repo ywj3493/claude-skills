@@ -4,7 +4,8 @@
 [Claude Code](https://claude.com/claude-code) 스킬 모음입니다 — 표준화된
 `docs/` 구조, 기획 파이프라인, 근거 기반 역문서화, 번역 미러를 두 개의
 플러그인으로 배포합니다 — **dev-docs**(영어)와 **explainable**(한국어,
-프론트엔드와 백엔드 설계를 분리).
+프론트엔드와 백엔드 설계를 분리하고, 설계를 4-Layered DDD 코드로 옮기는 백엔드
+구현 스킬 포함).
 
 English documentation: [README.md](README.md)
 
@@ -46,6 +47,7 @@ Requirements)** 이 포함되어 있어, 어떤 모델이 실행하든 결과 �
 | --- | --- | --- |
 | init-planning | `/explainable:init-planning` | 새 프로젝트: 인프라·프로젝트 설정을 먼저 확정한 뒤 용어집 → 요구사항 → 유저 스토리 → 정보 구조 → 유저 플로우 → 인터페이스 계약 → 추적성 |
 | init-design-backend | `/explainable:init-design-backend` | 4-Layered DDD: 레이어 매핑 → 도메인 모델 → ERD → 유저 스토리 기반 시퀀스 다이어그램 |
+| backend-implementation | `/explainable:backend-implementation` | 백엔드 설계를 4-Layered DDD 코드로 구현: 골격·의존 방향 계약 → 도메인 계층 → `FLOW-` 키별 테스트 우선 수직 슬라이스 → 전체 검증 → 테스트 명세 상태·근거 갱신. 언어별 관용구는 스택 프로파일(현재 Python + FastAPI)에서 읽음 |
 | init-design-frontend | `/explainable:init-design-frontend` | FSD: 레이어·슬라이스 구조 → 라우팅 → UI 구성 → 렌더링 흐름 → 상태 흐름. 기획의 화면 목록을 읽고 유저 플로우에 흐름 키를 되먹임 |
 | reverse-design-backend | `/explainable:reverse-design-backend` | 기존 백엔드: 인프라 → 코드베이스 → 도메인 → 오퍼레이션별 Source-Linked 시퀀스 다이어그램 → 도메인 모델·ERD |
 | reverse-design-frontend | `/explainable:reverse-design-frontend` | 기존 프론트엔드: 인프라 → 프레임워크 감지 → FSD 적합도 → 앱 셸 → 라우트별 코드·렌더링 흐름 |
@@ -152,6 +154,7 @@ translation_languages: []
 새 프로젝트 (기획 먼저)
   └─ /explainable:init-planning            인프라·프로젝트 설정, 그다음 기획 문서
       └─ /explainable:init-design-backend      4-Layered DDD
+          └─ /explainable:backend-implementation   설계 → 코드, 테스트 우선
       └─ /explainable:init-design-frontend     FSD
           └─ /explainable:translate-docs       번역 미러
 
@@ -183,6 +186,7 @@ dev-docs-plugin/          # dev-docs 플러그인 (.claude-plugin/plugin.json)
 explainable-plugin/       # explainable 플러그인 (한국어; .claude-plugin/plugin.json)
   skills/init-planning/            # /explainable:init-planning
   skills/init-design-backend/      # /explainable:init-design-backend
+  skills/backend-implementation/   # /explainable:backend-implementation
   skills/init-design-frontend/     # /explainable:init-design-frontend
   skills/reverse-design-backend/   # /explainable:reverse-design-backend
   skills/reverse-design-frontend/  # /explainable:reverse-design-frontend
@@ -191,7 +195,8 @@ explainable-plugin/       # explainable 플러그인 (한국어; .claude-plugin/
   agents/                 # infra-explorer, operation-tracer, render-flow-tracer, citation-verifier
   templates/              # overview/, planning/, design/{backend,frontend}/, verification/
   references/             # 스킬이 로드하는 공유 규약: common-, reverse-,
-                          # frontend-, planning-rules.md + document-order.md
+                          # frontend-, planning-, backend-implementation-rules.md
+                          # + document-order.md, stacks/에 스택 프로파일
   scripts/check-docs.sh   # ID·링크·자리표시자·펜스 결정적 검사
 templates/
   CLAUDE.md               # 새 프로젝트용 표준 CLAUDE.md (init-docs 번들 템플릿과 동일)

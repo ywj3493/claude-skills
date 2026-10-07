@@ -4,7 +4,8 @@ Reusable [Claude Code](https://claude.com/claude-code) skills for a
 docs-driven development workflow — a standardized `docs/` structure,
 planning pipelines, citation-verified reverse-engineering docs, and
 translation mirrors — distributed as two plugins: **dev-docs** (English)
-and **explainable** (Korean, with frontend and backend design split apart).
+and **explainable** (Korean, with frontend and backend design split apart,
+plus a backend implementation skill that turns the design into 4-Layered DDD code).
 
 한국어 문서: [README.ko.md](README.ko.md)
 
@@ -45,6 +46,7 @@ design-first, and exploration subagents each have one narrow job.
 | --- | --- | --- |
 | init-planning | `/explainable:init-planning` | New project: infrastructure and project setup first, then glossary → requirements → user stories → information architecture → user flows → interface contract → traceability |
 | init-design-backend | `/explainable:init-design-backend` | 4-Layered DDD: layer mapping → domain model → ERD → user-story-based sequence diagrams |
+| backend-implementation | `/explainable:backend-implementation` | Implements the backend design as 4-Layered DDD code: skeleton and dependency-direction contracts → domain layer → one test-first vertical slice per `FLOW-` key → full verification → test-spec status and citations; stack idioms come from a stack profile (currently Python + FastAPI) |
 | init-design-frontend | `/explainable:init-design-frontend` | FSD: layer/slice structure → routing → UI composition → render flow → state flow; reads the planning screen list and writes flow keys back into it |
 | reverse-design-backend | `/explainable:reverse-design-backend` | Existing backend: infra → codebase → domain → per-operation Source-Linked sequence diagrams → domain model and ERD |
 | reverse-design-frontend | `/explainable:reverse-design-frontend` | Existing frontend: infra → framework detection → FSD fit → app shell → per-route code and render flow |
@@ -153,6 +155,7 @@ depending on whether the code exists yet:
 New project (planning first)
   └─ /explainable:init-planning            infra + project setup, then planning docs
       └─ /explainable:init-design-backend      4-Layered DDD
+          └─ /explainable:backend-implementation   design → code, test-first
       └─ /explainable:init-design-frontend     FSD
           └─ /explainable:translate-docs       translation mirror
 
@@ -185,6 +188,7 @@ dev-docs-plugin/          # dev-docs plugin (.claude-plugin/plugin.json)
 explainable-plugin/       # explainable plugin (Korean; .claude-plugin/plugin.json)
   skills/init-planning/            # /explainable:init-planning
   skills/init-design-backend/      # /explainable:init-design-backend
+  skills/backend-implementation/   # /explainable:backend-implementation
   skills/init-design-frontend/     # /explainable:init-design-frontend
   skills/reverse-design-backend/   # /explainable:reverse-design-backend
   skills/reverse-design-frontend/  # /explainable:reverse-design-frontend
@@ -193,7 +197,8 @@ explainable-plugin/       # explainable plugin (Korean; .claude-plugin/plugin.js
   agents/                 # infra-explorer, operation-tracer, render-flow-tracer, citation-verifier
   templates/              # overview/, planning/, design/{backend,frontend}/, verification/
   references/             # shared rules the skills load: common-, reverse-,
-                          # frontend-, planning-rules.md + document-order.md
+                          # frontend-, planning-, backend-implementation-rules.md
+                          # + document-order.md; stacks/ holds stack profiles
   scripts/check-docs.sh   # deterministic ID, link, placeholder, and fence checks
 templates/
   CLAUDE.md               # Standard CLAUDE.md for new projects (same as init-docs' bundled template)
