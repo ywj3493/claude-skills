@@ -49,13 +49,13 @@ design-first, and exploration subagents each have one narrow job.
 | backend-implementation | `/explainable:backend-implementation` | Implements the backend design as 4-Layered DDD code: skeleton and dependency-direction contracts → domain layer → one test-first vertical slice per `FLOW-` key → full verification → test-spec status and citations; stack idioms come from a stack profile (currently Python + FastAPI) |
 | init-design-frontend | `/explainable:init-design-frontend` | FSD: layer/slice structure → routing → UI composition → render flow → state flow; reads the planning screen list and writes flow keys back into it |
 | reverse-design-backend | `/explainable:reverse-design-backend` | Existing backend: infra → codebase → domain → per-operation Source-Linked sequence diagrams → domain model and ERD |
-| reverse-design-frontend | `/explainable:reverse-design-frontend` | Existing frontend: infra → framework detection → FSD fit → app shell → per-route code and render flow |
+| reverse-design-frontend | `/explainable:reverse-design-frontend` | Existing frontend: infra → framework detection → route/domain identification → FSD fit → app shell → per-route code and render flow |
 | reverse-planning | `/explainable:reverse-planning` | Derives requirements, user stories, the screen list, and user flows from the design docs plus code evidence; never overwrites forward-written planning docs |
 | translate-docs | `/explainable:translate-docs` | Audit and sync translation mirrors, or opt in to mirroring |
 | infra-explorer | `infra-explorer` (agent) | Read-only: deployment, CI/CD, environment, and external-service facts, each cited |
 | operation-tracer | `operation-tracer` (agent) | Read-only: one backend operation's call chain, protocol-neutral |
 | render-flow-tracer | `render-flow-tracer` (agent) | Read-only: one route's code flow and render flow, framework-neutral |
-| citation-verifier | `citation-verifier` (agent) | Read-only: checks every citation against source; same contract as `doc-verifier` |
+| citation-verifier | `citation-verifier` (agent) | Read-only: checks every citation against source; `doc-verifier`'s contract plus a scope input and an absence-record rule |
 
 Backend design uses 4-Layered DDD and frontend uses FSD as baselines, but
 the plugin is **framework-neutral** — it never assumes React, and concrete

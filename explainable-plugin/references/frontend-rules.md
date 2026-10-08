@@ -66,6 +66,11 @@ app → pages → widgets → features → entities → shared
 만들지도 고치지도 않는다. 두 계층의 접점은 `routing.md`의 `대응 화면` 열
 하나다 — 기획의 `SCR-` 키에 실제 라우트를 대응시킨다.
 
+**유일한 예외**: `init-design-frontend`는 `user-flows.md`의 `서버 흐름`
+열에서 `설계 대기`를 설계가 부여한 `FLOW-` 키 링크로 바꾼다. 기획 단계가
+비워 두고 설계 단계가 채우도록 정해진 칸이기 때문이다. 그 외의 내용은
+바이트 단위로 보존한다.
+
 지역/공유의 경계는 **"그 라우트를 벗어나도 살아 있는가"**다. 역방향에서는
 `render-flow-tracer`가 반환한 `state` 항목의 `scope` 값이 이 배분을
 결정한다: `local`은 `render-flow.md`, `shared`와 `server`는
@@ -80,8 +85,10 @@ app → pages → widgets → features → entities → shared
    열을 채우고, `information-architecture.md`에 있는데 라우트가 없는 `SCR-`은
    `traceability.md`의 미연결 항목으로 내린다. 유저 플로우 자체의 작성 규칙은
    `planning-rules.md` §5가 소유한다.
-2. **앱 셸은 한 번만 기술한다.** 라우트마다 다시 추적하면 N개의 동일한
-   추적이 생기고 곧 서로 어긋난다. 다른 도메인 문서에 이미 앱 셸이 있으면
+2. **앱 셸은 저장소에 한 번만 기술한다.** 라우트마다 다시 추적하면 N개의
+   동일한 추적이 생기고 곧 서로 어긋난다. 처음 앱 셸을 쓰는 스킬 실행이
+   그때 다루는 도메인 중 **도메인 표의 첫 행**의 `render-flow.md`에
+   `## 앱 셸`을 쓴다. 다른 도메인 문서에 이미 앱 셸이 있으면 그 섹션을
    링크만 하고 반복하지 않는다.
 3. **라우트 목록의 `관련 스토리` 열을 반드시 채운다.** 어느 스토리와도
    연결되지 않는 라우트는 `traceability.md`의 미연결 항목으로 내린다.

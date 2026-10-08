@@ -24,7 +24,7 @@
 | 스킬 | `/explainable:backend-implementation` | 설계 문서로 4-Layered DDD 백엔드 구현: 골격·의존 방향 계약 → 도메인 계층 → FLOW별 응용·인프라·표현 수직 슬라이스(테스트 우선) → 전체 검증 → 테스트 명세 상태·근거 갱신 |
 | 스킬 | `/explainable:init-design-frontend` | FSD 설계: 레이어/슬라이스 구조 → 라우팅 → UI 구성 → 렌더링 흐름 → 상태 흐름. 기획의 화면 목록을 읽고 유저 플로우에 흐름 키를 되써 넣는다 |
 | 스킬 | `/explainable:reverse-design-backend` | 기존 백엔드 분석: 인프라 → 코드베이스 → 도메인 식별 → 오퍼레이션별 Source-Linked 시퀀스 다이어그램 → 도메인 모델·ERD 역추출 |
-| 스킬 | `/explainable:reverse-design-frontend` | 기존 프론트엔드 분석: 인프라 → 프레임워크 감지 → FSD 적합도 판정 → 앱 셸 + 라우트별 코드·렌더링 흐름 추적 |
+| 스킬 | `/explainable:reverse-design-frontend` | 기존 프론트엔드 분석: 인프라 → 프레임워크 감지 → 라우트·도메인 식별 → FSD 적합도 판정 → 앱 셸 + 라우트별 코드·렌더링 흐름 추적 |
 | 스킬 | `/explainable:reverse-planning` | 설계 문서와 코드 근거로부터 요구사항·유저 스토리를 역산. 순방향 기획 문서는 덮어쓰지 않고 차이 리포트를 만든다 |
 | 스킬 | `/explainable:translate-docs` | 번역 미러 감사 및 동기화. 번역 언어가 없으면 미러링 옵트인을 제안 |
 | 에이전트 | `infra-explorer` | 배포·CI/CD·환경변수·외부 서비스 사실 수집 (읽기 전용) |
@@ -132,7 +132,8 @@ GraphQL이면 SDL, gRPC면 `.proto`, 이벤트 기반이면 AsyncAPI.
 - 문서마다 `## 읽은 소스` 원장
 - `citation-verifier`가 인용을 실제 소스와 대조하고, 시퀀스 다이어그램은
   보이는 `Note`와 숨김 `CALLGRAPH` 블록을 양방향으로 교차 검증
-- 미해결 `MISMATCHED`/`UNSUPPORTED`가 남아 있으면 완료를 보고하지 않음
+- `MISMATCHED`/`UNSUPPORTED`가 남아 있으면 완료를 보고하지 않음. 수정·재검증은
+  문서당 최대 3회이며, 그래도 남으면 검증 실패로 보고하고 사용자 결정을 기다림
 
 순방향 문서는 코드가 없어 인용할 대상이 없으므로 `## 읽은 소스`를 넣지 않고,
 대신 `scripts/check-docs.sh`가 ID 추적성·링크 무결성·자리표시자 잔존·mermaid
@@ -187,9 +188,12 @@ claude --plugin-dir ./explainable-plugin
 | 이슈 관리 | 정책으로 포함 | 범위 제외 |
 | 출력 티어 | Lite / Full | 없음 (오퍼레이션 선별 게이트로 대체) |
 
-`citation-verifier`는 `dev-docs`의 `doc-verifier`를 이식한 것으로 **검증 계약이
-동일**합니다. 두 플러그인에서 같은 이름의 에이전트가 서로 다르게 진화하는 것을
-막기 위해 이름만 다르게 두었습니다.
+`citation-verifier`는 `dev-docs`의 `doc-verifier`를 이식한 것으로 판정 어휘와
+리포트 형식이 같습니다. 여기에 두 가지를 더했습니다: 일부 섹션·행만 검사하는
+**검증 범위** 입력(`backend-implementation`이 테스트 명세의 이번 행만 검증할 때
+씀)과, `상태: 미구현`·`없음 — 확인한 경로` 같은 **부재 기록은 주장으로 세지
+않는** 규칙입니다. 두 플러그인에서 같은 이름의 에이전트가 섞이지 않도록 이름을
+다르게 두었습니다.
 
 도메인이 여러 개인 저장소에서 영어 DDD 컨텍스트 맵이 필요하면
 `/dev-docs:domain-overview`가 별도로 있습니다. 이 플러그인의 `domain-map.md`는
