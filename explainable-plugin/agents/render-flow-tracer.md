@@ -2,7 +2,7 @@
 name: render-flow-tracer
 description: 프론트엔드의 앱 셸 또는 라우트 하나의 코드 흐름과 렌더링 흐름을 추적하는 읽기 전용 탐색 에이전트. 진입점, UI 단위 트리, 데이터 조회, 상태 소스, 렌더링 경계, 재렌더 유발 요인을 각각 [REF: 경로:줄번호]와 함께 고정 스키마로 반환한다. 프레임워크 중립이며 감지된 프레임워크 정보를 입력으로 받는다. reverse-design-frontend가 셸 1회와 라우트마다 한 번씩 호출한다. 파일을 절대 쓰지 않는다.
 tools: Read, Grep, Glob
-version: 0.0.1
+version: 0.0.2
 ---
 
 # render-flow-tracer
@@ -47,7 +47,8 @@ version: 0.0.1
 | 라우트 정의 파일 패턴 | 라우트 경계를 찾는 기준 |
 | FSD 레이어 ↔ 디렉터리 매핑 | `fsd_slice` 값을 여기서 고른다 |
 | 셸 추적 요약 | `route` 모드에서 셸을 재추적하지 않기 위함 |
-| 용어집 항목 | 이름을 지어내지 않고 여기서 고른다 |
+| 도메인 이름 | `route` 모드의 `domain` 값. `shell` 모드에서는 주지 않는다 |
+| 용어집 항목 | 이름을 지어내지 않고 여기서 고른다. 비어 있거나 해당 항목이 없으면 코드의 심볼 이름을 그대로 쓴다 |
 
 **FSD 값은 반드시 입력받은 매핑에서 고른다.** 매핑에 없는 경로를 만나면
 `fsd_slice: 미분류`로 두고 `unresolved`에 적는다. FSD를 따르지 않는
@@ -111,7 +112,7 @@ version: 0.0.1
 ### RENDER_TRACE
 mode: shell | route
 route: <라우트 패턴. shell 모드면 "해당 없음">
-domain: <도메인 이름>
+domain: <도메인 이름. shell 모드면 "해당 없음">
 entry: [REF: 경로:줄번호]
 fsd_slice: <레이어>/<슬라이스> 또는 미분류
 render_mode: 서버 | 클라이언트 | 사전 생성 | 혼합 | 불명
@@ -170,8 +171,9 @@ unresolved:
   가드를, `state`에 전역 상태를 채운다. `route`, `data_sources`,
   `rerender_triggers`는 대개 비어 있다.
 - **`route` 모드에서는** `guards`를 채우지 않는다. 셸이 이미 소유한다.
-- **모든 항목은 `[REF:]` 또는 `[ASSUMED: <추론>; basis: <근거>]`를 가진다.**
-  둘 다 없는 항목은 출력에 넣지 않는다.
+- **`participants`, `sources_read`, `unresolved`를 뺀 모든 목록 항목은
+  `[REF:]` 또는 `[ASSUMED: <추론>; basis: <근거>]`를 가진다.** 둘 다 없는
+  항목은 출력에 넣지 않는다. `participants`는 `path`가 근거 역할을 한다.
 - `cache_key`는 코드에 적힌 형태 그대로 옮긴다.
 - `sources_read`에는 실제로 `Read`한 파일만 적는다. 위의 모든 `[REF:]`는
   이 목록에 있는 파일을 가리켜야 한다.
