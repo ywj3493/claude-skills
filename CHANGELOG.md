@@ -3,6 +3,96 @@
 All notable changes to skills and plugins in this project are documented here.
 Entries are ordered newest first. Format follows [Keep a Changelog](https://keepachangelog.com/).
 
+## [explainable/v0.4.1] - 2026-10-08
+
+### Fixed
+These fixes come from a prompt review of the plugin's 8 skills, 4 agents, and shared references. The review found rules that contradicted each other or could stall a run. A model that follows rules literally either picks one side at random or loops at those points (Refs: #47)
+- **Verification loops can now end.** `common-rules.md` §3 caps the `check-docs.sh` fix/re-run cycle and the `citation-verifier` fix/re-verify cycle at 3 rounds per document. Before, "re-run until clean" combined with execution rule 9 ("never report completion while UNSUPPORTED remains") could stall a run forever. Whatever survives 3 rounds is now reported as a **verification failure** and the user decides what to do. The rules also forbid deleting or `[ASSUMED]`-masking correct claims just to end the loop (Refs: #47)
+- **"Unresolved" no longer means two things.** Execution rule 9 is now about verification failures (verifier MISMATCHED/UNSUPPORTED) only, and says outright that a document's `## 미해결 항목` section (agent `PARTIAL`/`unresolved` marked as `[ASSUMED]`) does not block completion (Refs: #47)
+- **Empty sections follow one rule.** `common-rules.md` §5 splits them into "not applicable" (delete the heading and TOC entry) and "checked but no evidence" (keep the section with `없음 — 확인한 경로: ...`). Before, §5 said to delete in both cases, even though its own stated reason argued against deleting, and that conflicted with `reverse-design-backend` and the explorer agents (Refs: #47)
+- `planning-rules.md` §3: "`## 범위 밖` must not be empty" now applies to forward planning only. In reverse, it was pushing the model to invent plausible-but-absent features (Refs: #47)
+- `reverse-rules.md` §1.5 says which documents accumulate the source ledger on re-run: the merge-only documents only. Documents discarded and regenerated under §3 start a fresh ledger (Refs: #47)
+- `reverse-rules.md` §4:
+  - an empty glossary on the first run now has defined handling
+  - the `PARTIAL` retry now says what to strengthen, based on the reason the agent returned
+- `frontend-rules.md` §3 names the one allowed edit to planning-owned `user-flows.md`: filling the `서버 흐름` column. Before, the "read only" rule directly contradicted `init-design-frontend` step 6 (Refs: #47)
+- `frontend-rules.md` §4.2 says which domain's `render-flow.md` holds the app shell: the first row of the domain table (Refs: #47)
+- Execution rule 4 (review gates) now says where a step-by-step run actually stops, because only some steps carry a confirmation prompt (Refs: #47)
+
+### Changed
+- READMEs: `citation-verifier` is no longer described as having a contract identical to `doc-verifier`, since it now adds a scope input and an absence-record rule. The `reverse-design-frontend` step order and the loop cap are updated too (Refs: #47)
+
+## [citation-verifier/v0.0.2] - 2026-10-08
+
+### Added
+- An `## 입력` section: document path, repository root, and an optional **verification scope** (sections or row IDs). Callers such as `backend-implementation` were asking for a scoped check the agent had no way to receive (Refs: #47)
+- Absence records (a `상태: 미구현` row with an empty evidence cell, `없음 — 확인한 경로: ...`) are not claims and are not counted (Refs: #47)
+- A `## 검증 불가` reply for an unreadable document, and `검증 범위` in the report header (Refs: #47)
+
+### Removed
+- The human-only note about sharing a contract with `doc-verifier` (Refs: #47)
+
+## [infra-explorer/v0.0.2] - 2026-10-08
+
+### Fixed
+- One rule for empty sections: keep the key empty and record the miss in `not_found`. The operating rules and the format rules used to disagree (Refs: #47)
+- Every per-app section gets an `app` field (`—` for single-project or repo-wide items), matching the monorepo rule. `repo_shape` now carries a citation. `sources_read`/`not_found` are exempt from the citation rule (Refs: #47)
+
+## [operation-tracer/v0.0.2] - 2026-10-08
+
+### Fixed
+- The built-in termination rules always apply. Termination rules passed in by the caller are added on top and never switch the built-in ones off (Refs: #47)
+- `cross_domain` edges get an arrow notation and a schema example. With an empty glossary, the agent uses code symbol names (Refs: #47)
+
+## [render-flow-tracer/v0.0.2] - 2026-10-08
+
+### Fixed
+- The "no citation, no item" rule no longer applies to `participants` (its `path` is the evidence), `sources_read`, or `unresolved`. Read literally, it used to drop every participant (Refs: #47)
+- Domain name added to the inputs. Shell mode reports `domain: 해당 없음`. With an empty glossary, the agent uses code symbol names (Refs: #47)
+
+## [reverse-design-backend/v0.1.1] - 2026-10-08
+
+### Fixed
+- The first-run glossary passed to `operation-tracer` is explicitly empty. Step 7 aligns participant display names with the chosen canonical identifiers and leaves `Note`, `CALLGRAPH`, `link`, and `[REF]` untouched (Refs: #47)
+
+## [reverse-design-frontend/v0.2.1] - 2026-10-08
+
+### Fixed
+- Route/domain identification (now step 3) runs before the FSD fit check (now step 4). Before, step 3 wrote to `<도메인>/design/frontend/fsd-structure.md` before any domain existed (Refs: #47)
+- Step 7 now updates `glossary.md`, which the output tree listed but no step wrote. Output-tree step numbers are corrected (Refs: #47)
+- The app shell goes in the first domain's `render-flow.md`. It is reused when another domain already documented it at the same commit. Route-mode calls pass the domain name (Refs: #47)
+
+## [reverse-planning/v0.2.1] - 2026-10-08
+
+### Fixed
+- Forward vs. reverse detection is per document, covering all of `planning/` and `test-spec.md`. Steps whose document is forward-authored write nothing: they feed `reverse-diff.md` and still keep their review gate. The other steps generate as usual (Refs: #47)
+- `## 범위 밖` lists only features that are mentioned somewhere but not found in code, each with the location of the mention. With no such mention, the section says `없음 — 확인한 경로`. The missing navigation section follows the same rule (Refs: #47)
+- `미구현` test rows are absence records, so they no longer stall the verification loop (Refs: #47)
+
+## [init-design-frontend/v0.2.1] - 2026-10-08
+
+### Fixed
+- The read-only rule for planning documents now names step 6's `서버 흐름` update as its single exception. The fallback in step 2 says it applies when `information-architecture.md` is missing (Refs: #47)
+
+## [init-design-backend/v0.1.1] - 2026-10-08
+
+### Fixed
+- One flow per operation, keyed `FLOW-<도메인>-<오퍼레이션 ID>`, with stories listed under `관련 스토리`. "One flow per story" did not fit an operation-keyed ID. Stories served only by pass-through operations are listed in the completion report (Refs: #47)
+
+## [backend-implementation/v0.0.2] - 2026-10-08
+
+### Fixed
+- New skill rule 5: after 3 failed attempts at the same failure, stop and report instead of looping. Tests must not be deleted, skipped, or weakened to get green. Steps 1, 2, and 3 point to this rule (Refs: #47)
+- Step 5 passes the filled `T-1NN` IDs through `citation-verifier`'s new scope input (Refs: #47)
+- The usage example uses the documented `FLOW-` key format (`FLOW-order-cancelOrder`) (Refs: #47)
+
+## [translate-docs/v0.1.2] - 2026-10-08
+
+### Fixed
+- The skill now names which `common-rules.md` rules apply to translation and which do not (Refs: #47)
+- Files with no commit history count as stale candidates, and content comparison decides (Refs: #47)
+- Anchor links are regenerated from the translated headings, and the structure check verifies them (Refs: #47)
+
 ## [explainable/v0.4.0] - 2026-10-07
 
 ### Added

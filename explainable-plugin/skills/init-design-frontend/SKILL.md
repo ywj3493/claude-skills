@@ -1,6 +1,6 @@
 ---
 name: init-design-frontend
-version: 0.2.0
+version: 0.2.1
 description: 기획 문서를 입력으로 프론트엔드 설계 문서를 한국어로 작성한다. FSD(Feature-Sliced Design)를 기준선으로 레이어·슬라이스 구조, 라우팅, UI 구성, 렌더링 흐름, 상태 흐름을 만들고 테스트 명세의 프론트엔드·E2E 섹션을 채운다. 기획의 정보 구조와 유저 플로우는 입력으로 읽을 뿐 다시 만들지 않는다. "프론트엔드 설계해줘", "컴포넌트 설계", "라우팅 설계", "FSD 구조 잡아줘"에 반응한다. React를 가정하지 않으며 프레임워크는 architecture.md의 결정을 따른다. 이미 있는 코드를 문서화하는 데는 쓰지 않는다 — 그건 reverse-design-frontend의 일이다.
 ---
 
@@ -36,7 +36,8 @@ description: 기획 문서를 입력으로 프론트엔드 설계 문서를 한�
    `user-stories.md`, `api-interface.md`, `architecture.md`, `glossary.md`,
    그리고 있으면 `information-architecture.md`와 `user-flows.md`.
    **뒤의 두 문서는 읽기 전용이다** — 이 스킬은 화면 목록과 유저 플로우를
-   만들지도 고치지도 않는다 (`frontend-rules.md` §3).
+   만들지도 고치지도 않는다 (`frontend-rules.md` §3). 유일한 예외는 단계 6의
+   `서버 흐름` 열 갱신이다.
 2. **`FLOW-<도메인>-<라우트 슬러그>` 키를 라우트마다 부여한다.**
 3. **`## 읽은 소스`를 생성하지 않는다** (계약 7). `분석 기준 커밋`은
    "해당 없음".
@@ -107,7 +108,8 @@ docs/<원본 언어>/specifications/<도메인>/
 1. **`information-architecture.md`가 있으면 그 화면 목록이 라우트의
    출발점이다.** 화면 하나에 라우트 하나가 기본이며, `대응 화면` 열에 `SCR-`
    키를 채운다. **기획의 모든 화면이 라우트를 가져야 한다**
-   (`frontend-rules.md` §4.1). 기획 문서가 없으면 `user-stories.md`의 각
+   (`frontend-rules.md` §4.1). `information-architecture.md`가 없으면
+   (프론트엔드 스택 없이 기획한 경우) `user-stories.md`의 각
    스토리가 어떤 화면을 필요로 하는지 직접 도출하고 그 열을 `—`로 둔다.
 2. 라우트 트리를 그린다. 동적 구간 표기는 `architecture.md`에 기록된 라우터의
    표기를 따른다.
@@ -176,7 +178,8 @@ docs/<원본 언어>/specifications/<도메인>/
 **갱신 대상** `<도메인>/planning/user-flows.md`
 
 **유저 플로우를 새로 만들지 않는다.** 기획이 소유한 문서이며, 이 단계는
-설계에서 부여한 `FLOW-` 키를 되먹이는 것뿐이다. 기획에 유저 플로우가 없으면
+설계에서 부여한 `FLOW-` 키를 되먹이는 것뿐이다 — `frontend-rules.md` §3이
+허용하는 유일한 수정이다. 기획에 유저 플로우가 없으면
 이 단계를 건너뛰고 사유를 완료 리포트에 남긴다.
 
 1. `planning/user-flows.md`를 디스크에서 읽는다.
