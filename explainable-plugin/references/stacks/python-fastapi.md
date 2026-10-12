@@ -8,8 +8,11 @@ Python이고 프레임워크가 FastAPI일 때 로드한다. 프레임워크 중
 
 이 프로파일은 FastAPI + Redis 기반 4-Layer DDD로 운영 중인 인증 세션 서비스의
 관례를 원형으로 삼고, 그 서비스가 구현 규약에서 벗어난 지점을 보정했다
-(§10). 아래 코드 조각은 프로파일 작성 시 실제 프로젝트로 조립해
-`pytest`·`lint-imports`·`ruff`를 통과시킨 것이다.
+(§11). §1~§9의 코드 조각은 프로파일 작성 시 실제 프로젝트로 조립해
+`pytest`·`lint-imports`·`ruff`를 통과시킨 것이다. §10은 원형 서비스에 없던
+동시성·이벤트·조회 관용구다. 순수 Python 조각(도메인, 응용, 페이크)은 실행해
+확인했지만, SQLAlchemy·Redis 어댑터 조각은 실제 저장소로 실행하지 않았다 —
+처음 쓰는 프로젝트에서는 어댑터 테스트로 먼저 확인한다.
 
 **우선순위** (`구현 규약` §1): 이름·폴더·도구 같은 관용구는 호스트
 프로젝트에 이미 있는 관례가 이 프로파일보다 앞선다. 예를 들어 기존 코드가
@@ -62,11 +65,15 @@ app/
     │   ├── dtos/                 # Command / Query / Result
     │   ├── queries/              # 조회 전용 포트 (CQRS, 있을 때만)
     │   ├── services/             # 유스케이스 간 조율 (있을 때만)
+    │   ├── event_handlers/       # 도메인 이벤트 구독 (있을 때만, §10.2)
+    │   ├── ports/                # UnitOfWork, EventPublisher, LockManager (있을 때만)
     │   └── exceptions/
     ├── infrastructure/
     │   ├── repositories/         # 어댑터 + 레코드 매퍼
     │   ├── clients/
-    │   └── queries/
+    │   ├── queries/
+    │   ├── events/               # 이벤트 발행·아웃박스·포워더 (있을 때만)
+    │   └── locks/                # LockManager 구현 (있을 때만)
     └── presentation/http/
         ├── controllers/          # APIRouter
         ├── schemas/              # 요청·응답 pydantic 모델
@@ -436,7 +443,166 @@ uv run lint-imports
 
 ---
 
-## 10. 원형 서비스 대비 보정 사항
+## 10. 동시성·이벤트·조회
+
+`구현 규약` §3.6–3.7, §4.6, §4.8–4.9, §5.6의 관용구다. 어느 것을 쓸지는
+`domain-model.md`가 정한다 — 칸이 `미정`이면 이 절의 코드를 쓰지 않고 스킬이
+묻는다.
+
+### 10.1 낙관적 잠금
+
+```python
+# app/shared/domain/errors.py
+class ConcurrentModificationError(DomainError):
+    """기대 버전과 저장소의 버전이 다르다. 다른 요청이 먼저 수정했다."""
+```
+
+1. 애그리거트는 `_version: int`를 재구성 인자로 받고 `@property version`만
+   노출한다. 행위 메서드는 버전을 건드리지 않는다.
+2. 리포지토리 포트의 저장 메서드가 기대 버전을 받는다:
+   `async def save(self, order: Order, expected_version: int) -> None`.
+   새 애그리거트의 첫 저장은 `expected_version=0`으로 하고 어댑터가 삽입한다.
+3. 유스케이스는 `command.expected_version`을 그대로 넘긴다. `버전 전달`이
+   `서버 내부`면 읽은 애그리거트의 `order.version`을 넘긴다.
+4. **SQLAlchemy 어댑터** — 조건부 UPDATE 한 문장으로 비교와 증가를 함께
+   한다. 루트가 아닌 구성 요소(항목 테이블)만 바뀌어도 이 문장이 루트 행의
+   버전을 올리므로 `구현 규약` §3.7.2를 만족한다. ORM의
+   `version_id_col`은 루트 행이 바뀔 때만 버전을 올리므로 쓰지 않는다.
+
+   ```python
+   result = await session.execute(
+       update(orders_table)
+       .where(orders_table.c.id == order.id.value,
+              orders_table.c.version == expected_version)
+       .values(status=order.status.value, version=expected_version + 1)
+   )
+   if result.rowcount == 0:
+       raise ConcurrentModificationError(order.id.value)
+   # 이어서 같은 세션에서 order_lines를 교체한다
+   ```
+
+5. **Redis 어댑터** — `WATCH` → 버전 확인 → `MULTI`/`EXEC`. `EXEC`가
+   `WatchError`를 던지면 `ConcurrentModificationError`로 바꾼다.
+6. 메모리 페이크도 버전을 비교한다 (`구현 규약` §8.1.4).
+7. 충돌은 `ERROR_RESPONSES`에 `ConcurrentModificationError: (409,
+   "<오류 모델의 코드>")`로 등록한다. 응답 스키마에 `version: int`를 두고
+   `from_result()`가 채운다.
+
+### 10.2 이벤트 기록과 커밋 후 발행
+
+```python
+@dataclass(frozen=True)
+class DomainEvent:
+    event_id: str
+    occurred_at: datetime
+
+@dataclass(frozen=True)
+class OrderCanceled(DomainEvent):
+    order_id: str
+    payment_id: str
+
+class Order:
+    def cancel(self, event_id: str, now: datetime) -> None:
+        ...
+        self._status = OrderStatus.CANCELED
+        self._events.append(OrderCanceled(event_id, now, self._id.value, self._payment_id))
+
+    def pull_events(self) -> list[DomainEvent]:
+        """기록된 이벤트를 꺼내고 비운다. 응용 계층이 커밋 후에 부른다."""
+        events, self._events = self._events, []
+        return events
+```
+
+```python
+class CancelOrderUseCase:
+    async def execute(self, command: CancelOrderCommand) -> OrderResult:
+        async with self._uow:
+            order = await self._order_repository.find_by_id(OrderId(command.order_id))
+            if order is None:
+                raise OrderNotFoundError(command.order_id)
+            order.cancel(self._new_event_id(), self._clock())
+            await self._order_repository.save(order, command.expected_version)
+        # 커밋 후에만 발행한다 — 저장이 예외로 끝나면 여기 오지 않는다
+        await self._event_publisher.publish(order.pull_events())
+        return OrderResult.from_aggregate(order)
+```
+
+1. 이벤트 ID와 발생 시각은 시계처럼 주입한다
+   (`new_event_id: Callable[[], str]`). 애그리거트가 `uuid4()`를 부르지 않는다.
+2. `__init__`(재구성)은 `self._events = []`로 시작하고 기록하지 않는다.
+3. `EventPublisher` 포트는 `application/ports/`에 둔다. 구현은 `전달 방식`에
+   따라 `infrastructure/events/`에:
+   - `커밋 후 동기` — 등록된 핸들러를 차례로 `await`. 핸들러 예외는 잡아
+     로그로 남기고 원래 요청을 실패시키지 않는다
+   - `로컬 비동기` — `asyncio.create_task`. 태스크 참조를 보관하고 예외를
+     로그로 남긴다
+   - `이벤트 저장소+포워더` — 발행이 아니라 **저장**이다. `async with
+     self._uow:` 안에서 `OutboxRepository.add(events)`로 같은 트랜잭션에
+     쓰고, 포워더(별도 프로세스·주기 작업)가 마지막 오프셋 이후를 읽어
+     보낸다. 이 경우 위 코드의 `publish` 호출은 `async with` 블록 안의
+     `outbox.add(order.pull_events())`로 바뀐다
+4. 핸들러는 `application/event_handlers/<동사>_on_<이벤트>.py`, 클래스는
+   `<Verb>On<Event>`, 공개 메서드는 `async def handle(self, event)` 하나.
+   멱등성은 처리 기록 포트로 한다:
+
+   ```python
+   class StartRefundOnOrderCanceled:
+       async def handle(self, event: OrderCanceled) -> None:
+           if not await self._processed_events.mark_processed(event.event_id):
+               return  # 이미 처리한 이벤트
+           ...
+   ```
+
+5. 재시도는 포워더나 큐 소비자에 둔다. 횟수·간격·상한 후 처리는
+   `실패 시 처리` 열의 값을 설정으로 받는다 — 상한 없는 루프를 쓰지 않는다.
+
+### 10.3 비관적·오프라인 비관적 잠금
+
+1. 비관적 — 포트에 `find_by_id_for_update`를 따로 두고, SQLAlchemy 어댑터는
+   `select(...).with_for_update()` 앞에 PostgreSQL이면
+   `SET LOCAL lock_timeout = '<잠금 한도>'`를 실행한다. 시간 초과
+   (`LockNotAvailable`)는 `LockTimeoutError(DomainError)`로 바꾼다.
+2. 오프라인 비관적 — `application/ports/lock_manager.py`의 `LockManager(ABC)`:
+   `acquire(target, owner, ttl) -> LockId`, `check(lock_id, owner)`,
+   `release(lock_id)`, `extend(lock_id, ttl)`. Redis 구현은
+   `SET <key> <owner> NX PX <ttl>`로 얻고, 확인·해제는 소유자를 비교하는 Lua
+   스크립트 한 번으로 한다(비교 후 삭제를 두 명령으로 나누지 않는다).
+
+### 10.4 조회 전용 경로
+
+```python
+@dataclass(frozen=True)
+class PageRequest:
+    page: int = 0
+    size: int = 20
+
+    def __post_init__(self) -> None:
+        if self.page < 0 or not 1 <= self.size <= 100:
+            raise ValueError("page >= 0, 1 <= size <= 100")
+
+    @property
+    def offset(self) -> int:
+        return self.page * self.size
+
+@dataclass(frozen=True)
+class OrderSearchCondition:
+    """비어 있는 필드는 제한 없음"""
+    orderer_id: Optional[str] = None
+    status: Optional[str] = None
+```
+
+1. 조회 포트는 `application/queries/`에 ABC로 두고
+   `search(condition, page) -> Page[OrderSummary]`처럼 읽기 모델 DTO를
+   돌려준다. 구현은 `infrastructure/queries/`에서 조건의 `None`이 아닌
+   필드만 `where`에 더한다.
+2. 컨트롤러는 유스케이스 없이 조회 포트를 `Depends(provide_order_query)`로
+   받아 부른다 (`구현 규약` §4.6.2). 프로바이더의 반환 타입은 포트다.
+3. `PageRequest`와 조건 객체는 응용 계층에 둔다. 요청 스키마의
+   `to_condition()`·`to_page()`가 만든다.
+
+---
+
+## 11. 원형 서비스 대비 보정 사항
 
 원형 서비스의 관례 중 아래는 `구현 규약`과 충돌해 이 프로파일에서 바꿨다.
 호스트 프로젝트가 원형과 같은 관례를 이미 쓰고 있어도 **새로 쓰는 코드는

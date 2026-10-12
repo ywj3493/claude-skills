@@ -100,7 +100,7 @@ docs/<source>/specifications/
 | `reverse-rules.md` | 인용 계약, Source-Linked 시퀀스 규약, 재실행·폐기 정책, 탐색 에이전트 호출 규약 | `reverse-*` 3종 |
 | `frontend-rules.md` | 프레임워크 중립 어휘, FSD 기준선, 문서 간 책임 경계 | `*-design-frontend` 2종 |
 | `planning-rules.md` | ID 체계, 스왑 테스트, 인수 기준 형식, 계약 블록 선택 | `*-planning` 2종 |
-| `backend-implementation-rules.md` | 결정 우선순위, 의존 방향 표, 계층별 DDD 구현 원칙, 테스트 전략, 실용적 타협의 기록 규칙, 자체 검토 체크리스트 | `backend-implementation` |
+| `backend-implementation-rules.md` | 결정 우선순위, 의존 방향 표, 계층별 DDD 구현 원칙(식별자 생성, 동시성 제어, 이벤트 발행·처리, 컨텍스트 간 번역, 조회 전용 경로), 테스트 전략, 실용적 타협의 기록 규칙, 자체 검토 체크리스트 | `backend-implementation` |
 | `stacks/<언어>-<프레임워크>.md` | 스택 프로파일 — 디렉터리, 관용구, 의존 방향 계약 설정, 검증 명령. 현재 `python-fastapi.md` | `backend-implementation` (감지된 스택 1개만) |
 | `document-order.md` | 문서 정규 순서와 내비게이션 링크 규칙 | `common-rules.md`가 참조 |
 
@@ -119,6 +119,14 @@ docs/<source>/specifications/
 프레임워크 중립 규칙(`backend-implementation-rules.md`)과 스택별 관용구를
 분리해 두고 `architecture.md`가 정한 스택의 프로파일 하나만 로드합니다.
 프로파일이 없는 스택이면 중립 규칙으로 진행하되 관용구를 사용자에게 묻습니다.
+
+**설계 결정은 구현이 내리지 않습니다.** 식별자 생성 방식, 애그리거트별
+동시성 정책(낙관적·비관적·오프라인 비관적 잠금), 도메인 이벤트의 전달 방식과
+실패 처리는 `init-design-backend`가 `domain-model.md`에 기록합니다. 기획
+문서로 정할 수 없는 칸은 추천 값과 함께 사용자에게 묻고, 정하지 않으면
+`미정`으로 둡니다. `backend-implementation`은 이 칸을 읽어 구현을 고르고,
+`미정`이면 구현 계획 단계에서 다시 묻습니다 — 연속 모드여도 이 질문은
+생략하지 않습니다.
 
 `api-interface.md`도 REST/OpenAPI를 전제하지 않습니다. 문서 구조는 고정이고,
 계약 블록 형식만 확정된 API 스타일에 따라 달라집니다 — REST면 OpenAPI 3.1,
