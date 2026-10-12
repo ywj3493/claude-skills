@@ -3,6 +3,45 @@
 All notable changes to skills and plugins in this project are documented here.
 Entries are ordered newest first. Format follows [Keep a Changelog](https://keepachangelog.com/).
 
+## [explainable/v0.5.0] - 2026-10-12
+
+### Added
+- `backend-implementation-rules.md` now covers chapters 8–11 of the user's DDD reading notes (`docs/reference/backend-implementation.md`, which is not committed) and the parts of chapters 4–5 the notes expanded. Each rule is restated in a framework-neutral form (Refs: #49):
+  - §3.1.9–10: three ways to generate identifiers and where each lives; loading strategy chosen per aggregate
+  - §3.6: event naming in the past tense and payload scope
+  - §3.7, §4.8, §5.6: optimistic locking, pessimistic locking, and offline pessimistic locking. The root version goes up when any component changes. Lock waits have a limit and offline locks expire
+  - §4.9: handlers run only after commit, with five delivery methods, an outbox, idempotent handlers, ordering, and capped retries
+  - §4.6: CQRS. Read paths may skip the use case. A separate read store is built only when the design defines it. Covers search conditions and pagination
+  - §5.7, §7.5–7: translators and ACLs, owned by the side the context-map pattern names; one package per context; a shared kernel only when the map says `SK`
+  - Test rules and checklist items 16–24 for all of the above
+- The `domain-model.md` template has new fields for decisions that change the code: `식별자 생성` per aggregate, a `## 동시성 정책` section, and `전달 방식` and `실패 시 처리` columns in `## 도메인 이벤트`. A cell the design cannot decide yet is written as `미정` and never left empty (Refs: #49)
+- The `layered-architecture.md` template has new Infrastructure kinds: query adapter, read model, context translator, event store, and lock (Refs: #49)
+- `python-fastapi.md` §10 adds idioms for each of these: optimistic locking with a conditional UPDATE or Redis WATCH, event recording and publishing after commit, an outbox, idempotent handlers, `FOR UPDATE` with `lock_timeout`, a Redis `LockManager`, and query ports with `PageRequest`. The pure-Python parts were run; the SQLAlchemy and Redis adapter snippets were not run against real stores. The old §10 is now §11 (Refs: #49)
+
+### Changed
+- `common-rules.md` execution rule 4: if a skill marks a question "연속 모드여도 묻는다", the run stops for it even in continuous mode (Refs: #49)
+- READMEs describe where design decisions come from. The root READMEs point to the new prompt-authoring rules (Refs: #49)
+
+## [backend-implementation/v0.1.0] - 2026-10-12
+
+### Added
+- Step 0.7 reads the decision fields in `domain-model.md` for the chosen FLOWs, plus the `domain-map.md` pattern for cross-context FLOWs. Any field that is `미정` or missing goes on a "결정 필요" list. Each item is asked with a recommended value, even in continuous mode. Step 1.1 writes the answers back to `domain-model.md` and `layered-architecture.md` before any code is written. The `domain-map.md` pattern answer is not written back, because the design skills own that file; it stays in the plan and appears in the completion report as a 설계 수정 제안 (Refs: #49)
+- Steps 2–3 add tests and implementation for event recording, locking, publishing after commit, and context translation (Refs: #49)
+
+### Fixed
+- Unique item 8 (the documents this skill writes) now lists `architecture.md`. Step 1 already wrote to that file, which contradicted the "no other documents" rule. The list also covers the new `domain-model.md` scope (Refs: #49)
+
+## [init-design-backend/v0.2.0] - 2026-10-12
+
+### Added
+- Step 2 fills identifier generation, a concurrency policy for every aggregate, and event delivery and failure handling. A value the planning docs do not decide is not invented. The step offers a recommended value at its gate, and anything the user leaves open is written as `미정` and listed in the completion report. Infrastructure rows these choices require are added to `layered-architecture.md` in step 2, not step 1, because step 1 runs before the choices exist (Refs: #49)
+- Step 1 adds query-adapter rows. A read-model row is added only when an NFR justifies it. Step 2 flags components besides the root that should be value objects or separate aggregates (Refs: #49)
+
+## [reverse-design-backend/v0.2.0] - 2026-10-12
+
+### Added
+- Step 6.7 extracts the new decision fields from code. Evidence is identifier generators, version columns with their compare code, lock queries, dispatchers, and outboxes. Fields with no evidence become `미정` with `없음 — 확인한 경로`. A version column with no compare code is not reported as optimistic locking (Refs: #49)
+
 ## [explainable/v0.4.1] - 2026-10-08
 
 ### Fixed

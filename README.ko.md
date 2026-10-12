@@ -47,7 +47,7 @@ Requirements)** 이 포함되어 있어, 어떤 모델이 실행하든 결과 �
 | --- | --- | --- |
 | init-planning | `/explainable:init-planning` | 새 프로젝트: 인프라·프로젝트 설정을 먼저 확정한 뒤 용어집 → 요구사항 → 유저 스토리 → 정보 구조 → 유저 플로우 → 인터페이스 계약 → 추적성 |
 | init-design-backend | `/explainable:init-design-backend` | 4-Layered DDD: 레이어 매핑 → 도메인 모델 → ERD → 유저 스토리 기반 시퀀스 다이어그램 |
-| backend-implementation | `/explainable:backend-implementation` | 백엔드 설계를 4-Layered DDD 코드로 구현: 골격·의존 방향 계약 → 도메인 계층 → `FLOW-` 키별 테스트 우선 수직 슬라이스 → 전체 검증 → 테스트 명세 상태·근거 갱신. 언어별 관용구는 스택 프로파일(현재 Python + FastAPI)에서 읽음 |
+| backend-implementation | `/explainable:backend-implementation` | 백엔드 설계를 4-Layered DDD 코드로 구현: 골격·의존 방향 계약 → 도메인 계층 → `FLOW-` 키별 테스트 우선 수직 슬라이스 → 전체 검증 → 테스트 명세 상태·근거 갱신. 식별자 생성·동시성 제어·이벤트 전달 방식은 설계 문서에서 읽고 `미정`이면 묻는다. 언어별 관용구는 스택 프로파일(현재 Python + FastAPI)에서 읽음 |
 | init-design-frontend | `/explainable:init-design-frontend` | FSD: 레이어·슬라이스 구조 → 라우팅 → UI 구성 → 렌더링 흐름 → 상태 흐름. 기획의 화면 목록을 읽고 유저 플로우에 흐름 키를 되먹임 |
 | reverse-design-backend | `/explainable:reverse-design-backend` | 기존 백엔드: 인프라 → 코드베이스 → 도메인 → 오퍼레이션별 Source-Linked 시퀀스 다이어그램 → 도메인 모델·ERD |
 | reverse-design-frontend | `/explainable:reverse-design-frontend` | 기존 프론트엔드: 인프라 → 프레임워크 감지 → 라우트·도메인 식별 → FSD 적합도 → 앱 셸 → 라우트별 코드·렌더링 흐름 |
@@ -222,6 +222,13 @@ CHANGELOG.md              # 전체 스킬/플러그인의 변경 이력 (최신�
 별개입니다.
 
 ## 스킬 개발 가이드
+
+이 저장소의 모든 프롬프트 — `SKILL.md`, 에이전트 정의, 플러그인
+`references/`, 템플릿의 지시 주석 — 는
+[.claude/rules/prompt-authoring.md](.claude/rules/prompt-authoring.md)를
+따릅니다: 반복 루프의 상한, 용어 하나에 의미 하나, 호출 측과 피호출 측의
+입출력 일치, 규칙의 예외는 그 규칙 옆에, 부재 처리 원칙 하나, 추측을
+강요하는 규칙 금지. 커밋 전에 그 문서의 자체 점검 체크리스트를 돌립니다.
 
 ### 기존 스킬 수정
 

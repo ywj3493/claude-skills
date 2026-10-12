@@ -1,3 +1,5 @@
 .agents/
 .claude/*
 !.claude/rules/
+# User-supplied reference material (docs/reference/ is user-managed; not committed)
+docs/reference/backend-implementation.md

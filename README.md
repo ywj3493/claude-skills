@@ -46,7 +46,7 @@ design-first, and exploration subagents each have one narrow job.
 | --- | --- | --- |
 | init-planning | `/explainable:init-planning` | New project: infrastructure and project setup first, then glossary → requirements → user stories → information architecture → user flows → interface contract → traceability |
 | init-design-backend | `/explainable:init-design-backend` | 4-Layered DDD: layer mapping → domain model → ERD → user-story-based sequence diagrams |
-| backend-implementation | `/explainable:backend-implementation` | Implements the backend design as 4-Layered DDD code: skeleton and dependency-direction contracts → domain layer → one test-first vertical slice per `FLOW-` key → full verification → test-spec status and citations; stack idioms come from a stack profile (currently Python + FastAPI) |
+| backend-implementation | `/explainable:backend-implementation` | Implements the backend design as 4-Layered DDD code: skeleton and dependency-direction contracts → domain layer → one test-first vertical slice per `FLOW-` key → full verification → test-spec status and citations; identifier generation, concurrency control, and event delivery are read from the design (asked when `미정`), never chosen by the implementer; stack idioms come from a stack profile (currently Python + FastAPI) |
 | init-design-frontend | `/explainable:init-design-frontend` | FSD: layer/slice structure → routing → UI composition → render flow → state flow; reads the planning screen list and writes flow keys back into it |
 | reverse-design-backend | `/explainable:reverse-design-backend` | Existing backend: infra → codebase → domain → per-operation Source-Linked sequence diagrams → domain model and ERD |
 | reverse-design-frontend | `/explainable:reverse-design-frontend` | Existing frontend: infra → framework detection → route/domain identification → FSD fit → app shell → per-route code and render flow |
@@ -223,6 +223,13 @@ Git tags use the `<skill-name>/v<major>.<minor>.<patch>` form
 independently of the `version` field each bundled skill/agent still keeps.
 
 ## Skill Development Guide
+
+Every prompt in this repository — `SKILL.md`, agent definitions, plugin
+`references/`, and instruction comments in templates — follows
+[.claude/rules/prompt-authoring.md](.claude/rules/prompt-authoring.md):
+capped loops, one meaning per term, matching caller/callee contracts,
+exceptions stated at the rule they break, one absence rule, and no rule
+that forces a guess. Run its self-review checklist before committing.
 
 ### Modifying an existing skill
 
