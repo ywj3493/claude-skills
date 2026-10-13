@@ -32,6 +32,7 @@ Python이고 프레임워크가 FastAPI일 때 로드한다. 프레임워크 중
 | 테스트 | pytest + pytest-asyncio(`asyncio_mode = "auto"`) + pytest-describe + httpx | |
 | 린트·포맷 | ruff | |
 | 의존 방향 | import-linter | `구현 규약` §2.3 |
+| 인증·보안 | `fastapi.security`(자격 증명 추출), PyJWT(JWT 검증), pwdlib[argon2](비밀번호 해싱), Starlette `CORSMiddleware` | `구현 규약` §4.5.3. 직접 구현하지 않는다. 기존 프로젝트의 도구가 있으면 그것을 따른다 |
 | 타입 검사 | mypy (선택) | |
 | 주석·독스트링 | 한국어 | 식별자는 영어. 호스트 프로젝트 규칙이 있으면 그것을 따른다 |
 
@@ -488,7 +489,7 @@ class ConcurrentModificationError(DomainError):
    "<오류 모델의 코드>")`로 등록한다. 응답 스키마에 `version: int`를 두고
    `from_result()`가 채운다.
 
-### 10.2 이벤트 기록과 커밋 후 발행
+### 10.2 이벤트 기록과 발행
 
 ```python
 @dataclass(frozen=True)
@@ -508,7 +509,7 @@ class Order:
         self._events.append(OrderCanceled(event_id, now, self._id.value, self._payment_id))
 
     def pull_events(self) -> list[DomainEvent]:
-        """기록된 이벤트를 꺼내고 비운다. 응용 계층이 커밋 후에 부른다."""
+        """기록된 이벤트를 꺼내고 비운다. 응용 계층이 전달 방식이 정한 시점에 부른다."""
         events, self._events = self._events, []
         return events
 ```
@@ -522,7 +523,7 @@ class CancelOrderUseCase:
                 raise OrderNotFoundError(command.order_id)
             order.cancel(self._new_event_id(), self._clock())
             await self._order_repository.save(order, command.expected_version)
-        # 커밋 후에만 발행한다 — 저장이 예외로 끝나면 여기 오지 않는다
+        # 커밋 후에만 발행한다(`트랜잭션 내 동기` 외의 방식) — 저장이 예외로 끝나면 여기 오지 않는다
         await self._event_publisher.publish(order.pull_events())
         return OrderResult.from_aggregate(order)
 ```
@@ -532,6 +533,12 @@ class CancelOrderUseCase:
 2. `__init__`(재구성)은 `self._events = []`로 시작하고 기록하지 않는다.
 3. `EventPublisher` 포트는 `application/ports/`에 둔다. 구현은 `전달 방식`에
    따라 `infrastructure/events/`에:
+   - `트랜잭션 내 동기` — 발행이 `async with self._uow:` **안**으로 들어간다.
+     저장 직후 `await self._event_publisher.publish(order.pull_events())`를
+     블록 안에서 부르고, 핸들러는 같은 `UnitOfWork`(같은 세션)에 묶인
+     리포지토리를 받는다. 핸들러 예외를 잡지 않는다 — 그대로 올라가 블록이
+     롤백한다. `layered-architecture.md`에 같은 트랜잭션 행이 있을 때만 쓴다
+     (`구현 규약` §4.4.2)
    - `커밋 후 동기` — 등록된 핸들러를 차례로 `await`. 핸들러 예외는 잡아
      로그로 남기고 원래 요청을 실패시키지 않는다
    - `로컬 비동기` — `asyncio.create_task`. 태스크 참조를 보관하고 예외를
@@ -540,7 +547,14 @@ class CancelOrderUseCase:
      self._uow:` 안에서 `OutboxRepository.add(events)`로 같은 트랜잭션에
      쓰고, 포워더(별도 프로세스·주기 작업)가 마지막 오프셋 이후를 읽어
      보낸다. 이 경우 위 코드의 `publish` 호출은 `async with` 블록 안의
-     `outbox.add(order.pull_events())`로 바뀐다
+     `outbox.add(order.pull_events())`로 바뀐다. 포워더는 기본으로 주기 작업이
+     `id > 마지막 오프셋`을 읽어 보내고, 보낸 뒤 오프셋을 기록한다. 보낸 뒤
+     기록 전에 죽으면 같은 이벤트를 다시 보내므로 메시지에 `event_id`를 싣는다.
+     CDC(Debezium 등)는 `layered-architecture.md`의 `이벤트 저장소` 행이 정했을
+     때만 쓴다
+   - `메시지 큐` — 커밋 후 전송한다. 아웃박스 없이 보내면 커밋 후 전송 전에
+     죽을 때 이벤트를 잃는다. `실패 시 처리`가 손실을 허용하지 않으면
+     `이벤트 저장소+포워더`로 설계 수정을 제안한다
 4. 핸들러는 `application/event_handlers/<동사>_on_<이벤트>.py`, 클래스는
    `<Verb>On<Event>`, 공개 메서드는 `async def handle(self, event)` 하나.
    멱등성은 처리 기록 포트로 한다:
@@ -553,6 +567,10 @@ class CancelOrderUseCase:
            ...
    ```
 
+   처리 기록(`mark_processed`)과 핸들러의 상태 변경은 같은 트랜잭션에서
+   커밋한다. 따로 커밋하면 기록만 남고 변경이 빠지거나 그 반대가 된다.
+   `트랜잭션 내 동기` 핸들러는 재전달이 없으므로 처리 기록을 두지 않는다
+   (`구현 규약` §4.9.4).
 5. 재시도는 포워더나 큐 소비자에 둔다. 횟수·간격·상한 후 처리는
    `실패 시 처리` 열의 값을 설정으로 받는다 — 상한 없는 루프를 쓰지 않는다.
 
@@ -563,10 +581,44 @@ class CancelOrderUseCase:
    `SET LOCAL lock_timeout = '<잠금 한도>'`를 실행한다. 시간 초과
    (`LockNotAvailable`)는 `LockTimeoutError(DomainError)`로 바꾼다.
 2. 오프라인 비관적 — `application/ports/lock_manager.py`의 `LockManager(ABC)`:
-   `acquire(target, owner, ttl) -> LockId`, `check(lock_id, owner)`,
-   `release(lock_id)`, `extend(lock_id, ttl)`. Redis 구현은
-   `SET <key> <owner> NX PX <ttl>`로 얻고, 확인·해제는 소유자를 비교하는 Lua
-   스크립트 한 번으로 한다(비교 후 삭제를 두 명령으로 나누지 않는다).
+   `acquire(target, owner, ttl) -> LockGrant`(`lock_id`, `fencing_token: int`),
+   `check(lock_id, owner)`, `release(lock_id)`, `extend(lock_id, ttl)`.
+   - **Redis 구현** — 획득은 Lua 스크립트 한 번으로 펜싱 토큰 발급과 잠금
+     설정을 함께 한다. 확인·해제도 소유자를 비교하는 Lua 스크립트 한 번으로
+     한다(비교 후 삭제를 두 명령으로 나누지 않는다).
+
+     ```lua
+     -- KEYS[1] = lock:<target>, KEYS[2] = lock:fence:<target>
+     -- ARGV[1] = owner, ARGV[2] = ttl(ms)
+     if redis.call('EXISTS', KEYS[1]) == 1 then return false end
+     local token = redis.call('INCR', KEYS[2])
+     redis.call('SET', KEYS[1], ARGV[1] .. ':' .. token, 'PX', ARGV[2])
+     return token
+     ```
+
+   - **보호 대상의 저장** (`구현 규약` §4.8 오프라인 비관적 3, §5.6) — 잠금으로
+     보호하는 애그리거트의 리포지토리 포트는 저장 메서드가 토큰을 받는다:
+     `async def save(self, document: Document, fencing_token: int) -> None`.
+     유스케이스는 `check()`가 통과해도 토큰을 반드시 넘긴다 — `check()`와
+     `save()` 사이에 잠금이 만료될 수 있다. 대상 테이블에 `fence_token`
+     컬럼을 두고 조건부 UPDATE 한 문장으로 쓴다:
+
+     ```python
+     result = await session.execute(
+         update(documents_table)
+         .where(documents_table.c.id == document.id.value,
+                documents_table.c.fence_token <= fencing_token)
+         .values(body=document.body, fence_token=fencing_token)
+     )
+     if result.rowcount == 0:
+         raise StaleLockError(document.id.value)  # shared/domain/errors.py
+     ```
+
+     잠금 테이블이 대상과 같은 DB에 있으면 토큰 컬럼 대신 같은 트랜잭션에서
+     잠금 행을 `select(locks).where(소유자·토큰 일치, 만료 전).with_for_update()`로
+     잡고, 행이 없으면 `StaleLockError`, 있으면 이어서 갱신한다.
+   - `StaleLockError(DomainError)`는 `ERROR_RESPONSES`에 `api-interface.md`
+     오류 모델의 코드로 등록한다. 메모리 페이크도 토큰을 비교한다.
 
 ### 10.4 조회 전용 경로
 
@@ -599,6 +651,14 @@ class OrderSearchCondition:
    받아 부른다 (`구현 규약` §4.6.2). 프로바이더의 반환 타입은 포트다.
 3. `PageRequest`와 조건 객체는 응용 계층에 둔다. 요청 스키마의
    `to_condition()`·`to_page()`가 만든다.
+4. **읽기 트랜잭션** (`구현 규약` §4.6.1) — 쿼리 하나면 세션의 기본
+   트랜잭션으로 충분하다. `search`처럼 목록과 총 개수를 따로 읽는 메서드는
+   어댑터가 `async with session.begin():` 블록 하나 안에서 두 쿼리를 실행한다.
+   PostgreSQL의 기본 격리 수준(READ COMMITTED)은 문장마다 스냅숏을 새로
+   잡으므로, 블록 첫 문장으로
+   `SET TRANSACTION ISOLATION LEVEL REPEATABLE READ READ ONLY`를 실행해 두
+   쿼리가 같은 시점을 읽게 한다. 조회 서비스가 여러 조회 포트를 묶으면 이 문서 §4.7의
+   `UnitOfWork`를 읽기 전용으로 열고 그 안에서 포트를 부른다.
 
 ---
 

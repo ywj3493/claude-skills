@@ -3,6 +3,39 @@
 All notable changes to skills and plugins in this project are documented here.
 Entries are ordered newest first. Format follows [Keep a Changelog](https://keepachangelog.com/).
 
+## [explainable/v0.6.0] - 2026-10-13
+
+### Changed
+The user corrected about 20 statements in the DDD reading notes (`docs/reference/backend-implementation.md`, not committed) that #49 had used as its source. These changes bring the rules in line with the corrected statements (Refs: #51)
+- `backend-implementation-rules.md` §4.2 and checklist #8: an application service coordinates use cases, transactions, and integrations without re-implementing domain rules. Length is no longer the test; the test is whether the use case holds a domain rule (a branch on aggregate state, a domain calculation, a transition check). Long coordination code stays in the application layer (Refs: #51)
+- §3.3: a domain service holds a domain rule that does not belong to one entity or value object. Using several aggregates, or calling an external system, is not enough reason for one. Technical calls with no domain judgment are coordinated by the application layer through ports (Refs: #51)
+- §4.4.2 and checklist #22: "one aggregate per transaction" is now a guideline. Changing several aggregates in one transaction is allowed when the same store needs atomicity. This is a design decision recorded as a 같은 트랜잭션 row in `layered-architecture.md` `## 도메인 고유 규칙`, not a §9 compromise. Aggregates in different stores still have to be split with events (Refs: #51)
+- §4.9: new delivery method `트랜잭션 내 동기`, where handlers run inside the publishing transaction and a handler failure rolls back the original change. It is valid only with a matching 같은 트랜잭션 row. The "handlers run only after commit" rule now covers the other methods only. Checklist #18 matches (Refs: #51)
+- §4.8 and §5.6, checklist #20: an offline-lock-protected save puts the lock check and the write in one atomic condition, using a fencing token, or a valid lock row in the same transaction. A distributed lock alone does not stop a previous owner from writing after the TTL expires (Refs: #51)
+- §4.6: CQRS is defined as separating command and query responsibilities and models; Command = domain model / Query = DAO is one option. Queries run in a transaction context, and a response built from two or more queries uses one read-only transaction by default. Cache control is now one of the reasons to add a query service. Checklist #24 matches (Refs: #51)
+- §4.9.2 and §4.9.4: the message-queue row names the dual-write problem; the outbox forwarder may be a polling publisher or CDC (polling by default); both publishing and consuming sides are assumed to deliver duplicates (Refs: #51)
+- §3.4.1: one repository per aggregate root applies to domain repositories only; query ports are separate (Refs: #51)
+- Templates: `domain-model.md` lists six delivery methods and narrows the domain-service section; `layered-architecture.md` documents the 같은 트랜잭션 row, the read-consistency opt-out, and the forwarder kind on the event-store row (Refs: #51)
+- `python-fastapi.md` §10.2–10.4: in-transaction dispatch, forwarder and dedupe notes, a Redis `LockManager` that issues fencing tokens, a token-conditioned UPDATE with `StaleLockError`, and a REPEATABLE READ read-only transaction for list + count queries. These adapter snippets were not run against real stores (Refs: #51)
+
+### Added
+- §4.5.3 and checklist #25: standard authentication, authorization, and common web security use proven frameworks; only business-specific permission policies are written by hand. `python-fastapi.md` §1 names the tools (Refs: #51)
+
+## [backend-implementation/v0.2.0] - 2026-10-13
+
+### Changed
+- Step 0.7 also checks transaction scope. A FLOW that saves two or more aggregates with no 같은 트랜잭션 row and no event chain, or that uses `트랜잭션 내 동기` with no 같은 트랜잭션 row, goes on the "결정 필요" list. Unique item 8 lets the skill add the approved 같은 트랜잭션 row to `layered-architecture.md` (Refs: #51)
+
+## [init-design-backend/v0.3.0] - 2026-10-13
+
+### Added
+- Step 4.8 checks every flow that changes two or more aggregates and records either a 같은 트랜잭션 row or an event, asking at the gate. The row is written in step 4 because it needs the FLOW key. Anything left open is listed as "트랜잭션 범위 미결" in the completion report (Refs: #51)
+
+## [reverse-design-backend/v0.3.0] - 2026-10-13
+
+### Added
+- Step 6.7 tells `트랜잭션 내 동기` from `커밋 후 동기` by where the dispatcher is called. Step 7.5 records operations that save two or more aggregates in one transaction as 같은 트랜잭션 rows, with `미정` for a reason the code does not show (Refs: #51)
+
 ## [explainable/v0.5.0] - 2026-10-12
 
 ### Added

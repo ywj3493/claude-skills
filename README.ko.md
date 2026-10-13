@@ -47,7 +47,7 @@ Requirements)** 이 포함되어 있어, 어떤 모델이 실행하든 결과 �
 | --- | --- | --- |
 | init-planning | `/explainable:init-planning` | 새 프로젝트: 인프라·프로젝트 설정을 먼저 확정한 뒤 용어집 → 요구사항 → 유저 스토리 → 정보 구조 → 유저 플로우 → 인터페이스 계약 → 추적성 |
 | init-design-backend | `/explainable:init-design-backend` | 4-Layered DDD: 레이어 매핑 → 도메인 모델 → ERD → 유저 스토리 기반 시퀀스 다이어그램 |
-| backend-implementation | `/explainable:backend-implementation` | 백엔드 설계를 4-Layered DDD 코드로 구현: 골격·의존 방향 계약 → 도메인 계층 → `FLOW-` 키별 테스트 우선 수직 슬라이스 → 전체 검증 → 테스트 명세 상태·근거 갱신. 식별자 생성·동시성 제어·이벤트 전달 방식은 설계 문서에서 읽고 `미정`이면 묻는다. 언어별 관용구는 스택 프로파일(현재 Python + FastAPI)에서 읽음 |
+| backend-implementation | `/explainable:backend-implementation` | 백엔드 설계를 4-Layered DDD 코드로 구현: 골격·의존 방향 계약 → 도메인 계층 → `FLOW-` 키별 테스트 우선 수직 슬라이스 → 전체 검증 → 테스트 명세 상태·근거 갱신. 식별자 생성·트랜잭션 범위·동시성 제어·이벤트 전달 방식은 설계 문서에서 읽고 `미정`이면 묻는다. 언어별 관용구는 스택 프로파일(현재 Python + FastAPI)에서 읽음 |
 | init-design-frontend | `/explainable:init-design-frontend` | FSD: 레이어·슬라이스 구조 → 라우팅 → UI 구성 → 렌더링 흐름 → 상태 흐름. 기획의 화면 목록을 읽고 유저 플로우에 흐름 키를 되먹임 |
 | reverse-design-backend | `/explainable:reverse-design-backend` | 기존 백엔드: 인프라 → 코드베이스 → 도메인 → 오퍼레이션별 Source-Linked 시퀀스 다이어그램 → 도메인 모델·ERD |
 | reverse-design-frontend | `/explainable:reverse-design-frontend` | 기존 프론트엔드: 인프라 → 프레임워크 감지 → 라우트·도메인 식별 → FSD 적합도 → 앱 셸 → 라우트별 코드·렌더링 흐름 |
