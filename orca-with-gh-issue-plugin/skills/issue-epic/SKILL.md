@@ -1,6 +1,6 @@
 ---
 name: issue-epic
-version: 0.0.1
+version: 0.0.2
 description: 기획·설계 단위 epic 이슈를 다룬다. epic을 만들 때 하위 이슈 계획을 함께 세워 sub-issue로 반드시 등록하고, 하위 이슈를 더하고, Draft PR로 시작하고, 하위 이슈 상태를 epic PR 체크리스트와 blocked 라벨에 동기화하고, 모든 하위 이슈가 끝나면 누락·보강을 점검해 epic PR을 머지하거나 닫는다. "epic 만들어줘", "하위 이슈 추가", "epic 시작", "epic 동기화", "epic 마무리"에 반응한다. 구현 이슈는 issue-leaf, 워크스페이스는 issue-orca-worktree가 맡는다.
 user-invocable: true
 allowed-tools: Bash(gh repo view*), Bash(gh auth status*), Bash(gh api*), Bash(gh issue*), Bash(gh label*), Bash(gh pr view*), Bash(gh pr create*), Bash(gh pr edit*), Bash(gh pr ready*), Bash(gh pr merge*), Bash(gh pr close*), Bash(git status*), Bash(git fetch*), Bash(git log*), Bash(git merge-base*), Bash(git rev-parse*), Bash(git switch*), Bash(git rebase*), Bash(git add*), Bash(git commit*), Bash(git push*), Bash(orca worktree current*), Bash(orca worktree list*), Bash(jq*), Bash(awk*)
@@ -71,7 +71,9 @@ epic, 선행 이슈, 크기(`size/XL`·`size/XXL`).
 ### Step 2: 관계 확인
 
 - 상위 epic: `이슈 조회`로 열린 epic인지 본다. 아니면 멈춘다
-- 선행: 규약 §4의 1. 계획 안의 행끼리는 같은 부모(이 epic)다
+- 선행: 규약 §4의 1. 계획 안의 행끼리는 같은 부모(이 epic)이고, 계획 밖 이슈(다른
+  epic의 하위 이슈 등)도 실제로 막으면 선행으로 건다. 그런 행은 미리보기에
+  다른 부모의 선행으로 표시한다
 
 ### Step 3: 본문 작성
 
@@ -157,7 +159,8 @@ epic PR이 열려 있으면 `동기화`를 안내한다.
 이 epic의 직계 하위 이슈만 본다.
 
 1. **상태 판정** — `하위 이슈 목록`, `PR 목록`(한 번), 이슈마다 `선행 목록`.
-   규약 §1의 상태를 매기고 규약 §2의 7 `이상`을 모은다. epic PR이 없으면
+   규약 §1의 상태를 매기고 규약 §2의 7 `이상`을 모은다. 선행 중 다른 부모의
+   선행(규약 §4의 1)을 모은다. epic PR이 없으면
    체크리스트는 빼고 나머지만 한다
 2. **변경 묶음** — 닫을 이슈(`머지됨` 중 `이상`이 아닌 것), 붙이거나 뗄
    `blocked`(닫을 이슈가 닫힌 것으로 보고 계산), 바뀐 체크리스트
@@ -219,5 +222,6 @@ epic PR이 열려 있으면 `동기화`를 안내한다.
 - 하지 않은 일: <멈춘 곳과 이유. 없으면 생략>
 - 하위 이슈: <동기화·마무리면 체크리스트 표>
 - 이상: <목록과 정리 방법. 없으면 생략>
+- 다른 부모의 선행: <하위 이슈 ← #번호 (부모 #P) 목록. 없으면 생략>
 - 다음 단계: <한 줄>
 ```

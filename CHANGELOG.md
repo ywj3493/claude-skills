@@ -3,6 +3,21 @@
 All notable changes to skills and plugins in this project are documented here.
 Entries are ordered newest first. Format follows [Keep a Changelog](https://keepachangelog.com/).
 
+## [orca-with-gh-issue/v0.1.1] - 2026-10-16
+
+### Changed
+- `references/issue-rules.md` §4.1: a prerequisite no longer has to share the dependent issue's parent. Any issue that really blocks another can be declared as its prerequisite without asking, because Blocked is already judged per issue from its prerequisite list. Prerequisites under a different parent are listed separately in reports, since only the dependent issue's own epic sync or start clears its `blocked` label (Refs: #55)
+
+## [issue-epic/v0.0.2] - 2026-10-16
+
+### Changed
+- Create/add accepts prerequisites outside the plan (for example a sub-issue of another epic) and marks them in the preview. Sync collects prerequisites under a different parent and the report lists them as `하위 이슈 ← #번호 (부모 #P)` (Refs: #55)
+
+## [issue-leaf/v0.0.2] - 2026-10-16
+
+### Changed
+- Create no longer asks when a prerequisite has a different parent; the preview marks it instead. Start's Blocked check names the parent epic of such a prerequisite, and the report gains a `다른 부모의 선행` line (Refs: #55)
+
 ## [orca-with-gh-issue/v0.1.0] - 2026-10-16
 
 ### Added
