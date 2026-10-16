@@ -1,0 +1,11 @@
+{
+  "name": "orca-with-gh-issue",
+  "version": "0.1.0",
+  "description": "GitHub 이슈를 epic(기획·설계, 하위 이슈를 거느림)과 leaf(구현) 계층으로 관리하고 이슈 하나당 Orca 워크스페이스 하나에서 작업하는 한국어 플러그인. 이슈 규칙(계층, Draft PR로 시작, 순서·Blocked, epic 마무리, 수용 기준 개수 기반 규모)을 공통 규약 한 곳에 두고, issue-epic·issue-leaf·issue-orca-worktree 세 스킬이 그 규약을 gh CLI와 Orca CLI로 실행한다.",
+  "author": {
+    "name": "ywj3493"
+  },
+  "homepage": "https://github.com/ywj3493/claude-skills",
+  "repository": "https://github.com/ywj3493/claude-skills",
+  "keywords": ["korean", "github", "issues", "sub-issues", "orca", "worktree", "workflow"]
+}

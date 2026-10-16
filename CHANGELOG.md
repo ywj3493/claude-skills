@@ -3,6 +3,32 @@
 All notable changes to skills and plugins in this project are documented here.
 Entries are ordered newest first. Format follows [Keep a Changelog](https://keepachangelog.com/).
 
+## [orca-with-gh-issue/v0.1.0] - 2026-10-16
+
+### Added
+- Skills follow a plain step format: overview, hard prohibitions up front, `Step 0` entry checks, numbered steps per action with the exact question quoted at each stop, and a fixed report block. Each skill declares `allowed-tools`; only `issue-epic` may merge (Refs: #53)
+- New plugin `orca-with-gh-issue`, registered in `.claude-plugin/marketplace.json` — a Korean-language GitHub issue workflow: issues form an epic/leaf hierarchy through GitHub sub-issues, every issue starts with a Draft PR, and each issue gets one Orca workspace whose parent matches the issue's parent. Every PR, leaf or epic, targets the default branch, so main stays current and `Closes #N` works; the hierarchy lives in sub-issues and workspaces, not branches. Design docs that leaves need ship as a docs leaf that implementation leaves depend on (Refs: #53)
+- `references/issue-rules.md` holds every issue rule once: terms and the five issue states (`미시작`, `진행 중`, `머지됨`, `완료`, `취소`), hierarchy, branch naming and base selection, Draft PR start, blockers and `blocked` label release, the epic checklist format, sync and wrap-up, size by acceptance-criteria count (XS 1, S 2, M 3–4, L 5–6, 7+ must be an epic), pre-checks including the push-permission stop, confirmation gates, labels, and failure handling (Refs: #53)
+- `references/commands.md` holds the exact gh, git, and orca commands under names the skills call them by (`이슈 생성`, `PR 목록`, `워크스페이스 생성`), including the sub-issue and issue-dependency REST calls that take the internal issue id rather than the number (Refs: #53)
+- Four templates: epic and leaf issue bodies (Korean headings 요약 · 배경 · 수용 기준 · 하위 이슈/작업 · 범위 밖 · 관련), epic and leaf Draft PR bodies. The epic issue body carries a `SUBISSUE-PLAN` table (order, issue, content, prerequisite) and the epic PR body the `SUBISSUES` status table that sync rewrites (Refs: #53)
+- `references/examples.md`: a fictional epic with a contract-first leaf and a blocked implementation leaf, plus the failure patterns seen in real issue trackers (split plans written only as checkboxes, implementation issues that grew children without becoming epics, over-declared prerequisites) and how the plugin handles each (Refs: #53)
+- Rules: an epic is created only together with at least one registered sub-issue; epics with no sub-issues, leaves with sub-issues, and untyped issues with sub-issues are reported as anomalies. New split criteria (split by use case, storage, or approval item; contract/design leaf first; BE and FE apart; declare only real blockers) and title formats (`epic: …`, `<type>(<scope>): …`) (Refs: #53)
+
+## [issue-orca-worktree/v0.0.1] - 2026-10-16
+
+### Added
+- Creates the Orca workspace for one issue: `--no-parent` for a top-level issue, `--parent-worktree` plus `--base-branch` set to the parent workspace's branch otherwise. Every workspace branches from `origin/<default branch>`; a child only needs its parent's workspace to exist (otherwise it stops and asks), not a started parent. The workspace display name is set to the issue title verbatim with `orca worktree set --display-name` after creation, because `--name` also becomes the branch (Orca prefixes the user and turns `/` and non-ASCII into `-` or drops them); rerunning on an existing workspace offers to re-sync a changed title. It always selects the parent by `worktree:<id>`, shows a preview gate before creating, never creates a duplicate workspace for an issue, and reports any mismatch in linked issue, parent, or branch pattern after creation with the next step (Refs: #53)
+
+## [issue-leaf/v0.0.1] - 2026-10-16
+
+### Added
+- Create and start actions for leaf issues (a new leaf under an epic also appends its row to the epic's plan table): sub-issue link to a parent epic (or an explicit parentless leaf), size label from the acceptance-criteria count with a stop at 7+ that offers to create an epic instead, blockers with the `blocked` label, and a Draft PR on an empty `chore: start #N` commit against the default branch with `Closes #N`. Issue branches are found by `(^|[/-])issue<N>-`, so a branch prefix added by Orca still matches (Refs: #53)
+
+## [issue-epic/v0.0.1] - 2026-10-16
+
+### Added
+- Create, add-sub-issues, start, sync, and finish actions for epics. Create builds a sub-issue plan (from the user, or proposed by the split criteria and approved) and, behind one confirmation, creates the epic, creates new leaves or attaches existing issues as sub-issues, wires prerequisites, and fills the epic's plan table with the real numbers. Sync closes any sub-issue whose PR merged without `Closes`, then re-evaluates `blocked` labels, then rewrites the checklist, all behind one confirmation. Finish runs only when every sub-issue is `완료` or `취소`, rates each acceptance criterion with evidence from the sub-issues' merged PR files, and offers cleanup-then-merge, finish without cleanup (close the epic PR and the epic as `completed`), split into new leaves, or stop (Refs: #53)
+
 ## [explainable/v0.6.0] - 2026-10-13
 
 ### Changed
