@@ -1,6 +1,6 @@
 ---
 name: issue-leaf
-version: 0.0.1
+version: 0.0.2
 description: 구현 단위 leaf 이슈를 다룬다. 부모 epic 아래 sub-issue로 leaf를 만들면서 수용 기준 개수로 크기 라벨을 정하고(상한을 넘으면 epic으로 안내), 선행 이슈를 걸면 blocked로 표시하고, 시작할 때 main을 base로 Draft PR과 작업 계획을 올린다. 머지하면 Closes로 이슈가 닫힌다. "leaf 만들어줘", "구현 이슈 추가", "이슈 시작", "Draft PR 올려줘"에 반응한다. epic은 issue-epic, 워크스페이스는 issue-orca-worktree가 맡는다.
 user-invocable: true
 allowed-tools: Bash(gh repo view*), Bash(gh auth status*), Bash(gh api*), Bash(gh issue*), Bash(gh label*), Bash(gh pr view*), Bash(gh pr create*), Bash(git status*), Bash(git fetch*), Bash(git merge-base*), Bash(git rev-parse*), Bash(git switch*), Bash(git rebase*), Bash(git commit*), Bash(git push*), Bash(orca worktree current*), Bash(jq*), Bash(awk*)
@@ -57,7 +57,8 @@ Blocked 해제는 `issue-epic`의 동기화가 맡는다.
    > "수용 기준 <n>개는 leaf 상한을 넘습니다. 1. `issue-epic` 생성으로 넘어간다 (권장 — 규약 §6) 2. 수용 기준을 줄여 다시 입력한다 3. 중단"
 
 3. **관계 확인** — 부모는 `이슈 조회`로 열린 epic인지 본다. leaf나 닫힌 이슈면
-   멈추고 알린다. 라벨을 스스로 바꾸지 않는다. 선행은 규약 §4의 1
+   멈추고 알린다. 라벨을 스스로 바꾸지 않는다. 선행은 규약 §4의 1 — 부모가
+   달라도 건다. 다른 부모의 선행이면 미리보기에 그렇게 표시한다
 4. **본문** — `examples.md`로 형식을 맞추고 `leaf-issue.md`를 채운다. 부모가
    있으면 요약 첫 문장에 epic 번호와 역할(설계·계약 / BE / FE)을 적는다.
    라벨 점검을 여기서 한다(규약 §10)
@@ -83,6 +84,7 @@ Blocked 해제는 `issue-epic`의 동기화가 맡는다.
 1. **이슈 확인** — `이슈 조회`. 열린 leaf가 아니면 멈춘다. `하위 이슈 목록`이
    있으면 규약 §2의 7 `이상`으로 보고하고 epic 전환을 권한다(시작은 막지 않는다)
 2. **Blocked 확인** — `선행 목록`. 열린 선행이 있으면 목록을 보고하고 멈춘다.
+   다른 부모의 선행이면 그 선행의 부모 epic 번호를 함께 적는다(규약 §4의 1).
    없는데 `blocked`가 있으면 뗀다
 3. **이미 시작했는가** — `PR 목록`. 열린 이슈 PR이 있으면 보고하고 멈춘다.
    머지된 이슈 PR만 있으면 묻는다
@@ -112,6 +114,7 @@ Blocked 해제는 `issue-epic`의 동기화가 맡는다.
 
 - leaf: #<N> <제목> (<URL>) — <size 라벨>, 부모 #<번호 또는 없음>
 - 한 일: <만든 이슈, 연결, 의존성, 라벨, PR>
+- 다른 부모의 선행: <#번호 (부모 #P) 목록. 없으면 생략>
 - 하지 않은 일: <멈춘 곳과 이유. 없으면 생략>
 - 다음 단계: <한 줄>
 ```
