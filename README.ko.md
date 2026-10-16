@@ -65,6 +65,26 @@ Requirements)** 이 포함되어 있어, 어떤 모델이 실행하든 결과 �
 각 스킬의 현재 버전은 `SKILL.md` 프론트매터에 있으며, 변경 사항은
 [CHANGELOG.md](CHANGELOG.md)에 기록됩니다.
 
+## orca-with-gh-issue 플러그인
+
+한국어 GitHub 이슈 워크플로입니다
+([orca-with-gh-issue-plugin/](orca-with-gh-issue-plugin/)). 이슈는
+epic/leaf 계층(GitHub sub-issue)을 이룹니다. epic은 기획·설계를 맡고 하위
+이슈를 추적하며, leaf는 구현을 맡습니다. 모든 이슈는 Draft PR로 시작하고,
+이슈마다 Orca 워크스페이스를 하나씩 두며 워크스페이스의 부모는 이슈의 부모와
+같습니다. 규칙은 `references/issue-rules.md` 한 곳에 있고 스킬은 그 규칙을
+실행만 합니다.
+
+| 스킬 | 명령어 | 용도 |
+| --- | --- | --- |
+| issue-epic | `/orca-with-gh-issue:issue-epic` | epic 생성(하위 이슈 계획을 함께 세워 새 leaf나 기존 이슈를 sub-issue로 반드시 등록), 하위 이슈 추가, Draft PR로 시작, 하위 이슈 체크리스트와 `blocked` 라벨 동기화, 모든 하위 이슈가 끝난 뒤에만 누락·보강 점검 → 정리 작업이 있으면 epic PR 머지, 없으면 닫기 |
+| issue-leaf | `/orca-with-gh-issue:issue-leaf` | 부모 epic 아래 leaf 생성(수용 기준 개수로 크기 라벨, 7개 이상이면 epic으로 안내), 선행 이슈 지정, 기본 브랜치를 base로 Draft PR 시작(`Closes #N`) |
+| issue-orca-worktree | `/orca-with-gh-issue:issue-orca-worktree` | 이슈의 Orca 워크스페이스 생성(표시 이름은 이슈 제목): 최상위 이슈는 독립, 부모가 있으면 부모 이슈 워크스페이스의 하위. 브랜치는 항상 기본 브랜치에서 분기. 부모 워크스페이스가 없으면 멈추고 묻는다 |
+
+leaf든 epic이든 모든 PR은 기본 브랜치에 바로 머지되므로 main이 늘 최신이고
+`Closes #N`이 그대로 동작합니다. 계층은 브랜치가 아니라 sub-issue와 Orca
+워크스페이스로 나타내고, epic PR에는 정리 작업만 담습니다.
+
 ## 설치
 
 이 저장소의 마켓플레이스
@@ -76,18 +96,21 @@ claude
 /plugin marketplace add ywj3493/claude-skills
 /plugin install dev-docs@claude-skills
 /plugin install explainable@claude-skills
+/plugin install orca-with-gh-issue@claude-skills
 ```
 
-둘은 독립적이므로 하나만 설치해도 됩니다. 또는 로컬 개발 용도로 직접
+플러그인끼리 독립적이므로 하나만 설치해도 됩니다. 또는 로컬 개발 용도로 직접
 불러올 수 있습니다:
 
 ```bash
 claude --plugin-dir ./dev-docs-plugin
 claude --plugin-dir ./explainable-plugin
+claude --plugin-dir ./orca-with-gh-issue-plugin
 ```
 
-자세한 내용은 [dev-docs-plugin/README.md](dev-docs-plugin/README.md)와
-[explainable-plugin/README.md](explainable-plugin/README.md)를 참조하세요.
+자세한 내용은 [dev-docs-plugin/README.md](dev-docs-plugin/README.md),
+[explainable-plugin/README.md](explainable-plugin/README.md),
+[orca-with-gh-issue-plugin/README.md](orca-with-gh-issue-plugin/README.md)를 참조하세요.
 
 ## 어느 플러그인을 쓸까
 
@@ -173,7 +196,7 @@ translation_languages: []
 
 ```text
 .claude-plugin/
-  marketplace.json        # 플러그인 마켓플레이스 매니페스트 (dev-docs, explainable 등록)
+  marketplace.json        # 플러그인 마켓플레이스 매니페스트 (dev-docs, explainable, orca-with-gh-issue 등록)
 dev-docs-plugin/          # dev-docs 플러그인 (.claude-plugin/plugin.json)
   skills/init-docs/            # /dev-docs:init-docs (+ scripts/, references/ — CLAUDE.md 템플릿 포함)
   skills/dev-planning/         # /dev-docs:dev-planning
@@ -198,6 +221,12 @@ explainable-plugin/       # explainable 플러그인 (한국어; .claude-plugin/
                           # frontend-, planning-, backend-implementation-rules.md
                           # + document-order.md, stacks/에 스택 프로파일
   scripts/check-docs.sh   # ID·링크·자리표시자·펜스 결정적 검사
+orca-with-gh-issue-plugin/ # orca-with-gh-issue 플러그인 (한국어, .claude-plugin/plugin.json)
+  skills/issue-epic/           # /orca-with-gh-issue:issue-epic
+  skills/issue-leaf/           # /orca-with-gh-issue:issue-leaf
+  skills/issue-orca-worktree/  # /orca-with-gh-issue:issue-orca-worktree
+  references/             # issue-rules.md (공통 규약), commands.md (이름 붙인 명령), examples.md
+  templates/              # epic/leaf 이슈 본문과 Draft PR 본문
 templates/
   CLAUDE.md               # 새 프로젝트용 표준 CLAUDE.md (init-docs 번들 템플릿과 동일)
 docs/                     # 이 저장소 자체의 문서 (시스템 자체 검증용)

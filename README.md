@@ -65,6 +65,26 @@ frameworks enter only as detected facts or user decisions recorded in
 Current versions live in each skill's `SKILL.md` frontmatter; changes are
 recorded in [CHANGELOG.md](CHANGELOG.md).
 
+## The orca-with-gh-issue plugin
+
+A Korean-language GitHub issue workflow
+([orca-with-gh-issue-plugin/](orca-with-gh-issue-plugin/)). Issues form an
+epic/leaf hierarchy (GitHub sub-issues): an epic owns planning and design
+and tracks its children, a leaf owns implementation. Every issue starts with
+a Draft PR, and each issue gets one Orca workspace whose parent matches the
+issue's parent. The rules live once in `references/issue-rules.md`; the
+skills only run them.
+
+| Skill | Command | Purpose |
+| --- | --- | --- |
+| issue-epic | `/orca-with-gh-issue:issue-epic` | Create an epic together with its sub-issue plan (new leaves or existing issues, registered as sub-issues — an epic is never created without them), add sub-issues later, start it with a Draft PR, sync the sub-issue checklist and `blocked` labels, and wrap up only after every sub-issue is done: gap check, then merge the epic PR if it carries cleanup work or close it if not |
+| issue-leaf | `/orca-with-gh-issue:issue-leaf` | Create a leaf under a parent epic with a size label from its acceptance-criteria count (7+ → make an epic instead), optional blockers, and start it with a Draft PR against the default branch (`Closes #N`) |
+| issue-orca-worktree | `/orca-with-gh-issue:issue-orca-worktree` | Create the Orca workspace for an issue, named after the issue title: independent for a top-level issue, a child of the parent issue's workspace otherwise (always branched from the default branch); stops and asks when the parent workspace is missing |
+
+Every PR, leaf or epic, merges straight into the default branch, so main
+stays current and `Closes #N` works. The hierarchy lives in sub-issues and
+Orca workspaces, not in branches; the epic PR carries only cleanup work.
+
 ## Installation
 
 Install from this repository's marketplace
@@ -75,18 +95,21 @@ claude
 /plugin marketplace add ywj3493/claude-skills
 /plugin install dev-docs@claude-skills
 /plugin install explainable@claude-skills
+/plugin install orca-with-gh-issue@claude-skills
 ```
 
-Install either one on its own — they are independent. Or load directly for
+Install any of them on its own — they are independent. Or load directly for
 local development:
 
 ```bash
 claude --plugin-dir ./dev-docs-plugin
 claude --plugin-dir ./explainable-plugin
+claude --plugin-dir ./orca-with-gh-issue-plugin
 ```
 
 See [dev-docs-plugin/README.md](dev-docs-plugin/README.md) and
-[explainable-plugin/README.md](explainable-plugin/README.md) for details.
+[explainable-plugin/README.md](explainable-plugin/README.md), and
+[orca-with-gh-issue-plugin/README.md](orca-with-gh-issue-plugin/README.md) for details.
 
 ## Which plugin to use
 
@@ -175,7 +198,7 @@ derived from.
 
 ```text
 .claude-plugin/
-  marketplace.json        # Plugin marketplace manifest (lists dev-docs, explainable)
+  marketplace.json        # Plugin marketplace manifest (lists dev-docs, explainable, orca-with-gh-issue)
 dev-docs-plugin/          # dev-docs plugin (.claude-plugin/plugin.json)
   skills/init-docs/            # /dev-docs:init-docs (+ scripts/, references/ incl. CLAUDE.md template)
   skills/dev-planning/         # /dev-docs:dev-planning
@@ -200,6 +223,12 @@ explainable-plugin/       # explainable plugin (Korean; .claude-plugin/plugin.js
                           # frontend-, planning-, backend-implementation-rules.md
                           # + document-order.md; stacks/ holds stack profiles
   scripts/check-docs.sh   # deterministic ID, link, placeholder, and fence checks
+orca-with-gh-issue-plugin/ # orca-with-gh-issue plugin (Korean; .claude-plugin/plugin.json)
+  skills/issue-epic/           # /orca-with-gh-issue:issue-epic
+  skills/issue-leaf/           # /orca-with-gh-issue:issue-leaf
+  skills/issue-orca-worktree/  # /orca-with-gh-issue:issue-orca-worktree
+  references/             # issue-rules.md (shared rules), commands.md (named commands), examples.md
+  templates/              # epic/leaf issue bodies and Draft PR bodies
 templates/
   CLAUDE.md               # Standard CLAUDE.md for new projects (same as init-docs' bundled template)
 docs/                     # This repository's own docs (dogfooding the system)
