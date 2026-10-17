@@ -90,26 +90,43 @@ gh pr create --draft --base {B} --head "$(git rev-parse --abbrev-ref HEAD)" --ti
 
 ## Orca
 
+**워크스페이스 선택자는 `id:<id>`다.** `<id>`는 `워크스페이스 목록`의 `id`
+(`<repo-id>::<절대 경로>`) 그대로다. `orca worktree set`은 `worktree:<id>`
+형식을 받지 않는다(`selector_not_found`). `--parent-worktree`·`--worktree` 모두
+`id:`로 통일한다.
+
 | 이름 | 명령 |
 |---|---|
 | 워크스페이스 목록 | `orca worktree list --json` — `result.worktrees[]`에서 `projectId`(`github:<owner>/<repo>`, 대소문자 무시), `linkedIssue`, `branch`(`refs/heads/` 떼고), `id`, `path`, `displayName`, `parentWorktreeId`, `isArchived`(true면 없는 것으로 본다)를 쓴다 |
 | 현재 워크스페이스 | `orca worktree current --json` — Orca 밖이면 실패. 연결 이슈는 `linkedIssue` |
-| 표시 이름 | `orca worktree set --worktree worktree:<id> --display-name "<이슈 제목 그대로>" --json` |
+| 표시 이름 | `orca worktree set --worktree id:<id> --display-name "<이슈 제목 그대로>" --json` |
+| Teams 실행 | `orca terminal create --worktree id:<id> --title "claude-teams" --command "orca claude-teams" --json` — 초기 프롬프트가 있으면 `--command "orca claude-teams '<프롬프트>'"`(프롬프트 안의 `'`는 `'\''`로). 핸들은 `result.terminal.handle` |
 
 워크스페이스 생성 — `--repo`는 `현재 워크스페이스`가 실패할 때만 붙인다.
+`[...]`의 에이전트 옵션은 `issue-orca-worktree` Step 4에서 정한 값이 Orca
+에이전트 ID일 때만 붙인다(`claude-teams`·`없음`이면 뺀다).
 
 ```bash
 git fetch origin {B}
 # 최상위 이슈
 orca worktree create [--repo path:<toplevel>] --issue {N} --no-parent \
-  --base-branch origin/{B} --name <type>/issue{N}-<slug> --json
+  --base-branch origin/{B} --name <type>/issue{N}-<slug> \
+  [--agent <ID> [--prompt "<초기 프롬프트>"]] --json
 # 부모가 있는 이슈
-orca worktree create [--repo path:<toplevel>] --issue {N} --parent-worktree worktree:<부모 id> \
-  --base-branch origin/{B} --name <type>/issue{N}-<slug> --json
+orca worktree create [--repo path:<toplevel>] --issue {N} --parent-worktree id:<부모 id> \
+  --base-branch origin/{B} --name <type>/issue{N}-<slug> \
+  [--agent <ID> [--prompt "<초기 프롬프트>"]] --json
 ```
 
 - `--no-parent`를 빼면 Orca가 호출 위치로 부모를 추론한다. 최상위에는 꼭 넣는다
-- 부모는 `issue:<번호>`가 아니라 고른 워크스페이스의 `worktree:<id>`로 지정한다.
+- 부모는 `issue:<번호>`가 아니라 고른 워크스페이스의 `id:<id>`로 지정한다.
   `issue:`는 보관됐거나 다른 저장소의 워크스페이스를 고를 수 있다
 - `--name`은 표시 이름과 브랜치를 함께 정하므로 이슈 제목을 넣지 않는다.
   표시 이름은 생성 뒤 `표시 이름`으로 맞춘다
+- `--agent`를 붙이면 첫 터미널에서 그 에이전트가 뜬다. 핸들은
+  `result.agentTerminalHandle`(구버전 Orca는 `result.startupTerminal.handle`)
+- `orca claude-teams`는 Orca 에이전트 ID가 아니라 Orca 터미널 안에서만 실행되는
+  명령이어서 `--agent`로 넘길 수 없다. 에이전트 없이 만든 워크스페이스의 생성
+  결과에는 첫 터미널 핸들이 없으므로, `Teams 실행`으로 새 Orca 터미널을 열어
+  실행한다. `orca terminal create`로 연 터미널은 Orca 터미널이다
+  (`ORCA_TERMINAL_HANDLE`이 설정됨)
