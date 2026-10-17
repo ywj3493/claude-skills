@@ -3,6 +3,30 @@
 All notable changes to skills and plugins in this project are documented here.
 Entries are ordered newest first. Format follows [Keep a Changelog](https://keepachangelog.com/).
 
+## [orca-with-gh-issue/v0.2.0] - 2026-10-17
+
+### Added
+- `references/commands.md`: a named `Teams 실행` command (`orca terminal create --worktree id:<id> --command "orca claude-teams"`) and optional `--agent`/`--prompt` on `워크스페이스 생성`, with where each launch reports its terminal handle (Refs: #57)
+
+### Changed
+- `references/issue-rules.md` §10: the workspace-creation confirmation now covers the agent to launch, and agent launches are exempt from the retry-once rule because a retry can start a second agent (Refs: #57)
+
+### Fixed
+- `references/commands.md`: workspace selectors use `id:<repo-id>::<path>`. `orca worktree set` rejects the `worktree:<id>` form (`selector_not_found`), so the display-name step always failed (Refs: #57)
+
+## [issue-orca-worktree/v0.1.0] - 2026-10-17
+
+### Added
+- Launches an agent once after creating the workspace. New Step 4 picks it in order: the agent the user named in the request, "no agent" if the user said so, `claude-teams` for an epic, `claude` for a leaf, and a question for an untyped issue. The preview shows the agent and its reason and lets the user change it (Refs: #57)
+- Claude Code Agent Teams starts through `Teams 실행` in a new Orca terminal, because `orca claude-teams` must run inside an Orca terminal and is not an `--agent` id; other agents start with `--agent` on creation. An initial prompt is passed only when the user gave one (Refs: #57)
+
+### Changed
+- The prohibition on `--agent` and terminal control is narrowed to everything after the single launch; an existing workspace (Step 2) gets no new agent. A failed launch is never retried and never undoes the workspace — the report gives the manual launch command. A failed creation checks the workspace list before retrying (Refs: #57)
+- Result checks and the report include the agent's terminal handle (Refs: #57)
+
+### Fixed
+- Parent selection and the mismatch hints use `id:<id>` instead of `worktree:<id>` (Refs: #57)
+
 ## [orca-with-gh-issue/v0.1.1] - 2026-10-16
 
 ### Changed

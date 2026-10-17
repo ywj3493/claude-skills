@@ -23,7 +23,7 @@ GitHub 이슈를 **epic / leaf** 계층으로 관리하고, 이슈 하나당 Orc
 | --- | --- | --- |
 | 스킬 | `/orca-with-gh-issue:issue-epic` | 생성(하위 이슈 계획을 세워 sub-issue로 함께 등록) · 하위 이슈 추가 · 시작(Draft PR) · 동기화(체크리스트, `blocked` 라벨) · 마무리(누락·보강 점검 → 정리 작업이 있으면 머지, 없으면 닫기) |
 | 스킬 | `/orca-with-gh-issue:issue-leaf` | 생성(부모 epic 연결, 크기 라벨, 선행 이슈) · 시작(기본 브랜치를 base로 Draft PR, `Closes #N`) |
-| 스킬 | `/orca-with-gh-issue:issue-orca-worktree` | 이슈 번호로 Orca 워크스페이스 생성. 최상위 이슈는 독립, 부모가 있으면 부모 워크스페이스의 하위. 표시 이름은 이슈 제목 그대로 |
+| 스킬 | `/orca-with-gh-issue:issue-orca-worktree` | 이슈 번호로 Orca 워크스페이스 생성. 최상위 이슈는 독립, 부모가 있으면 부모 워크스페이스의 하위. 표시 이름은 이슈 제목 그대로. 생성과 함께 에이전트를 띄운다(말하지 않으면 epic은 `orca claude-teams`, leaf는 `claude`) |
 | 규약 | `references/issue-rules.md` | 용어, 계층, Draft PR 시작, 순서·Blocked, epic 추적과 마무리, 규모, 사전 점검, 확인 게이트, 라벨, 실패 처리 |
 | 명령 | `references/commands.md` | 스킬이 이름으로 부르는 gh · git · orca 명령 (예: `PR 목록`, `워크스페이스 생성`) |
 | 예시 | `references/examples.md` | epic 1개와 leaf 2개의 가상 예시, 실제로 본 문제와 처리 방법 |
@@ -33,10 +33,10 @@ GitHub 이슈를 **epic / leaf** 계층으로 관리하고, 이슈 하나당 Orc
 
 ```text
 /orca-with-gh-issue:issue-epic        생성        epic #60 + 하위 leaf #61, #62 등록 (#62는 #61에 Blocked)
-/orca-with-gh-issue:issue-orca-worktree #60      독립 워크스페이스
+/orca-with-gh-issue:issue-orca-worktree #60      독립 워크스페이스 + Claude Code Agent Teams
 /orca-with-gh-issue:issue-epic        시작        Draft PR #70 (base: main)
 
-/orca-with-gh-issue:issue-orca-worktree #61      #60 워크스페이스의 하위 (main에서 분기)
+/orca-with-gh-issue:issue-orca-worktree #61      #60 워크스페이스의 하위 (main에서 분기) + Claude Code
 /orca-with-gh-issue:issue-leaf        시작        Draft PR #71 (base: main, Closes #61)
   … 구현, 리뷰, #71을 main에 머지 → #61 자동으로 닫힘 …
 
@@ -64,6 +64,12 @@ GitHub 이슈를 **epic / leaf** 계층으로 관리하고, 이슈 하나당 Orc
   (`gh auth switch -u <계정>`).
 - **필요한 라벨**: `epic`, `leaf`, `blocked`, `size/XS`·`S`·`M`·`L`·`XL`·`XXL`.
   없으면 처음 쓸 때 만들지 묻습니다.
+- **워크스페이스를 만들면 에이전트가 뜹니다.** 기본값은 이슈 종류로 정합니다 —
+  epic은 여러 에이전트가 나눠 일하는 Claude Code Agent Teams(`orca
+  claude-teams`), leaf는 Claude Code(`claude`). "codex로", "에이전트 없이"처럼
+  요청에서 말하거나 미리보기에서 바꾸면 그 값을 따릅니다. 종류 미정 이슈는
+  묻습니다. 이미 워크스페이스가 있으면 새로 띄우지 않고, 띄운 뒤의 터미널
+  제어는 Orca의 `orca-cli` 스킬이 맡습니다.
 - GitHub sub-issue와 이슈 의존성(blocked by) API를 씁니다. gh 2.87.3 기준으로
   `gh issue create`에는 부모 지정 옵션이 없어 `gh api`로 연결합니다.
 
@@ -71,5 +77,5 @@ GitHub 이슈를 **epic / leaf** 계층으로 관리하고, 이슈 하나당 Orc
 
 - `gh` CLI (로그인된 계정에 대상 저장소 push 권한)
 - Orca CLI (`orca worktree create`가 `--issue`, `--parent-worktree`,
-  `--no-parent`, `--base-branch`를 지원하는 버전) — `issue-orca-worktree`에만
-  필요합니다
+  `--no-parent`, `--base-branch`, `--agent`를 지원하고 `orca terminal create`,
+  `orca claude-teams`가 있는 버전) — `issue-orca-worktree`에만 필요합니다

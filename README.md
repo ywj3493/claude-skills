@@ -79,7 +79,7 @@ skills only run them.
 | --- | --- | --- |
 | issue-epic | `/orca-with-gh-issue:issue-epic` | Create an epic together with its sub-issue plan (new leaves or existing issues, registered as sub-issues — an epic is never created without them), add sub-issues later, start it with a Draft PR, sync the sub-issue checklist and `blocked` labels, and wrap up only after every sub-issue is done: gap check, then merge the epic PR if it carries cleanup work or close it if not |
 | issue-leaf | `/orca-with-gh-issue:issue-leaf` | Create a leaf under a parent epic with a size label from its acceptance-criteria count (7+ → make an epic instead), optional blockers, and start it with a Draft PR against the default branch (`Closes #N`) |
-| issue-orca-worktree | `/orca-with-gh-issue:issue-orca-worktree` | Create the Orca workspace for an issue, named after the issue title: independent for a top-level issue, a child of the parent issue's workspace otherwise (always branched from the default branch); stops and asks when the parent workspace is missing |
+| issue-orca-worktree | `/orca-with-gh-issue:issue-orca-worktree` | Create the Orca workspace for an issue, named after the issue title: independent for a top-level issue, a child of the parent issue's workspace otherwise (always branched from the default branch); stops and asks when the parent workspace is missing. Launches an agent in the new workspace — by default Claude Code Agent Teams (`orca claude-teams`) for an epic and Claude Code (`claude`) for a leaf, unless the user names another agent or none |
 
 Every PR, leaf or epic, merges straight into the default branch, so main
 stays current and `Closes #N` works. The hierarchy lives in sub-issues and

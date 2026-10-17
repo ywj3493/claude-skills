@@ -79,7 +79,7 @@ epic/leaf 계층(GitHub sub-issue)을 이룹니다. epic은 기획·설계를 �
 | --- | --- | --- |
 | issue-epic | `/orca-with-gh-issue:issue-epic` | epic 생성(하위 이슈 계획을 함께 세워 새 leaf나 기존 이슈를 sub-issue로 반드시 등록), 하위 이슈 추가, Draft PR로 시작, 하위 이슈 체크리스트와 `blocked` 라벨 동기화, 모든 하위 이슈가 끝난 뒤에만 누락·보강 점검 → 정리 작업이 있으면 epic PR 머지, 없으면 닫기 |
 | issue-leaf | `/orca-with-gh-issue:issue-leaf` | 부모 epic 아래 leaf 생성(수용 기준 개수로 크기 라벨, 7개 이상이면 epic으로 안내), 선행 이슈 지정, 기본 브랜치를 base로 Draft PR 시작(`Closes #N`) |
-| issue-orca-worktree | `/orca-with-gh-issue:issue-orca-worktree` | 이슈의 Orca 워크스페이스 생성(표시 이름은 이슈 제목): 최상위 이슈는 독립, 부모가 있으면 부모 이슈 워크스페이스의 하위. 브랜치는 항상 기본 브랜치에서 분기. 부모 워크스페이스가 없으면 멈추고 묻는다 |
+| issue-orca-worktree | `/orca-with-gh-issue:issue-orca-worktree` | 이슈의 Orca 워크스페이스 생성(표시 이름은 이슈 제목): 최상위 이슈는 독립, 부모가 있으면 부모 이슈 워크스페이스의 하위. 브랜치는 항상 기본 브랜치에서 분기. 부모 워크스페이스가 없으면 멈추고 묻는다. 새 워크스페이스에 에이전트를 띄운다 — 사용자가 다른 에이전트나 "없음"을 말하지 않으면 epic은 Claude Code Agent Teams(`orca claude-teams`), leaf는 Claude Code(`claude`) |
 
 leaf든 epic이든 모든 PR은 기본 브랜치에 바로 머지되므로 main이 늘 최신이고
 `Closes #N`이 그대로 동작합니다. 계층은 브랜치가 아니라 sub-issue와 Orca
