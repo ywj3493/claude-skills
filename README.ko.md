@@ -53,10 +53,16 @@ Requirements)** 이 포함되어 있어, 어떤 모델이 실행하든 결과 �
 | reverse-design-frontend | `/explainable:reverse-design-frontend` | 기존 프론트엔드: 인프라 → 프레임워크 감지 → 라우트·도메인 식별 → FSD 적합도 → 앱 셸 → 라우트별 코드·렌더링 흐름 |
 | reverse-planning | `/explainable:reverse-planning` | 설계 문서와 코드 근거로 요구사항·유저 스토리·화면 목록·유저 플로우를 역산. 순방향으로 쓴 기획 문서는 덮어쓰지 않음 |
 | translate-docs | `/explainable:translate-docs` | 번역 미러 감사·동기화, 또는 미러링 옵트인 |
+| issue-local | `/explainable:issue-local` | GitHub·Orca 없이 파일 기반 epic/leaf 이슈 관리: 생성·분할, 선행·Blocked, 시작·완료, epic 동기화·마무리 |
+| issue-orca-worktree | `/explainable:issue-orca-worktree` | 로컬 이슈를 읽어 선택적으로 Orca 워크스페이스와 부모 연결을 생성. 에이전트는 지정한 경우만 실행 |
 | infra-explorer | `infra-explorer` (에이전트) | 읽기 전용: 배포·CI/CD·환경·외부 서비스 사실을 근거와 함께 수집 |
 | operation-tracer | `operation-tracer` (에이전트) | 읽기 전용: 백엔드 오퍼레이션 하나의 호출 체인 추적, 프로토콜 중립 |
 | render-flow-tracer | `render-flow-tracer` (에이전트) | 읽기 전용: 라우트 하나의 코드 흐름과 렌더링 흐름, 프레임워크 중립 |
 | citation-verifier | `citation-verifier` (에이전트) | 읽기 전용: 모든 인용을 소스와 대조. `doc-verifier` 계약에 검증 범위 입력과 부재 기록 규칙을 더함 |
+
+로컬 이슈는 `docs/<source>/issue/`에서 관리하며 git 워크트리는 명시한 공용 원본
+경로를 사용합니다. 완료는 수용 기준과 근거로 판단하고 PR·머지는 필수가 아닙니다.
+Orca 연동은 이슈 상태를 바꾸지 않으며 `orca-with-gh-issue` 설치도 요구하지 않습니다.
 
 백엔드는 4-Layered DDD, 프론트엔드는 FSD를 기준선으로 삼지만 **프레임워크에는
 중립**입니다 — React를 가정하지 않으며, 구체 프레임워크는 감지된 사실이나
@@ -120,7 +126,7 @@ claude --plugin-dir ./orca-with-gh-issue-plugin
 | 설계 분리 | 하나의 파이프라인 | 프론트엔드·백엔드 별도 스킬 |
 | 역방향 순서 | 기획 → 설계 | **설계 → 기획** |
 | 아키텍처 기준선 | 없음 | 백엔드 4-Layered DDD, 프론트엔드 FSD |
-| 이슈 관리 | 정책으로 포함 | 범위 제외 |
+| 이슈 관리 | 정책으로 포함 | 로컬 epic/leaf + 선택적 Orca 연동 |
 | 출력 티어 | Lite / Full | 없음 (오퍼레이션 선별 게이트로 대체) |
 | `docs/` 스캐폴딩 | `init-docs` | 출력 경로만 최소 생성 |
 
@@ -215,6 +221,8 @@ explainable-plugin/       # explainable 플러그인 (한국어; .claude-plugin/
   skills/reverse-design-frontend/  # /explainable:reverse-design-frontend
   skills/reverse-planning/         # /explainable:reverse-planning
   skills/translate-docs/           # /explainable:translate-docs
+  skills/issue-local/              # /explainable:issue-local
+  skills/issue-orca-worktree/      # /explainable:issue-orca-worktree (optional Orca adapter)
   agents/                 # infra-explorer, operation-tracer, render-flow-tracer, citation-verifier
   templates/              # overview/, planning/, design/{backend,frontend}/, verification/
   references/             # 스킬이 로드하는 공유 규약: common-, reverse-,

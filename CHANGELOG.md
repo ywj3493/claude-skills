@@ -3,6 +3,34 @@
 All notable changes to skills and plugins in this project are documented here.
 Entries are ordered newest first. Format follows [Keep a Changelog](https://keepachangelog.com/).
 
+## [explainable/v0.7.0] - 2026-10-26
+
+### Added
+- Independent local epic/leaf issue management and an optional Orca workspace adapter, with no dependency on `orca-with-gh-issue` (Refs: #60)
+- Issue templates, local issue and Orca adapter contracts, a standard-library Python validator and shared git-worktree source registry, and remote-free behavioral tests
+
+### Changed
+- Scope the common documentation rules for issue management and workspace adapters; update plugin/marketplace descriptions and README command tables
+
+### Fixed
+- Make `check-docs.sh` executable under macOS Bash 3 by replacing `mapfile` and disambiguating a case pattern inside command substitution
+
+## [issue-local/v0.0.1] - 2026-10-26
+
+### Added
+- Local issue creation, sizing, splitting, hierarchy, prerequisites, derived Blocked state, lifecycle, epic synchronization and evidence-based completion without gh or Orca
+- Shared source paths across git worktrees, legacy issue preservation, explicit write locking and collision handling, configured translation mirrors, and bounded verification
+
+## [issue-orca-worktree/v0.0.1] - 2026-10-26
+
+### Added
+- Read-only local issue adapter for Orca workspace creation, same-repo/host parent and duplicate checks, provider-free ID/root metadata, default-branch bases, and opt-in agent launches with no automatic retry
+
+## [translate-docs/v0.1.3] - 2026-10-26
+
+### Changed
+- Clarify that issue mirrors are maintained by `issue-local`; the translation skill continues to audit specification documents
+
 ## [orca-with-gh-issue/v0.2.0] - 2026-10-17
 
 ### Added

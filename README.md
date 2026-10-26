@@ -52,6 +52,8 @@ design-first, and exploration subagents each have one narrow job.
 | reverse-design-frontend | `/explainable:reverse-design-frontend` | Existing frontend: infra → framework detection → route/domain identification → FSD fit → app shell → per-route code and render flow |
 | reverse-planning | `/explainable:reverse-planning` | Derives requirements, user stories, the screen list, and user flows from the design docs plus code evidence; never overwrites forward-written planning docs |
 | translate-docs | `/explainable:translate-docs` | Audit and sync translation mirrors, or opt in to mirroring |
+| issue-local | `/explainable:issue-local` | File-based epic/leaf issues without GitHub or Orca: creation, splitting, dependencies, Blocked, lifecycle, epic sync and completion |
+| issue-orca-worktree | `/explainable:issue-orca-worktree` | Optional Orca adapter for local issues: workspace creation and parent linkage; launches an agent only when requested |
 | infra-explorer | `infra-explorer` (agent) | Read-only: deployment, CI/CD, environment, and external-service facts, each cited |
 | operation-tracer | `operation-tracer` (agent) | Read-only: one backend operation's call chain, protocol-neutral |
 | render-flow-tracer | `render-flow-tracer` (agent) | Read-only: one route's code flow and render flow, framework-neutral |
@@ -64,6 +66,12 @@ frameworks enter only as detected facts or user decisions recorded in
 
 Current versions live in each skill's `SKILL.md` frontmatter; changes are
 recorded in [CHANGELOG.md](CHANGELOG.md).
+
+`issue-local` stores issues under `docs/<source>/issue/`. Git worktrees share an
+explicit source directory through a local git-common-dir pointer. Completion is
+based on acceptance criteria and recorded evidence; a PR or merge is optional.
+The Orca adapter reads those files without changing issue status. Neither skill
+requires the `orca-with-gh-issue` plugin.
 
 ## The orca-with-gh-issue plugin
 
@@ -119,7 +127,7 @@ See [dev-docs-plugin/README.md](dev-docs-plugin/README.md) and
 | Design split | one pipeline | separate frontend and backend skills |
 | Reverse order | planning → design | **design → planning** |
 | Architecture baseline | none | backend 4-Layered DDD, frontend FSD |
-| Issue management | included as policy | out of scope |
+| Issue management | included as policy | local epic/leaf issues + optional Orca adapter |
 | Output tiers | Lite / Full | none (operation selection gate instead) |
 | `docs/` scaffolding | `init-docs` | minimal output paths only |
 
@@ -217,6 +225,8 @@ explainable-plugin/       # explainable plugin (Korean; .claude-plugin/plugin.js
   skills/reverse-design-frontend/  # /explainable:reverse-design-frontend
   skills/reverse-planning/         # /explainable:reverse-planning
   skills/translate-docs/           # /explainable:translate-docs
+  skills/issue-local/              # /explainable:issue-local
+  skills/issue-orca-worktree/      # /explainable:issue-orca-worktree (optional Orca adapter)
   agents/                 # infra-explorer, operation-tracer, render-flow-tracer, citation-verifier
   templates/              # overview/, planning/, design/{backend,frontend}/, verification/
   references/             # shared rules the skills load: common-, reverse-,
