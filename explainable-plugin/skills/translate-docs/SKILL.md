@@ -1,6 +1,6 @@
 ---
 name: translate-docs
-version: 0.1.2
+version: 0.1.3
 description: docs/config.yml에 설정된 원본 언어 문서 디렉터리를 감사해 번역이 없는 문서나 원본보다 오래된 번역을 찾아 생성·갱신한다. 번역 언어가 아직 설정되지 않았으면 미러링을 켤지 제안하고, 선택한 언어를 docs/config.yml에 기록한 뒤 미러 디렉터리를 만들고 동기화한다. "번역 동기화", "문서 번역해줘", "미러 맞춰줘", "번역 언어 추가"에 반응한다.
 ---
 
@@ -25,7 +25,7 @@ description: docs/config.yml에 설정된 원본 언어 문서 디렉터리를 �
   `<도메인>/design/backend/` 같은 깊은 경로도 포함된다.
 - **제외**: `docs/reference/` (사용자 관리, 언어 중립),
   `.claude/rules/` (영어 전용 Claude Code 설정),
-  `issue/` (이 플러그인은 이슈를 다루지 않는다)
+  `issue/` (이슈 미러는 `issue-local`이 원본 변경과 함께 관리한다)
 
 ## 실행 규약
 

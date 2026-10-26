@@ -27,6 +27,8 @@
 | 스킬 | `/explainable:reverse-design-frontend` | 기존 프론트엔드 분석: 인프라 → 프레임워크 감지 → 라우트·도메인 식별 → FSD 적합도 판정 → 앱 셸 + 라우트별 코드·렌더링 흐름 추적 |
 | 스킬 | `/explainable:reverse-planning` | 설계 문서와 코드 근거로부터 요구사항·유저 스토리를 역산. 순방향 기획 문서는 덮어쓰지 않고 차이 리포트를 만든다 |
 | 스킬 | `/explainable:translate-docs` | 번역 미러 감사 및 동기화. 번역 언어가 없으면 미러링 옵트인을 제안 |
+| 스킬 | `/explainable:issue-local` | GitHub·Orca 없이 로컬 epic/leaf 생성·분할, 관계·규모, 시작·완료, Blocked, epic 동기화·마무리 |
+| 스킬 | `/explainable:issue-orca-worktree` | 로컬 이슈를 읽어 선택적으로 Orca 워크스페이스 생성·부모 연결. 에이전트는 지정한 경우만 실행 |
 | 에이전트 | `infra-explorer` | 배포·CI/CD·환경변수·외부 서비스 사실 수집 (읽기 전용) |
 | 에이전트 | `operation-tracer` | 오퍼레이션 1개의 호출 체인을 진입점부터 어댑터까지 추적 (읽기 전용) |
 | 에이전트 | `render-flow-tracer` | 앱 셸 또는 라우트 1개의 코드 흐름과 렌더링 흐름 추적 (읽기 전용) |
@@ -53,6 +55,44 @@
 쓰려고 하면 근거 없이 추측하게 되기 때문입니다. 설계 문서에서 코드가 실제로
 강제하는 것(검증, 권한 체크, 분기, 타임아웃 설정)을 확인한 뒤에야 요구사항을
 말할 수 있습니다.
+
+## 로컬 이슈와 선택적 Orca 연동
+
+`/explainable:issue-local`은 `docs/<source>/issue/issue001.md` 같은 파일로 이슈를
+관리합니다. epic은 하위 이슈와 함께 만들고 leaf 규모는 수용 기준 수로 정합니다.
+상태는 Open / In Progress / Done / Cancelled이며 Blocked는 선행 상태에서
+계산합니다. 완료 근거는 수용 기준과 검증 결과이며 git 머지·PR은 필수가 아닙니다.
+GitHub CLI, 원격 저장소, Orca가 없어도 사용할 수 있습니다.
+
+```text
+/explainable:issue-local  로컬 epic과 하위 leaf 생성
+/explainable:issue-local  issue002 시작 / 완료, issue001 동기화
+# Orca를 사용할 때만:
+/explainable:issue-orca-worktree  issue002 워크스페이스 생성
+/explainable:issue-orca-worktree  issue003 codex로 워크스페이스 생성
+```
+
+Orca 연동은 이슈 파일을 읽기만 합니다. 생성은 이슈 시작과 별개이며 에이전트는
+요청했을 때만 실행합니다. 부모는 이슈 계층을 따르고 git base는 저장소 기본
+브랜치입니다. 다른 `orca-with-gh-issue` 플러그인을 설치할 필요가 없습니다.
+
+여러 git 워크트리는 하나의 공용 원본 디렉터리를 사용합니다. 처음 선택한 절대
+경로를 git common directory에 로컬로 등록하며 다른 checkout에서도 같은 원본을
+읽고 씁니다. 원본 checkout을 삭제하기 전에는 경로를 보존하거나 이전해야 합니다.
+이슈 문서를 커밋하는 작업은 사용자가 수행합니다. 원격 없는 일반 디렉터리에서는
+원본 경로를 직접 지정합니다. 기존 frontmatter 없는 문서는 자동 변환하지 않으며
+번호만 예약합니다. 번역 언어가 설정돼 있으면 `issue-local`이 이슈 미러도 갱신합니다.
+
+검증 도구는 Python 3 표준 라이브러리만 사용합니다.
+
+```bash
+python3 explainable-plugin/scripts/local-issues.py check --root docs/en/issue
+python3 -m unittest discover -s explainable-plugin/tests -v
+```
+
+이슈 전용 계약은 `references/issue-rules.md`, Orca 연동은
+`references/issue-orca-rules.md`에 있습니다. 명세 생성 파이프라인의 문서 검사와
+메타데이터 규칙은 이슈에 그대로 적용하지 않습니다.
 
 ## 산출 문서
 
@@ -96,12 +136,14 @@ docs/<source>/specifications/
 
 | 파일 | 담는 것 | 읽는 스킬 |
 | --- | --- | --- |
-| `common-rules.md` | 문서 환경 감지, 실행 규약 9항목, 검증 루프, 완료 리포트, 문서 규칙, 공통 경계 규칙 | 8종 전부 |
+| `common-rules.md` | 문서 환경 감지, 실행 규약 9항목, 검증 루프, 완료 리포트, 문서 규칙, 공통 경계 규칙 | 모든 스킬 (이슈 스킬은 적용 범위 절 참조) |
 | `reverse-rules.md` | 인용 계약, Source-Linked 시퀀스 규약, 재실행·폐기 정책, 탐색 에이전트 호출 규약 | `reverse-*` 3종 |
 | `frontend-rules.md` | 프레임워크 중립 어휘, FSD 기준선, 문서 간 책임 경계 | `*-design-frontend` 2종 |
 | `planning-rules.md` | ID 체계, 스왑 테스트, 인수 기준 형식, 계약 블록 선택 | `*-planning` 2종 |
 | `backend-implementation-rules.md` | 결정 우선순위, 의존 방향 표, 계층별 DDD 구현 원칙(식별자 생성, 동시성 제어, 이벤트 발행·처리, 컨텍스트 간 번역, 조회 전용 경로), 테스트 전략, 실용적 타협의 기록 규칙, 자체 검토 체크리스트 | `backend-implementation` |
 | `stacks/<언어>-<프레임워크>.md` | 스택 프로파일 — 디렉터리, 관용구, 의존 방향 계약 설정, 검증 명령. 현재 `python-fastapi.md` | `backend-implementation` (감지된 스택 1개만) |
+| `issue-rules.md` | 공용 원본 경로, 파일 계약, 계층·규모·선행, 상태·동기화·완료, 잠금·검증 | `issue-local` (전체), `issue-orca-worktree` (§1·§2) |
+| `issue-orca-rules.md` | 로컬 ID/root 식별, 부모·중복, base, 선택적 에이전트, 결과 검증 | `issue-orca-worktree` |
 | `document-order.md` | 문서 정규 순서와 내비게이션 링크 규칙 | `common-rules.md`가 참조 |
 
 ## 프레임워크 중립성
@@ -196,7 +238,7 @@ claude --plugin-dir ./explainable-plugin
 | 설계 분리 | 하나의 파이프라인 | 백엔드/프론트엔드 별도 스킬 |
 | 역방향 순서 | 기획 → 설계 | **설계 → 기획** |
 | 아키텍처 기준선 | 없음 | 백엔드 4-Layered DDD, 프론트엔드 FSD |
-| 이슈 관리 | 정책으로 포함 | 범위 제외 |
+| 이슈 관리 | 정책으로 포함 | 로컬 epic/leaf + 선택적 Orca 연동 |
 | 출력 티어 | Lite / Full | 없음 (오퍼레이션 선별 게이트로 대체) |
 
 `citation-verifier`는 `dev-docs`의 `doc-verifier`를 이식한 것으로 판정 어휘와

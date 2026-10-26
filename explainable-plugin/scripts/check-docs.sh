@@ -37,7 +37,11 @@ PROBLEMS=0
 note() { printf '  %s\n' "$1"; }
 fail() { printf '  [문제] %s\n' "$1"; PROBLEMS=$((PROBLEMS + 1)); }
 
-mapfile -t DOCS < <(find "$SPEC_DIR" -name '*.md' -type f | sort)
+# Bash 3 (macOS) has process substitution and arrays, but no mapfile builtin.
+DOCS=()
+while IFS= read -r doc; do
+  DOCS+=("$doc")
+done < <(find "$SPEC_DIR" -name '*.md' -type f | sort)
 
 if [[ ${#DOCS[@]} -eq 0 ]]; then
   echo "오류: $SPEC_DIR 아래에 마크다운 문서가 없습니다." >&2
@@ -120,7 +124,7 @@ BROKEN=$(
       | sort -u \
       | while IFS= read -r target; do
           [[ -z "$target" ]] && continue
-          case "$target" in http*|/*) continue ;; esac
+          case "$target" in (http*|/*) continue ;; esac
           [[ -f "$dir/$target" ]] || echo x
         done
   done | wc -l
@@ -222,7 +226,10 @@ done < <(find "$SPEC_DIR" -path '*/planning/user-flows.md' -type f)
 
 while IFS= read -r ia; do
   [[ -z "$ia" ]] && continue
-  mapfile -t SCREENS < <(collect_screens "$ia")
+  SCREENS=()
+  while IFS= read -r screen; do
+    SCREENS+=("$screen")
+  done < <(collect_screens "$ia")
   if [[ ${#SCREENS[@]} -eq 0 ]]; then
     fail "$ia: '## 화면 목록' 표에서 SCR- ID를 찾지 못했습니다"
     continue
